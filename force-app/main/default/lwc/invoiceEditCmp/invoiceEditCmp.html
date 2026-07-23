@@ -1,0 +1,331 @@
+<template>
+    <template if:true={loaded}>
+        <c-wave-loader></c-wave-loader>
+    </template>
+    <lightning-card>
+        <div class="slds-grid slds-wrap slds-p-around_medium">
+
+            <div class="slds-col slds-large-size_4-of-12 slds-medium-size_5-of-12 slds-size_1-of-1" style="border-right: 2px solid #c9c9c9;">
+                <!-- <div class="pl_left_mobile" style=" padding-left: 23px; border-right: 4px ridge; width: 95%;"> -->
+                <div class="pl_left_mobile" style="width: 95%;">
+                    <b class="slds-p-left_x-small">
+                        PAGES
+                    </b>
+                    <p class="slds-p-left_x-small">
+                        Choose the pages to include in your report.
+                    </p>
+
+                    <div class="slds-p-top_medium"></div>
+
+                    <table>
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={ElementList} for:item="pages" for:index="index">
+
+                                <tr class="left_mobile_width" key={pages.Id} data-page={pages.Name} onclick={handleClickPages} data-recid={pages.Id} data-label={pages.label}>
+
+                                    <template if:true={pages.selected}>
+                                        <td style="width: 100%; padding: 8px 0; background-color:#003366; border-radius: 40px; color:white">
+                                            <div class="slds-grid slds-wrap" style="align-items: center;">
+                                                <div class="slds-col slds-size_9-of-12" style="display: flex; align-items: center;">
+                                                    <span class="slds-p-left_x-small tab-titles-name" style="font-size: 20px; padding-left: 1rem;" title={index}>
+                                                        {pages.Name}
+                                                    </span>
+                                                </div>
+                                                <div class="slds-col slds-size_3-of-12" style="display: flex; justify-content: center;">
+                                                    <lightning-input type="toggle" name="input1" onchange={handleChangeToggle} message-toggle-active=" " message-toggle-inactive=" "
+                                                        data-label={pages.label} checked={pages.toggle}></lightning-input>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </template>
+
+                                    <template if:false={pages.selected}>
+                                        <td style="width: 100%; padding: 8px 0;">
+                                            <div class="slds-grid slds-wrap" style="align-items: center;">
+                                                <div class="slds-col slds-size_9-of-12" style="display: flex; align-items: center;">
+                                                    <span class="slds-p-left_x-small tab-titles-name" style="font-size: 20px; padding-left: 1rem;" title={index}>
+                                                        {pages.Name}
+                                                    </span>
+                                                </div>
+                                                <div class="slds-col slds-size_3-of-12" style="display: flex; justify-content: center;">
+                                                    <lightning-input type="toggle" name="input1" onchange={handleChangeToggle} message-toggle-active=" " message-toggle-inactive=" "
+                                                        data-label={pages.label} checked={pages.toggle}></lightning-input>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </template>
+                                </tr>
+
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="slds-col slds-large-size_8-of-12 slds-medium-size_7-of-12 slds-size_1-of-1">
+                <div style="padding-left: 20px;">
+
+                    <template if:true={titlePageSelected}>
+                        <span>
+                            <div if:false={editBoolPages}>
+                                <h1 margin="5px" class="title">{dataPageName}
+                                    <lightning-icon onclick={handleClickEditIcon} style="position: absolute;z-index: 1;margin-top: 1px;margin-left: 6px;cursor: pointer;"
+                                        icon-name='utility:edit' alternative-text='edit' size='xx-small' title='edit'></lightning-icon>
+                                </h1>
+
+                            </div>
+                            <div if:true={editBoolPages}>
+                                <lightning-input value={dataPageName} onblur={handleSavePagesName} style="width: 17%;" type="text" variant="label-hidden"
+                                    onchange={handleChangePagesName} label="Title"></lightning-input>
+                            </div>
+                        </span>
+                        <div>
+                            <lightning-input type="text" label="Layout Name" value={layout__Name} onchange={handleInputFieldsChange} data-field="layout__Name"></lightning-input>
+                            <lightning-input type="date" label="Date" value={CreatedDate} onchange={handleDateFieldsChange} data-field="date"></lightning-input>
+                            <lightning-combobox label="Price Book" value={priceBookId} options={priceBookOptions} onchange={handleInputFieldsChange} data-field="priceBookId"></lightning-combobox>
+
+                            <p><b>Primary Image:</b></p>
+                            <template if:false={primaryImageUrl}>
+                                <lightning-input type="file" label-hidden accept=".png, .jpg, .jpeg" onchange={handlePrimaryUpload}>
+                                </lightning-input>
+                            </template>
+
+                            <template if:true={primaryImageUrl}>
+                                <div class="preview-card">
+                                    <img src={primaryImageUrl} alt="Primary Image" style="max-height:200px; border-radius:8px;" />
+                                    <lightning-button label="Delete" variant="destructive" onclick={handleDeletePrimary}></lightning-button>
+                                </div>
+                            </template>
+
+                            <p style="padding-top: 10px;"><b>Secondary Image:</b></p>
+
+                            <template if:false={secondaryImageUrl}>
+                                <lightning-input type="file" label-hidden accept=".png, .jpg, .jpeg" onchange={handleSecondaryUpload}>
+                                </lightning-input>
+                            </template>
+
+                            <template if:true={secondaryImageUrl}>
+                                <div class="preview-card">
+                                    <img src={secondaryImageUrl} alt="Secondary Image" class="preview-image" style="max-height:200px; border-radius:8px;" />
+                                    <lightning-button label="Delete" variant="destructive" onclick={handleDeleteSecondary}></lightning-button>
+                                </div>
+                            </template>
+
+                            <!-- object-api-name updated to QuoteForce__Estimate__c -->
+                            <lightning-record-edit-form object-api-name="QuoteForce__Estimate__c">
+                                <!-- field-name updated to QuoteForce__Contact_Name__c -->
+                                <lightning-input-field style="padding-top: 10px; display: block;" field-name="QuoteForce__Contact_Name__c" variant="label-hidden" value={contactId}
+                                    onchange={handleChangeContact}>
+                                </lightning-input-field>
+                            </lightning-record-edit-form>
+
+                            <lightning-input label="First Name" value={firstName} onchange={handleInputFieldsChange} data-field="firstName"></lightning-input>
+                            <lightning-input label="Last Name" value={lastName} onchange={handleInputFieldsChange} data-field="lastName"></lightning-input>
+                            <lightning-input label="Street Address" value={streetAddress} onchange={handleInputFieldsChange} data-field="streetAddress"></lightning-input>
+                            <lightning-input label="City" value={city} onchange={handleInputFieldsChange} data-field="city"></lightning-input>
+                            <lightning-input label="State/Province" value={stateProvince} onchange={handleInputFieldsChange} data-field="stateProvince"></lightning-input>
+                            <lightning-input maxlength="8" type="text" label="Zip code/Postal code" value={zipCode} onchange={handleInputFieldsChange}
+                                data-field="zipCode"></lightning-input>
+
+
+                        </div>
+
+                        <template if:true={titleViewPageModel}>
+                            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1"
+                                class="slds-modal slds-fade-in-open">
+                                <div class="slds-modal__container">
+                                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                                        <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                                        <span class="slds-assistive-text">Close</span>
+                                    </button>
+                                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                        <div class="slds-grid slds-wrap">
+                                        </div>
+                                        <div style="background-color: #106893; color: white; font-family: sans-serif;">
+                                        </div>
+                                    </div>
+                                    <footer class="slds-modal__footer">
+                                        <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                                    </footer>
+                                </div>
+                            </section>
+                        </template>
+                    </template>
+
+                    <!-- latter Form The Owner Page Selected -->
+                    <template if:true={latterFormTheOwnerPageSelected}>
+                        <span>
+                            <div if:false={editBoolPages}>
+                                <h1 margin="5px" class="title">{dataPageName}
+                                    <lightning-icon onclick={handleClickEditIcon} style="position: absolute;z-index: 1;margin-top: 1px;margin-left: 6px;cursor: pointer;"
+                                        icon-name='utility:edit' alternative-text='edit' size='xx-small' title='edit'></lightning-icon>
+                                </h1>
+                            </div>
+                            <div if:true={editBoolPages}>
+                                <lightning-input value={dataPageName} onblur={handleSavePagesName} style="width: 17%;" type="text" variant="label-hidden"
+                                    onchange={handleChangePagesName} label="Letter from the owner"></lightning-input>
+                            </div>
+                        </span>
+
+                        <div class="slds-m-top_small">
+                            <lightning-input-rich-text class="inputText" value={letterForm} data-field="letterFromOwner" style="overflow-y: hidden !important;"
+                                onchange={handleRichInputFieldsChange} label="Letter From The Owner">
+                            </lightning-input-rich-text>
+                        </div>
+
+
+                        <!-- model will open user click on the preview button -->
+                        <template if:true={LetterFromTheOwnerModel}>
+                            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1"
+                                class="slds-modal slds-fade-in-open">
+                                <div class="slds-modal__container">
+                                    <header class="slds-modal__header modelheader">
+                                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                                            <span class="slds-assistive-text">Close</span>
+                                        </button>
+                                    </header>
+                                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                                        <div class="slds-m-left_x-large slds-m-top_medium">
+                                            <div class="slds-text-heading_large wfont fonts">LETTER FROM THE OWNER Demo
+                                            </div>
+                                        </div>
+                                        <div class="slds-m-left_x-large slds-m-top_xx-large">
+                                            <div class="slds-text-body_regular">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <footer class="slds-modal__footer">
+                                        <button class="slds-button slds-button_neutral" onclick={handlePrevious} title="Cancel">Cancel</button>
+                                    </footer>
+                                </div>
+                            </section>
+                            <div class="slds-backdrop slds-backdrop_open"></div>
+                        </template>
+                    </template>
+
+                    <template if:true={quoteDetailPageSelected}>
+                        <span>
+                            <div if:false={editBoolPages}>
+                                <h1 margin="5px" class="title">{dataPageName}
+                                    <lightning-icon onclick={handleClickEditIcon} style="position: absolute;z-index: 1;margin-top: 1px;margin-left: 6px;cursor: pointer;"
+                                        icon-name='utility:edit' alternative-text='edit' size='xx-small' title='edit'></lightning-icon>
+                                </h1>
+                            </div>
+                            <div if:true={editBoolPages}>
+                                <lightning-input value={dataPageName} onblur={handleSavePagesName} style="width: 17%;" type="text" variant="label-hidden"
+                                    onchange={handleChangePagesName} label="QuoteDetails"></lightning-input>
+                            </div>
+                        </span>
+                        <c-quote-edit-detail-cmp recid={invoiceId} quoteid={quoteDetailRecordId} mode={mode} record-context="invoice"></c-quote-edit-detail-cmp>
+
+                    </template>
+
+                    <template if:true={WarrantyPageSelected}>
+                        <img src={warrantyUrl} style="width: 100%; min-height: 63vh;" />
+                    </template>
+
+                    <template if:true={TermsAndConditionPageSelected}>
+                        <img src={termAndConditionUrl} style="width: 100%; min-height: 63vh;" />
+                    </template>
+
+                    <!-- to add the custom page start-->
+                    <template if:true={customePage}>
+
+                        <!-- to change the label of the custom page -->
+
+                        <span>
+                            <div if:false={editCustomPageName}>
+                                <h1 class="slds-m-around_small slds-text-heading_medium slds-truncate slds-text-color_bold">
+                                    {currentSelectedCustomPage.Name}</h1>
+                                <a> <lightning-icon onclick={handleEditCustomPageName} style="position: absolute; margin-top: -30px;margin-left: 15%;" icon-name='utility:edit'
+                                        alternative-text='edit' size='xx-small' title='edit'></lightning-icon></a>
+                            </div>
+                            <div if:true={editCustomPageName}>
+                                <lightning-input value={currentSelectedCustomPage.Name} onblur={handleSaveCustomPageName} style="width: 25%;" type="text" variant="label-hidden"
+                                    onchange={handleChangeCustomPageName} label="QuoteDetails" data-recid={currentSelectedCustomPage.Id}></lightning-input>
+                            </div>
+
+                            <div>
+                                <button class="btn btn-delete" onclick={handleClickOnDeleteCustomPage} data-recid={currentSelectedCustomPage.Id} label="Delete" data-label="Delete">
+                                    <lightning-icon icon-name="utility:delete" alternative-text="Delete" size="xx-small" class="delete-icon"></lightning-icon>
+                                </button>
+                            </div>
+                        </span>
+
+
+
+
+                        <div class="slds-m-top_large">
+                            <lightning-card>
+                                <div class="slds-p-around_medium">
+                                    <lightning-radio-group name="radioGroup" value={ctmPgType} options={radioOptions} onchange={handleRadioChange} class="slds-text-color_bold">
+                                    </lightning-radio-group>
+                                </div>
+
+                                <!-- lightning file uploader to upload the file -->
+                                <template if:true={customPageUploadFile}>
+                                    <template if:false={currentSelectedCustomPage.customPageImageAvl}>
+                                        <div class="slds-m-around_medium">
+                                            <lightning-input label-hidden="Upload File" type="file" accept=".png, .jpg, .jpeg" name="customPageDoc"
+                                                onchange={handleUploadDocuments}>
+                                            </lightning-input>
+                                        </div>
+                                    </template>
+                                    <template if:true={currentSelectedCustomPage.customPageDocUrl}>
+                                        <div>
+                                            <img src={currentSelectedCustomPage.customPageDocUrl} alt="Uploaded Image" style="width: auto; height: 350px;" />
+                                        </div>
+                                        <div>
+                                            <lightning-icon style="padding-top: 3px;" icon-name="utility:delete" data-doctype="customPageDoc"
+                                                data-contentid={currentSelectedCustomPage.customPageDocId} onclick={handleDeleteTempDocs} alternative-text="delete" variant="error"
+                                                size="small" title="delete"></lightning-icon>
+                                        </div>
+                                    </template>
+                                </template>
+
+
+                                <!-- rich text field -->
+                                <template if:true={customPageTextPage}>
+                                    <lightning-input-rich-text variant="label-hidden" type="text" data-recid={currentSelectedCustomPage.Id} label="Text Page"
+                                        value={currentSelectedCustomPage.richTextValue} onchange={handleTextValueChange} onblur={handleUpdateCustomTextFieldValue}>
+                                    </lightning-input-rich-text>
+                                </template>
+                            </lightning-card>
+                        </div>
+                    </template>
+                    <!-- to add the custom page end here-->
+
+
+                    <template if:true={deleteCustomPageModal}>
+                        <div class="modal-backdrop">
+                            <div class="confirm-modal">
+                                <div class="confirm-header">
+                                    <h2 class="confirm-title">Custom Page</h2>
+                                    <button title="Close" onclick={handleClickOnCancelDeleteCustomPage} class="confirm-close">×</button>
+                                </div>
+                                <div class="confirm-body">
+                                    <p>Are You Sure Delete This Page?</p>
+                                </div>
+                                <div class="confirm-footer">
+                                    <button class="btn-cancel" onclick={handleClickOnCancelDeleteCustomPage}>Cancel</button>
+                                    <button class="btn-yes" onclick={handleDeleteCustomPage}>Yes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+</template>

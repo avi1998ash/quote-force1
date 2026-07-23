@@ -1,0 +1,78 @@
+<template>
+    <template if:true={loaded}>
+        <c-wave-loader></c-wave-loader>
+    </template>
+    <div class="tax-manager">
+        <template if:true={isEditable}>
+            <div class="tax-grid">
+                <lightning-input type="checkbox" label="Enable Tax Calculation" checked={settings.QuoteForce__Enable_Tax_Calculation__c} onchange={handleSettingChange}
+                    data-field="QuoteForce__Enable_Tax_Calculation__c"></lightning-input>
+                <lightning-combobox label="Global Default Tax Rule" value={settings.QuoteForce__Default_Tax_Rule__c} options={taxRuleOptions} onchange={handleSettingChange}
+                    data-field="QuoteForce__Default_Tax_Rule__c"></lightning-combobox>
+                <lightning-combobox label="Tax Display Mode" value={settings.QuoteForce__Tax_Display_Mode__c} options={taxDisplayModeOptions} onchange={handleSettingChange}
+                    data-field="QuoteForce__Tax_Display_Mode__c"></lightning-combobox>
+                <lightning-input label="Company GSTIN" value={settings.QuoteForce__Company_GSTIN__c} onchange={handleSettingChange} data-field="QuoteForce__Company_GSTIN__c"></lightning-input>
+                <lightning-input label="Default Tax Country" value={settings.QuoteForce__Default_Tax_Country__c} onchange={handleSettingChange}
+                    data-field="QuoteForce__Default_Tax_Country__c"></lightning-input>
+                <lightning-input type="checkbox" label="Auto Detect Tax By Country" checked={settings.QuoteForce__Auto_Detect_Tax_By_Country__c} onchange={handleSettingChange}
+                    data-field="QuoteForce__Auto_Detect_Tax_By_Country__c"></lightning-input>
+                <lightning-input type="checkbox" label="Lock Invoice Tax" checked={settings.QuoteForce__Lock_Invoice_Tax__c} onchange={handleSettingChange}
+                    data-field="QuoteForce__Lock_Invoice_Tax__c"></lightning-input>
+                <lightning-input type="checkbox" label="Default Interstate Tax" checked={settings.QuoteForce__Default_Is_Interstate__c} onchange={handleSettingChange}
+                    data-field="QuoteForce__Default_Is_Interstate__c"></lightning-input>
+            </div>
+
+            <div class="rule-editor">
+                <div class="section-title">Tax Rules</div>
+                <div class="tax-grid">
+                    <lightning-input label="Rule Name" value={draftRule.Name} onchange={handleRuleChange} data-field="Name"></lightning-input>
+                    <lightning-combobox label="Type" value={draftRule.QuoteForce__Type__c} options={typeOptions} onchange={handleRuleChange} data-field="QuoteForce__Type__c"></lightning-combobox>
+                    <lightning-input type="number" label="Value" value={draftRule.QuoteForce__Value__c} onchange={handleRuleChange} data-field="QuoteForce__Value__c"></lightning-input>
+                    <lightning-input label="Country" value={draftRule.QuoteForce__Country__c} onchange={handleRuleChange} data-field="QuoteForce__Country__c"></lightning-input>
+                    <lightning-input label="Country Code" value={draftRule.QuoteForce__Country_Code__c} onchange={handleRuleChange} data-field="QuoteForce__Country_Code__c"></lightning-input>
+                    <lightning-combobox label="Applies To" value={draftRule.QuoteForce__Applies_To__c} options={appliesToOptions} onchange={handleRuleChange}
+                        data-field="QuoteForce__Applies_To__c"></lightning-combobox>
+                    <lightning-input label="HSN/SAC Code" value={draftRule.QuoteForce__HSN_SAC_Code__c} onchange={handleRuleChange} data-field="QuoteForce__HSN_SAC_Code__c"></lightning-input>
+                    <lightning-input label="GSTIN Number" value={draftRule.QuoteForce__GSTIN_Number__c} onchange={handleRuleChange} data-field="QuoteForce__GSTIN_Number__c"></lightning-input>
+                    <lightning-input type="checkbox" label="Tax Inclusive" checked={draftRule.QuoteForce__Tax_Inclusive__c} onchange={handleRuleChange}
+                        data-field="QuoteForce__Tax_Inclusive__c"></lightning-input>
+                    <lightning-input type="checkbox" label="Interstate" checked={draftRule.QuoteForce__Is_Interstate__c} onchange={handleRuleChange}
+                        data-field="QuoteForce__Is_Interstate__c"></lightning-input>
+                    <lightning-input type="checkbox" label="Default Rule" checked={draftRule.QuoteForce__Is_Default__c} onchange={handleRuleChange} data-field="QuoteForce__Is_Default__c"></lightning-input>
+                    <lightning-input type="checkbox" label="Active" checked={draftRule.QuoteForce__Active__c} onchange={handleRuleChange} data-field="QuoteForce__Active__c"></lightning-input>
+                    <lightning-textarea class="wide" label="Tax Components JSON" value={draftRule.QuoteForce__Tax_Components__c} onchange={handleRuleChange}
+                        data-field="QuoteForce__Tax_Components__c"></lightning-textarea>
+                </div>
+                <div class="actions">
+                    <lightning-button variant="brand" label={ruleSaveLabel} onclick={saveRule}></lightning-button>
+                    <lightning-button variant="neutral" label="Clear" onclick={handleClear}></lightning-button>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={hasTaxRules}>
+            <div class="rules-list">
+                <template for:each={taxRules} for:item="rule">
+                    <div key={rule.Id} class="rule-row">
+                        <div>
+                            <strong>{rule.Name}</strong>
+                            <div class="rule-meta">{rule.QuoteForce__Type__c} - {rule.QuoteForce__Value__c} - {rule.QuoteForce__Country__c}</div>
+                        </div>
+                        <div class="row-actions">
+                            <template if:true={rule.QuoteForce__Is_Default__c}>
+                                <span class="default-pill">Default</span>
+                            </template>
+                            <template if:true={isEditable}>
+                                <lightning-button-icon icon-name="utility:check" alternative-text="Set Default" title="Set Default" data-id={rule.Id}
+                                    onclick={setDefault}></lightning-button-icon>
+                                <lightning-button-icon icon-name="utility:edit" alternative-text="Edit" title="Edit" data-id={rule.Id} onclick={editRule}></lightning-button-icon>
+                                <lightning-button-icon icon-name="utility:delete" alternative-text="Delete" title="Delete" data-id={rule.Id}
+                                    onclick={deleteRule}></lightning-button-icon>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

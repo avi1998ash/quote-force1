@@ -1,0 +1,6 @@
+<aura:component implements="force:hasRecordId,lightning:isUrlAddressable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global">   
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="objectApiName" type="String" />    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <c:customInvoiceCreateCmp parentId="{!v.recordId}" objectApiName="{!v.objectApiName}" ></c:customInvoiceCreateCmp>
+</aura:component>

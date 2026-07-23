@@ -1,0 +1,220 @@
+<apex:page controller="InvoicePageSectionController" renderAs="pdf" sidebar="false" showHeader="false" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false">
+    <head>
+        <style>
+            @page {
+                size: A4;
+                margin: 0;
+                background: #b7c4cf;
+            }
+            body {
+                font-family: 'Segoe UI', 'Helvetica', sans-serif;
+                font-size: 13px;
+                color: #2b2b2b;
+                background-color: #fff;
+            }
+            .header, .header-second {
+                background-color: #0f395f;
+                color: #fff;
+                padding: 15px;
+                font-size: 20px;
+                font-weight: 600;
+                text-align: center;
+                border-radius: 6px;
+                margin-bottom: 25px;
+                margin-top: 8px;
+            }
+            .section {
+                background-color: #f2f4f7;
+                border: 1px solid #dbe1e8;
+                padding: 18px 20px;
+                border-radius: 10px;
+                margin-bottom: 25px;
+                page-break-inside: avoid;
+            }
+            .section-title {
+                font-size: 16px;
+                color: #0f395f;
+                font-weight: 600;
+                margin-bottom: 12px;
+                border-bottom: 1px solid #ccd4de;
+                padding-bottom: 4px;
+            }
+            .field {
+                margin-bottom: 10px;
+                display: flex;
+                gap: 10px;
+            }
+            .label {
+                font-weight: 600;
+                width: 160px;
+                color: #0f395f;
+            }
+            .value {
+                flex: 1;
+                color: #333;
+            }
+            .image-box {
+                width: 200px;
+                height: 120px;
+                border: 1px dashed #999;
+                border-radius: 6px;
+                text-align: center;
+                line-height: 120px;
+                color: #999;
+                background-color: #fff;
+                margin-top: 6px;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+
+            .section-name {
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 15px;
+                color: #0f395f;
+            }
+
+            .table-container {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .table-header {
+                background-color: #0f395f;
+                color: #ffffff;
+                font-weight: bold;
+            }
+            .table-container td,
+            .table-container th {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: center;
+            }
+            .table-row {
+                background-color: #f9f9f9;
+            }
+            .section-total {
+                text-align: right;
+                font-size: 14px;
+                margin-top: 10px;
+                font-weight: bold;
+            }
+            .grand-total {
+                margin-top: 20px;
+                font-weight: bold;
+                text-align: right;
+            }
+            .note {
+                margin-top: 20px;
+                font-size: 12px;
+                color: #555;
+            }
+        </style>
+    </head>
+    <body>
+        <apex:outputPanel rendered="{!isTitle}">
+            <div class="header">Invoice Title</div>
+            <div class="section">
+                <div class="section-title">Basic Information</div>
+                <div class="field"><div class="label">Layout Name:</div><div class="value">{!invoiceRecord.Layout_Name__c}</div></div>
+                <div class="field"><div class="label">Invoice Name:</div><div class="value">{!invoiceRecord.Name}</div></div>
+                <div class="field"><div class="label">Date:</div><div class="value"><apex:outputText value="{0, date, MMM d',' yyyy}"><apex:param value="{!invoiceRecord.Date__c}" /></apex:outputText></div></div>
+                <div class="field">
+                    <div class="label">Primary Image:</div>
+                    <div class="value"><div class="image-box"><img src="{!invoiceRecord.Primary_Image__c}" alt="Primary" width="100" /></div></div>
+                </div>
+                <div class="field">
+                    <div class="label">Secondary Image:</div>
+                    <div class="value"><div class="image-box"><img src="{!invoiceRecord.Secondary_Image__c}" alt="Secondary" width="120" /></div></div>
+                </div>
+                <div class="field">
+                    <div class="label">Company Address</div>
+                    <div class="value">
+                        {!companyinfo.Street__c}<br/>
+                        {!companyinfo.City__c}, {!companyinfo.State_Province__c} - {!companyinfo.Postal_Code__c}<br/>
+                        Email: {!companyinfo.Email__c}<br/>
+                        Phone: {!companyinfo.Phone__c}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="label">Customer Address</div>
+                    <div class="value">
+                        {!invoiceRecord.Name}<br/>
+                        {!invoiceRecord.Ship_To__Street__s}<br/>
+                        {!invoiceRecord.Ship_To__City__s}, {!invoiceRecord.Ship_To__StateCode__s} - {!invoiceRecord.Ship_To__PostalCode__s}<br/>
+                        {!invoiceRecord.Ship_To__CountryCode__s}
+                    </div>
+                </div>
+            </div>
+        </apex:outputPanel>
+
+        <apex:outputPanel rendered="{!isLetterFromOwner}">
+            <div class="page-break"></div>
+            <div class="header-second">Customer Address Info</div>
+            <div class="section">
+                <div class="section-title">Personal Details</div>
+                <div class="field"><div class="label">First Name:</div><div class="value">{!invoiceRecord.First_Name__c}</div></div>
+                <div class="field"><div class="label">Last Name:</div><div class="value">{!invoiceRecord.Last_Name__c}</div></div>
+                <div class="field"><div class="label">Street Address:</div><div class="value">{!invoiceRecord.Street_Address__c}</div></div>
+                <div class="field"><div class="label">City:</div><div class="value">{!invoiceRecord.City__c}</div></div>
+                <div class="field"><div class="label">State/Province:</div><div class="value">{!invoiceRecord.State_Province__c}</div></div>
+                <div class="field"><div class="label">Zip/Postal Code:</div><div class="value">{!invoiceRecord.Zip_code_Postal_code__c}</div></div>
+            </div>
+        </apex:outputPanel>
+
+        <apex:outputPanel rendered="{!isQuoteDetails}">
+            <div class="page-break"></div>
+            <div class="header-second">Invoice Details</div>
+            <div class="section">
+                <div class="field"><div class="label">Status:</div><div class="value">{!invoiceRecord.Status__c}</div></div>
+                <div class="field"><div class="label">Expiration Date:</div><div class="value"><apex:outputText value="{0, date, MMM d',' yyyy}"><apex:param value="{!invoiceRecord.Expiration_Date__c}" /></apex:outputText></div></div>
+                <div class="field"><div class="label">Tax:</div><div class="value">{!invoiceRecord.Tax__c}</div></div>
+                <div class="field"><div class="label">Bill To:</div><div class="value">{!invoiceRecord.Bill_to__Street__s}, {!invoiceRecord.Bill_to__City__s}, {!invoiceRecord.Bill_to__StateCode__s} - {!invoiceRecord.Bill_to__PostalCode__s}, {!invoiceRecord.Bill_to__CountryCode__s}</div></div>
+                <div class="field"><div class="label">Ship To:</div><div class="value">{!invoiceRecord.Ship_To__Street__s}, {!invoiceRecord.Ship_To__City__s}, {!invoiceRecord.Ship_To__StateCode__s} - {!invoiceRecord.Ship_To__PostalCode__s}, {!invoiceRecord.Ship_To__CountryCode__s}</div></div>
+
+                <apex:repeat value="{!sectionsData}" var="sw">
+                    <div class="section-name">{!sw.sectionName}</div>
+
+                    <table class="table-container">
+                        <tr class="table-header">
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Line Total</th>
+                        </tr>
+                        <apex:repeat value="{!sw.lineItems}" var="li">
+                            <tr class="table-row">
+                                <td>{!li.productName}</td>
+                                <td>{!li.quantity}</td>
+                                <td>{!li.price}</td>
+                                <td>{!ROUND(li.quantity * li.price, 2)}</td>
+                            </tr>
+                        </apex:repeat>
+                    </table>
+
+                    <div class="section-total">Section Total: {!sw.sectionTotal}</div>
+                    <div class="note">Note: {!sw.notes}</div>
+                    <div style="height: 10px;"></div>
+                </apex:repeat>
+
+                <div class="grand-total">Grand Total: {!grandTotal}</div>
+            </div>
+        </apex:outputPanel>
+
+        <apex:outputPanel rendered="{!isWarranty}">
+            <div class="page-break"></div>
+            <div class="header-second">Warranty</div>
+            <div class="section">
+                <div class="field"><img src="{!invoiceRecord.Warranty__c}" width="700" /></div>
+            </div>
+        </apex:outputPanel>
+
+        <apex:outputPanel rendered="{!isTermsAndConditions}">
+            <div class="page-break"></div>
+            <div class="header-second">Terms and Conditions</div>
+            <div class="section">
+                <div class="field"><img src="{!invoiceRecord.Terms_Conditions__c}" alt="Terms" width="615" /></div>
+            </div>
+        </apex:outputPanel>
+    </body>
+</apex:page>

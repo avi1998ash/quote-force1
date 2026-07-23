@@ -1,0 +1,417 @@
+/* Header Styling */
+
+.template-design{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.search-template{
+    --slds-c-input-radius-border: 3rem;
+    width: 300px;
+     padding: 0 20px 20px;
+}
+
+.search{
+    /* background-color: #ccc; */
+    padding: 10px;
+}
+
+.new-template {
+    background-color: #003366;
+    color: white;
+    padding: 7px 30px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform-style: preserve-3d;
+}
+
+.new-template:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.2);
+}
+
+.new-template:active {
+    transform: translateY(1px) scale(0.97);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.layout-wrapper {
+    margin: 1rem;
+}
+
+.layout-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 2rem;
+    background-color: white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1),
+        0 6px 6px rgba(0, 0, 0, 0.1);
+    transform-style: preserve-3d;
+    margin-bottom: 1rem;
+}
+
+.layout-item:hover {
+    transform: translateY(-8px) rotateX(2deg) rotateY(1deg);
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2),
+        0 10px 10px rgba(0, 0, 0, 0.1);
+}
+
+.layout-item:hover {
+    transform: translateY(-3px);
+}
+
+.layout-name {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.layout-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.custom-button {
+    color: white;
+    border: none; 
+    border-radius: 20px; 
+    padding: 0.5rem 1.5rem; 
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform-style: preserve-3d;
+    min-width: 125px;
+}
+
+.custom-button:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 16px rgba(0, 0, 0, 0.2);
+}
+
+.custom-button:active {
+    transform: translateY(1px) scale(0.98);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+.default-button {
+    background-color: #003366;
+}
+
+.disabled-button {
+    background-color: #e0e0e0;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.icon-button {
+    background: white;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    justify-content: center;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform-style: preserve-3d;
+}
+
+.icon-button:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 16px rgba(0, 0, 0, 0.2);
+}
+
+.icon-button:active {
+    transform: translateY(1px) scale(0.98);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+.icon-button-delete {
+    background: #eb1f1f;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    justify-content: center;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform-style: preserve-3d;
+}
+
+.icon-button-delete:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 16px rgba(0, 0, 0, 0.2);
+}
+
+.icon-button-delete:active {
+    transform: translateY(1px) scale(0.98);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.delete-button lightning-icon {
+    --slds-c-icon-color-foreground-default:white;
+}
+
+.search-template lightning-input{
+    /* --slds-c-input-color-background:#e0e0e0; */
+    
+}
+/* .custom-header {
+    background-color: #162055;
+    color: white;
+    padding: 1.5rem;
+}
+
+.custom-header h1 {
+    margin-bottom: 0.5rem;
+}
+
+.custom-header p {
+    margin-top: 0;
+}
+
+
+.custom-footer {
+    background-color: #f4f6f9;
+    color: #162055;
+    padding: 1.5rem;
+    border-top: 1px solid #d8dde6;
+}
+
+.custom-footer p {
+    margin: 0.25rem 0;
+    font-size: 0.875rem;
+}
+
+.custom-footer .slds-text-heading_small {
+    font-weight: bold;
+    margin-bottom: 0px;
+}
+
+.custom-cancel-button {
+    background-color: white;
+    color: #162055;
+    border: none; 
+    border-radius: 3px;
+    padding: 0.5rem 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s; 
+}
+
+.custom-cancel-button,
+.custom-button {
+    padding: 0.5rem 1rem; 
+}
+
+@media (max-width: 600px) {
+    .slds-text-align_center {
+        flex-direction: column;
+        align-items: center; 
+    }
+    
+    .custom-cancel-button,
+    .custom-button {
+        margin-bottom: 0.5rem; 
+    }
+}
+
+
+.custom-button {
+    background-color: #162055;
+    color: white;
+    border: none; 
+    border-radius: 3px; 
+    padding: 0.5rem 1.5rem; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+    transition: background-color 0.3s; 
+}
+
+.custom-button:hover {
+    background-color: #162055;
+    cursor: pointer; 
+}
+
+.custom-button:focus {
+    outline: none; 
+    box-shadow: #162055; 
+}
+
+
+.slds-grid_align-spread {
+    display: flex;
+    justify-content: space-between;
+}
+
+.slds-p-vertical_small {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.slds-m-left_x-small {
+    margin-left: 10px;
+}
+
+.slds-button[disabled], .slds-button:disabled {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--slds-g-color-neutral-base-80, var(--lwc-colorTextButtonDefaultDisabled, rgb(201, 201, 201)));
+    cursor: default;
+} */
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.confirm-modal {
+    background: white;
+    border-radius: 16px;
+    width: 420px;
+    max-width: 90%;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    text-align: center;
+    position: relative;
+}
+
+.confirm-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.confirm-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.confirm-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.confirm-body p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #333;
+    line-height: 1.6;
+}
+
+.confirm-footer {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1.75rem;
+}
+
+.btn-yes {
+    background-color: #003366;
+    color: white;
+    padding: 0.5rem 2rem;
+    border: none;
+    border-radius: 2rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-cancel {
+    background-color: #eb1f1f;
+    color: white;
+    padding: 0.5rem 2rem;
+    border: none;
+    border-radius: 2rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+
+/* lightning-input {
+    --slds-c-input-radius-border: 1.5rem;
+}
+
+lightning-input-address {
+    --slds-c-input-radius-border: 1.5rem;
+    --slds-c-textarea-radius-border: 1.5rem;
+} */
+
+lightning-combobox {
+    --slds-c-input-radius-border: 1.5rem;
+}
+.product-modal-image-actions {
+    margin-top: 0.75rem;
+    display: flex;
+    justify-content: center;
+}
+
+.delete-icon {
+    --slds-c-icon-color-foreground-default: white;
+}
+.product-modal-image-actions {
+    margin-top: 0.75rem;
+    display: flex;
+    justify-content: center;
+}
+
+.icon-button-delete {
+    background: #eb1f1f;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    justify-content: center;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform-style: preserve-3d;
+}
+
+.icon-button-delete:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 16px rgba(0, 0, 0, 0.2);
+}
+
+.icon-button-delete:active {
+    transform: translateY(1px) scale(0.98);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.delete-icon {
+    --slds-c-icon-color-foreground-default: white;
+}

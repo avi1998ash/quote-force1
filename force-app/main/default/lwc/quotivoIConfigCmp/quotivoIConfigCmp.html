@@ -1,0 +1,144 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 10-02-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <template if:true={isLoading}>
+        <c-wave-loader></c-wave-loader>
+    </template>
+    <c-header-cmp title="Manage Your Quote Templates" title-sec="Simplify template management — all in one place."></c-header-cmp>
+    <div style="background: white;">
+        <div class="template-design">
+            <div class="search-template">
+                <lightning-input label="Search Templates" type="search" value={searchTerm} onchange={handleSearchChange} placeholder="Search by template name"></lightning-input>
+            </div>
+            <button class="new-template" style="margin-right: 20px;" onclick={handleCreateTemplate}>Create New Template</button>
+            <template if:true={isModalOpen}>
+                <c-master-template-modal-cmp onrefreshlist={refreshLayouts} record-id={recordId} onclose={handleModalClose} template-type={templateType}>
+                </c-master-template-modal-cmp>
+            </template>
+        </div>
+
+      <div title="Shared Layouts" style="padding-bottom: 4px;">
+    <div class="layout-wrapper">
+
+        <template if:true={layouts.length}>
+            <template for:each={layouts} for:item="layout">
+                <div key={layout.Id} class="layout-item">
+                    <div class="layout-name">{layout.QuoteForce__Layout_Name__c}</div>
+                    <div class="layout-actions">
+
+                        <template if:false={layout.QuoteForce__IsDefault__c}>
+                            <button class="custom-button default-button"
+                                data-id={layout.Id}
+                                onclick={handleConfirm}>
+                                Make Default
+                            </button>
+                        </template>
+
+                        <template if:true={layout.QuoteForce__IsDefault__c}>
+                            <button class="custom-button disabled-button" disabled>
+                                Default
+                            </button>
+                        </template>
+
+                        <button class="icon-button"
+                            onclick={handleEdit}
+                            data-id={layout.Id}>
+                            <lightning-icon icon-name="utility:edit"
+                                alternative-text="Edit"
+                                size="x-small">
+                            </lightning-icon>
+                        </button>
+
+                        <button class="icon-button-delete delete-button"
+                            onclick={handleClikDelete}
+                            data-id={layout.Id}
+                            data-label={layout.Id}>
+                            <lightning-icon icon-name="utility:delete"
+                                alternative-text="Delete"
+                                size="x-small">
+                            </lightning-icon>
+                        </button>
+
+                    </div>
+                </div>
+            </template>
+        </template>
+
+        <template if:false={layouts.length}>
+            <div style="display:flex;justify-content:center;align-items:center;margin-top:30px;">
+                <div style="background:#f0f4ff;border-left:5px solid #007bff;padding:14px 18px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.10);font-size:20px;gap: 10px;background: #f0f4ff;color: #333;font-family: Arial, sans-serif;font-weight: 500;width: 100%;min-height: 60px;">
+                    No templates found. Please create a template.
+                </div>
+            </div>
+        </template>
+    </div>
+    </div>
+</div>
+    <template if:true={deleteTemplate}>
+    <div class="modal-backdrop">
+        <div class="confirm-modal">
+            <div class="confirm-header">
+                <h2 class="confirm-title">
+                    Delete Template
+                </h2>
+                <button title="Close"  onclick={deleteTemplateCancel} class="confirm-close">x</button>
+            </div>
+            <div class="confirm-body">
+            <div class="product-modal-image-actions">
+
+    <button class="icon-button-delete">
+
+        <lightning-icon
+            title="Delete Template"
+            icon-name="utility:delete"
+            alternative-text="Delete"
+            size="xx-small"
+            class="delete-icon">
+        </lightning-icon>
+
+    </button>
+
+</div>
+                <p class="delete-message">
+                    Are you sure you want to delete this template?
+                </p>
+            </div>
+            <div class="confirm-footer">
+                <button
+                    class="btn-cancel"
+                    onclick={deleteTemplateCancel}>
+                    Cancel
+                </button>
+                <button
+                    class="btn-yes"
+                    onclick={handleDelete}>
+                    Yes
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+
+    <template if:true={makeDefaultWarning}>
+        <div class="modal-backdrop">
+            <div class="confirm-modal">
+                <div class="confirm-header">
+                    <h2 class="confirm-title">Confirm Default Layout</h2>
+                    <button title="Close" onclick={makeDefaultWarningCancel} class="confirm-close">x</button>
+                </div>
+                <div class="confirm-body">
+                    <p>Are you sure you want to set this layout as the default?</p>
+                </div>
+                <div class="confirm-footer">
+                    <button class="btn-cancel" onclick={makeDefaultWarningCancel}>Cancel</button>
+                    <button class="btn-yes" onclick={handleMakeDefault}>Yes</button>
+                </div>
+            </div>
+        </div>
+    </template>
+</template>

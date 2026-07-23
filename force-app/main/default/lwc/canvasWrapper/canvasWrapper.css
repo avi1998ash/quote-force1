@@ -1,0 +1,137 @@
+/* RESET */
+:host {
+  display: block;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: #e5e7eb;
+  font-family: sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Universal Box Model */
+:host *,
+:host *::before,
+:host *::after {
+  box-sizing: border-box;
+}
+
+/* Media Reset */
+:host img,
+:host picture,
+:host video,
+:host canvas,
+:host svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Form Reset */
+:host input,
+:host button,
+:host textarea,
+:host select {
+  font: inherit;
+}
+
+/* Typography Reset */
+:host p,
+:host h1,
+:host h2,
+:host h3,
+:host h4,
+:host h5,
+:host h6 {
+  overflow-wrap: break-word;
+}
+
+/* MAIN WRAPPER */
+.canvas-wrapper {
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  position: relative;
+}
+
+/* Mobile Tutorial */
+.canvas-wrapper .mobile-tutorial {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  background: rgba(255, 255, 255, 0.58);
+  border-radius: 16px;
+  backdrop-filter: blur(12.7px);
+  -webkit-backdrop-filter: blur(12.7px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 10px;
+  width: 90%;
+}
+
+/* Tutorial Keys */
+.canvas-wrapper .tutorial-keys {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  font-weight: 1000;
+}
+
+/* Key Style */
+.canvas-wrapper .tutorial-keys span {
+  font-family: sans-serif;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding-bottom: 3px;
+  width: 48px;
+  height: 45px;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #444;
+  border-top: 1px solid #cccccc;
+  box-shadow: 0px 3px 0px 2px #cccccc;
+}
+
+/* Grid Layout */
+.canvas-wrapper .tutorial-keys section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  place-items: center;
+  gap: 1px;
+  width: 168px;   /* 56 * 3 */
+  height: 112px;  /* 56 * 2 */
+}
+
+/* Arrow Positioning */
+.canvas-wrapper .tutorial-keys section > span:nth-child(1) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.canvas-wrapper .tutorial-keys section > span:nth-child(2) {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.canvas-wrapper .tutorial-keys section > span:nth-child(3) {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.canvas-wrapper .tutorial-keys section > span:nth-child(4) {
+  grid-column: 3;
+  grid-row: 2;
+}

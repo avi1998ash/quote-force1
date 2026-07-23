@@ -1,0 +1,41 @@
+.uploaded-image {
+    width: 100px;
+    height: auto;
+    margin-top: 10px;
+}
+.slds-p-around_medium {
+    padding: 1rem;
+}
+
+.slds-modal__container {
+    min-width: 80rem !important;
+    max-width: 80rem !important;
+    width: 90% !important;
+}
+
+.clear-btn{
+     background-color: #eb1f1f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: 0.4rem 1rem;
+    border: none;
+    border-radius: 2rem;
+    width: 90px;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform-style: preserve-3d;
+}
+ 
+.save-btn{
+    background-color: #003366;
+    color: white;
+    padding: 0.4rem 1rem;
+    border: none;
+    border-radius: 3rem;
+    cursor: pointer;
+    width: 100px;
+    max-width: 100%;
+}

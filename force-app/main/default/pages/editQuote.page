@@ -1,0 +1,38 @@
+<apex:page showHeader="false" sidebar="false" controller="editQuoteController">
+    <apex:includeLightning />
+     <html>
+        <head>
+            <apex:includeLightning />
+            <style>
+                
+            </style>
+        </head>
+        <body style="overflow-x:hidden;">
+            <div id="LightningComponentid"></div> 
+            <apex:slds />
+
+            <script>
+            $Lightning.use("QuoteForce:editQuoteApp", function() {
+                $Lightning.createComponent("QuoteForce:customQuoteEditCmp",
+                                           {
+                                               "recordId" : "{!currentRecId}",
+                                               "objectApiName":"{!currentObjectName}"
+                                           },
+                                           "LightningComponentid",
+                                           function (cmp) {
+                                            //    var loadingDivElement = document.getElementById("loading");
+                                            //    loadingDivElement.style.display = 'none'
+                                            //    var ltngDivElement = document.getElementById("container");
+                                            //    ltngDivElement.style.display = 'block';
+                                            //    console.log('AppWebApp VF Page includer initialized');
+                                           });
+            });
+            
+             setTimeout(function(){ 
+    var spinner = document.getElementById('spinner');
+    if(spinner) { spinner.className += ' slds-hide'; }}, 3000);
+
+            </script>
+        </body>
+    </html>
+</apex:page>

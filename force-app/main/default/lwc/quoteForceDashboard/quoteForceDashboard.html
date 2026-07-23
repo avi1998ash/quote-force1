@@ -1,0 +1,273 @@
+<template>
+    <div class="qf-shell">
+
+        <!-- ===== Left sidebar ===== -->
+        <aside class="qf-sidebar">
+            <div class="brand">
+                <div class="brand-logo"><lightning-icon icon-name="utility:summarydetail" size="small" variant="inverse"></lightning-icon></div>
+                <span class="brand-name">QuoteForce</span>
+            </div>
+
+            <nav class="nav">
+                <template for:each={navItems} for:item="item">
+                    <button key={item.key} class={item.cssClass} data-key={item.key} onclick={handleNav}>
+                        <lightning-icon icon-name={item.icon} size="x-small" variant={item.variant}></lightning-icon>
+                        <span>{item.label}</span>
+                    </button>
+                </template>
+            </nav>
+
+            <div class="nav-foot">
+                <p class="foot-title">Need more?</p>
+                <p class="foot-text">Manage everything — products, templates &amp; quotes — right here.</p>
+            </div>
+        </aside>
+
+        <!-- ===== Main content ===== -->
+        <main class="qf-main">
+
+            <div class="qf-topbar">
+                <h1 class="top-title">{viewTitle}</h1>
+                <template if:true={isDashboard}>
+                    <button class="qf-refresh" onclick={handleRefresh} title="Refresh">
+                        <lightning-icon icon-name="utility:refresh" size="x-small" variant="inverse"></lightning-icon>
+                        <span>Refresh</span>
+                    </button>
+                </template>
+            </div>
+
+            <!-- ===== Dashboard view ===== -->
+            <template if:true={isDashboard}>
+                <div class="qf-dashboard">
+
+                    <template if:false={loaded}>
+                        <c-wave-loader></c-wave-loader>
+                    </template>
+
+                    <template if:true={isEmpty}>
+                        <div class="qf-empty">
+                            <div class="qf-empty-icon">📊</div>
+                            <h2>No quotes yet</h2>
+                            <p>Create your first quote and your pipeline, deal value and trends will light up here.</p>
+                        </div>
+                    </template>
+
+                    <template if:true={hasData}>
+                        <div class="qf-grid">
+
+                            <!-- Overview -->
+                            <section class="card card--overview qf-ov-light">
+                                <header class="qf-ov-head">
+                                    <h2 class="qf-ov-title">Overview</h2>
+                                    <span class="qf-ov-badge">All Time</span>
+                                </header>
+
+                                <div class="qf-ov-sub">
+                                    <span class="qf-ov-number">{totalQuotesLabel}</span>
+                                    <span class="qf-ov-sub-text">Quotes in pipeline · {pipelineLabel}</span>
+                                </div>
+
+                                <!-- Funnel (replaces the old chip-grid) -->
+                                <div class="qf-funnel">
+                                    <template for:each={funnelStages} for:item="stage">
+                                        <div key={stage.key} class={stage.cssClass} style={stage.rowStyle}>
+                                            <span class="qf-funnel-name">{stage.label}</span>
+                                            <span class="qf-funnel-count">{stage.count}</span>
+                                        </div>
+                                    </template>
+                                </div>
+                                <p class="qf-ov-note">Rejected ({rejectedCount}) removed from flow at review / approval stage</p>
+                                <!-- Value in -->
+                                <div class="qf-ov-totals">
+                                    <div class="qf-ov-stat">
+                                        <p class="qf-ov-stat-label">Net Pipeline</p>
+                                        <p class="qf-ov-stat-value">{pipelineLabel}</p>
+                                    </div>
+                                    <div class="qf-ov-stat">
+                                        <p class="qf-ov-stat-label">Achieved So Far</p>
+                                        <p class="qf-ov-stat-value qf-ov-pos">{achievedLabel}</p>
+                                    </div>
+                                    <div class="qf-ov-stat">
+                                        <p class="qf-ov-stat-label">Difference</p>
+                                        <p class="qf-ov-stat-value qf-ov-warn">{differenceLabel}</p>
+                                    </div>
+                                    <div class="qf-ov-stat">
+                                        <p class="qf-ov-stat-label">Target</p>
+                                        <p class="qf-ov-stat-value">{targetLabel}</p>
+                                    </div>
+                                </div>
+
+                                <div class="qf-ov-progress-row">
+                                    <span>Progress to target</span>
+                                    <span>{progressPercent}%</span>
+                                </div>
+                                <div class="qf-ov-progress-track">
+                                    <div class="qf-ov-progress-fill" style={progressStyle}></div>
+                                </div>
+                            </section>
+
+                            <!-- High Value Quotes -->
+                            <section class="card card--deals">
+                                <header class="card-head">
+                                    <h2>High Value Quotes</h2>
+                                    <span class="card-badge">Top 5</span>
+                                </header>
+
+                                <div class="deals-table">
+                                    <div class="deals-row deals-row--head">
+                                        <span>Customer</span>
+                                        <span>Quote</span>
+                                        <span class="ta-right">Value</span>
+                                        <span class="ta-right">Age</span>
+                                    </div>
+                                    <template for:each={highValueRows} for:item="row">
+                                        <div key={row.id} class="deals-row">
+                                            <span class="deals-cust">
+                                                <span class="avatar">{row.initial}</span>
+                                                <span class="ellipsis">{row.customer}</span>
+                                            </span>
+                                            <span class="deals-name">
+                                                <span class="ellipsis">{row.name}</span>
+                                                <span class={row.statusClass}>{row.status}</span>
+                                            </span>
+                                            <span class="ta-right deals-val">{row.valueLabel}</span>
+                                            <span class="ta-right deals-age">{row.ageLabel}</span>
+                                        </div>
+                                    </template>
+                                </div>
+
+                                <div class="mini-stats">
+                                    <div class="mini-stat">
+                                        <p class="ms-num">{productCountLabel}</p>
+                                        <p class="ms-label">Products</p>
+                                    </div>
+                                    <div class="mini-stat">
+                                        <p class="ms-num">{bundleCountLabel}</p>
+                                        <p class="ms-label">Bundles</p>
+                                    </div>
+                                    <div class="mini-stat">
+                                        <p class="ms-num">{invoiceCountLabel}</p>
+                                        <p class="ms-label">Invoices</p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Opportunity Index -->
+                            <section class="card card--index">
+                                <header class="card-head">
+                                    <h2>Opportunity Index</h2>
+                                    <span class="card-badge">All Time</span>
+                                </header>
+
+                                <div class="donut-wrap">
+                                    <div class="donut" style={donutStyle}>
+                                        <div class="donut-hole">
+                                            <span class="donut-num">{oppTotalLabel}</span>
+                                            <span class="donut-cap">Quotes</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="index-legend">
+                                    <div class="leg">
+                                        <span class="dot dot-won"></span>
+                                        <span class="leg-num">{wonLabel}</span>
+                                        <span class="leg-lab">Won</span>
+                                    </div>
+                                    <div class="leg">
+                                        <span class="dot dot-prog"></span>
+                                        <span class="leg-num">{inProgressLabel}</span>
+                                        <span class="leg-lab">In Progress</span>
+                                    </div>
+                                    <div class="leg">
+                                        <span class="dot dot-lost"></span>
+                                        <span class="leg-num">{lostLabel}</span>
+                                        <span class="leg-lab">Lost</span>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Deal Value + chart -->
+                            <section class="card card--value">
+                                <header class="card-head">
+                                    <h2>Deal Value</h2>
+                                    <span class="card-badge">Last 8 Months</span>
+                                </header>
+
+                                <div class="value-body">
+                                    <div class="value-metrics">
+                                        <div class="vm">
+                                            <span class="vm-icon vm-won"><lightning-icon icon-name="utility:like" size="x-small" variant="inverse"></lightning-icon></span>
+                                            <div>
+                                                <p class="vm-num">{wonLabel} <small>won</small></p>
+                                                <p class="vm-val">{wonValueLabel}</p>
+                                            </div>
+                                        </div>
+                                        <div class="vm">
+                                            <span class="vm-icon vm-prog"><lightning-icon icon-name="utility:clock" size="x-small" variant="inverse"></lightning-icon></span>
+                                            <div>
+                                                <p class="vm-num">{inProgressLabel} <small>open</small></p>
+                                                <p class="vm-val">{inProgressValueLabel}</p>
+                                            </div>
+                                        </div>
+                                        <div class="vm">
+                                            <span class="vm-icon vm-lost"><lightning-icon icon-name="utility:dislike" size="x-small" variant="inverse"></lightning-icon></span>
+                                            <div>
+                                                <p class="vm-num">{lostLabel} <small>lost</small></p>
+                                                <p class="vm-val">{lostValueLabel}</p>
+                                            </div>
+                                        </div>
+                                        <div class="vm">
+                                            <span class="vm-icon vm-age"><lightning-icon icon-name="utility:date_time" size="x-small" variant="inverse"></lightning-icon></span>
+                                            <div>
+                                                <p class="vm-num">Avg Age</p>
+                                                <p class="vm-val">{avgAgeLabel}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="chart">
+                                        <div class="chart-bars">
+                                            <template for:each={bars} for:item="bar">
+                                                <div key={bar.label} class="bar-group">
+                                                    <div class="bar-pair">
+                                                        <div class="bar bar-won" style={bar.wonStyle} title={bar.won}></div>
+                                                        <div class="bar bar-lost" style={bar.lostStyle} title={bar.lost}></div>
+                                                    </div>
+                                                    <span class="bar-label">{bar.label}</span>
+                                                </div>
+                                            </template>
+                                        </div>
+                                        <div class="chart-legend">
+                                            <span class="leg"><span class="dot dot-won"></span> Won ({totalWon})</span>
+                                            <span class="leg"><span class="dot dot-lost"></span> Lost ({totalLost})</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <!-- ===== Embedded app views ===== -->
+            <template if:true={isProducts}>
+                <div class="qf-embed"><c-product-configure-cmp></c-product-configure-cmp></div>
+            </template>
+
+            <template if:true={isTemplates}>
+                <div class="qf-embed"><c-quotivo-i-config-cmp></c-quotivo-i-config-cmp></div>
+            </template>
+
+            <template if:true={isAdmin}>
+                <div class="qf-embed"><c-admin-configuration></c-admin-configuration></div>
+            </template>
+
+            <template if:true={isCreateQuote}>
+                <div class="qf-embed"><c-custom-quote-create-cmp></c-custom-quote-create-cmp></div>
+            </template>
+
+        </main>
+    </div>
+</template>

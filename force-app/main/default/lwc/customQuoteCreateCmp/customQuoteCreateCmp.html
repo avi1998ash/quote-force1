@@ -1,0 +1,275 @@
+<!--
+    @description       : 
+    @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+    @group             : 
+    @last modified on  : 10-02-2024
+    @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <template if:true={loaded}>
+        <c-wave-loader></c-wave-loader>
+    </template>
+    <div style="background-color: white;">
+        <!-- Header -->
+        <div class="custom-header slds-p-around_medium">
+            <div class="slds-grid slds-grid_vertical-align-center slds-wrap">
+                <div class="slds-col slds-size_1-of-1 slds-text-align_center">
+                    <div class="slds-grid slds-grid_align-center slds-wrap">
+                        <!-- <lightning-icon icon-name="standard:quotes" alternative-text="Quotes Icon" size="large" class="slds-m-right_small"></lightning-icon> -->
+                        <div>
+                            <h1 class="slds-text-heading_large slds-text-color_inverse">Configure. Quote. Close.</h1>
+                            <p class="slds-text-body_regular">Smart, flexible quotes made for your customers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Section -->
+        <div class="slds-m-around_medium">
+            <template if:true={isFirstStep}>
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input label="Quote Name" value={quoteName} onchange={handleInputChange} data-field="quoteName" required></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input label="Expiration Date" type="date" value={expirationDate} onchange={handleInputChange} data-field="expirationDate"
+                            required></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-combobox label="Status" value={status} options={statusOptions} onchange={handleInputChange} data-field="status" required></lightning-combobox>
+                    </div>
+
+                   <!-- <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-combobox
+                            label="Currency"
+                            value={currencyType}
+                            options={currencyOptions}
+                            onchange={handleCurrencyChange}
+                            data-field="currencyType"
+                            required>
+                        </lightning-combobox>
+                    </div> -->
+                 <!--   <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-combobox
+                            label="Price Book"
+                            value={priceBookId}
+                            options={priceBookOptions}
+                            onchange={handlePriceBookChange}>
+                        </lightning-combobox> 
+                    </div>  -->
+                    <template if:true={linkOpportunity}>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <lightning-record-picker object-api-name="Opportunity" label="Opportunity" value={parentId} disabled>
+                            </lightning-record-picker>
+                        </div>
+                    </template>
+
+                    <!-- Address Information Section -->
+                    <div class="slds-col slds-size_1-of-1 slds-m-top_medium">
+                        <h2 class="slds-text-heading_medium">Address Information</h2>
+                        <div class="slds-grid slds-wrap slds-gutters">
+                            <div class="slds-col slds-size_1-of-2">
+                                <h3 class="slds-text-heading_small">Bill To</h3>
+                                <lightning-input-address address-label="Address" street-label="Street" city-label="City" country-label="Country" province-label="Province"
+                                    postal-code-label="PostalCode" street={billingAddress.street} city={billingAddress.city} province={billingAddress.province}
+                                    postal-code={billingAddress.postalCode} country={billingAddress.country} field-level-help="Help Text for inputAddress field"
+                                    country-options={countryOptions} province-options={billingProvinceOptions} onchange={handleBillToAddressChange} show-address-lookup>
+                                </lightning-input-address>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <h3 class="slds-text-heading_small">Ship To</h3>
+                                <lightning-input-address address-label="Address" street-label="Street" city-label="City" country-label="Country" province-label="Province"
+                                    postal-code-label="PostalCode" street={shippingAddress.street} city={shippingAddress.city} province={shippingAddress.province}
+                                    postal-code={shippingAddress.postalCode} country={shippingAddress.country} field-level-help="Help Text for inputAddress field"
+                                    country-options={countryOptions} province-options={shippingProvinceOptions} onchange={handleShipToAddressChange} show-address-lookup>
+                                </lightning-input-address>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Second Step: Summary or Other Details -->
+            <template if:true={isSecondStep}>
+                <!-- <lightning-radio-group name="radioGroup" label="Radio Group" options={options} value={selectedValue} onchange={handleRadioChange}
+                    type="radio"></lightning-radio-group>
+
+                <div>
+                    <h2>Summary of Quote Details</h2>
+                    <p>Quote Name: {quoteName}</p>
+                    <p>Expiration Date: {expirationDate}</p>
+                    <p>Status: {status}</p>
+                    <p>Tax: {tax}</p>
+                </div> -->
+                <div class="quote-container">
+                    <div class="section">
+                        <div class="section-header">
+                            <span class="icon">🎯</span>
+                            <h2>Choose a Quote Template</h2>
+                        </div>
+
+                        <!-- <template if:true={layoutAvailabel}>
+                            <lightning-radio-group disabled name="radioGroup" options={options} checked={selectedValue} onchange={handleRadioChange} type="radio"
+                                class="custom-radio"></lightning-radio-group>
+                        </template>
+
+                        <template if:false={layoutAvailabel}>
+                            <lightning-radio-group name="radioGroup" options={options} checked={selectedValue} onchange={handleRadioChange} type="radio"
+                                class="custom-radio"></lightning-radio-group>
+                        </template> -->
+                        <template if:true={paginatedOptions.length}>
+                            <template for:each={paginatedOptions} for:item="option">
+                                <div key={option.value} class="slds-p-vertical_x-small custom-radio">
+
+                                    <input if:true={layoutAvailabel} type="radio" disabled id={option.value} name="customRadio" value={option.value} checked={option.checked}
+                                        onchange={handleRadioChange} class="slds-radio custom-radio" />
+                                    <input if:false={layoutAvailabel} type="radio" id={option.value} name="customRadio" value={option.value} checked={option.checked}
+                                        onchange={handleRadioChange} class="slds-radio custom-radio" />
+                                    <label class="slds-p-left_x-small" for={option.value}>{option.label}</label>
+                                </div>
+                            </template>
+
+                            <div class="slds-m-top_medium">
+                                <lightning-button label="Previous" onclick={handlePrev} disabled={isFirstPage}></lightning-button>
+                                <lightning-button label="Next" onclick={handleNext} class="slds-m-left_small" disabled={isLastPage}></lightning-button>
+                                <span class="slds-p-left_xx-small">Page {currentPage} of {totalPages}</span>
+                            </div>
+                        </template>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header">
+                            <span class="icon">📋</span>
+                            <h2>Quote Summary</h2>
+                        </div>
+                        <div class="summary-item"><label>Quote Name:</label> <span>{quoteName}</span></div>
+                        <div class="summary-item"><label>Expiration Date:</label> <span>{expirationDate}</span></div>
+                        <div class="summary-item"><label>Status:</label> <span>{status}</span></div>
+                    </div>
+                </div>
+            </template>
+            <template if:true={isThirdStep}>
+                <!-- <c-custom-quote-c-m-p lwc:ref="quoteForm" record-id={selectedValue} quote-id={activeQuoteId} mode={isEditable} is-from-quote={isFromQuote}> </c-custom-quote-c-m-p> -->
+                <c-quotes-edit-cmp 
+                currency-type={currencyType} 
+                lwc:ref="quoteForm" 
+                record-id={selectedValue} 
+                quote-id={activeQuoteId} 
+                mode={isEditable} 
+                is-from-quote={isFromQuote}> </c-quotes-edit-cmp>
+
+                <!-- <c-quotes-edit-cmp lwc:ref="quoteForm" record-id={selectedValue} quote-id={activeQuoteId} mode={isEditable} is-from-quote={isFromQuote}> </c-quotes-edit-cmp> -->
+
+            </template>
+            <template if:true={isEmailModalOpen}>
+                <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <c-email-lwc record-id={activeQuoteId} onclosemodal={handleCloseModal}></c-email-lwc>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+            
+            <template if:true={isModalVisible}>
+                <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+            
+                        <!-- Header -->
+                        <header class="slds-modal__header">
+                            <h2 class="slds-text-heading_medium">{modalTitle}</h2>
+                            <button
+                                    class="slds-button slds-button_icon slds-modal__close"
+                                    title="Close"
+                                    onclick={handleCloseModalPdf}>
+                                    <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                                </button>
+                        </header>
+            
+                        <!-- Body -->
+                        <div class="slds-modal__content" style="height:70vh;">
+                            <iframe src={iframeSourceUrl} width="100%" height="100%" style="border:none;">
+                            </iframe>
+                        </div>
+            
+                        <!-- Footer -->
+                        <footer class="slds-modal__footer">
+                            <lightning-button variant="neutral" label="Close" onclick={handleCloseModalPdf}>
+                            </lightning-button>
+                        </footer>
+                    </div>
+                </section>
+            
+                <!-- Backdrop -->
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+        </div>
+        <!-- Success & Error Messages -->
+        <template if:true={successMessage}>
+            <div class="slds-text-color_success slds-m-top_small">{successMessage}</div>
+        </template>
+        <template if:true={errorMessage}>
+            <div class="slds-text-color_error slds-m-top_small">{errorMessage}</div>
+        </template>
+
+
+        <!-- Footer -->
+        <footer class="slds-grid slds-grid_align-center slds-p-top_medium slds-p-bottom_medium slds-text-align_center" style="background-color: #f4f6f9;">
+            <div class="slds-col slds-size_1-of-1 slds-text-align_center">
+                <div class="slds-m-bottom_small">
+                    <button class="custom-cancel-button" onclick={handleCancel}>
+                        Cancel
+                    </button>
+                    <template if:true={isThirdStep}>
+                        <button class="custom-button slds-m-left_small slds-m-bottom_small " onclick={handleSecondPrevious}>
+                            Previous
+                        </button>
+                        <!-- <lightning-button class="slds-m-left_small" label="Save" variant="brand" onclick={handleSave}></lightning-button> -->
+                        <button class="custom-button slds-m-bottom_small slds-m-left_small" onclick={handleSave}>
+                            Save
+                        </button>
+                        <button class="custom-button slds-m-bottom_small slds-m-left_small" onclick={handleRepriceLines}>
+                            Reprice Lines
+                        </button>
+
+                        <button class="custom-button slds-m-bottom_small slds-m-left_small" onclick={handleOpenModalPdf}>
+                            Preview PDF
+                        </button>
+
+                        <button class="custom-button slds-m-bottom_small slds-m-left_small" onclick={handleOpenModal}>
+                            Send Mail
+                        </button>
+                    </template>
+
+                    <template if:true={isFirstStep}>
+                        <!-- <button class="custom-button slds-m-bottom_small slds-m-right_x-small" onclick={saveAndNext}>
+                            Save & Next
+                        </button> -->
+                        <!-- <lightning-button label="Save & Next" class="slds-m-bottom_small slds-m-right_x-small slds-p-left_small" variant="inverse"
+                            onclick={saveAndNext}></lightning-button> -->
+                        <button class="custom-button saveNnext-button slds-m-left_small" onclick={saveAndNext}>Save & Next</button>
+                    </template>
+
+                    <template if:true={isSecondStep}>
+                        <button class="custom-button slds-m-bottom_small slds-m-left_small" onclick={handlePrevious}>
+                            Previous
+                        </button>
+                        <!-- <button class="custom-button slds-m-bottom_small slds-m-right_x-small" onclick={finalizeQuote}>
+                            Finish
+                        </button> -->
+                        <!-- <lightning-button class="slds-m-left_small" label="Next" onclick={handelnextpage}></lightning-button> -->
+                        <button class="custom-button slds-m-bottom_small slds-m-left_small" onclick={handelnextpage}>
+                            Next
+                        </button>
+                        <!-- <template if:true={isModalOpen}>
+                            <c-custom-quote-c-m-p record-id={recordId}>
+                            </c-custom-quote-c-m-p>
+                        </template> -->
+                    </template>
+                </div>
+
+               <!-- <p class="slds-text-body_regular slds-p-top_x-small">© 2025 NSIQ INFOTECH PVT. LTD. - Salesforce Development Company. All rights reserved.</p> -->
+            </div>
+        </footer>
+    </div>
+</template>

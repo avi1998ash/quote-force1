@@ -1,0 +1,20 @@
+<template>
+    <div class="modal-backdrop">
+        <div class="confirm-modal">
+            <div class="confirm-header">
+                <p class="confirm-title">{title}</p>
+                <button class="confirm-close" onclick={handleCancel}>&#x2715;</button>
+            </div>
+            <div class="confirm-body">
+                <div class="delete-icon-wrapper">
+                    <lightning-icon icon-name="utility:delete" size="x-small" class="delete-icon"></lightning-icon>
+                </div>
+                <p>{message}</p>
+            </div>
+            <div class="confirm-footer">
+                <button class="btn-cancel" onclick={handleCancel}>Cancel</button>
+                <button class="btn-yes" onclick={handleConfirm}>Yes</button>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,356 @@
+<apex:page controller="PageSectionController"
+           renderAs="pdf" sidebar="false"
+           showHeader="false"
+           title="Quote PDF"
+           docType="html-5.0"
+           applyBodyTag="false"
+           applyHtmlTag="false"
+           contentType="application/pdf#Quotation.pdf"
+           standardStylesheets="false">
+    <head>
+        <style>
+            @page {
+            size: A4;
+            margin: 0;
+            background: #b7c4cf;
+            }
+            body {
+            font-family: 'Segoe UI', 'Helvetica', sans-serif;
+            font-size: 13px;
+            color: #2b2b2b;
+            background-color: #fff;
+            }
+            .header-second {
+            background-color: #0f395f;
+            color: #fff;
+            padding: 15px;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            margin-top: 8px;
+            }
+            .header {
+            background-color: #0f395f;
+            color: #fff;
+            padding: 15px;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            }
+            .section {
+            background-color: #f2f4f7;
+            border: 1px solid #dbe1e8;
+            padding: 18px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            page-break-inside: avoid;
+            }
+            .section-title {
+            font-size: 16px;
+            color: #0f395f;
+            font-weight: 600;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #ccd4de;
+            padding-bottom: 4px;
+            }
+            .field {
+            margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+            }
+            .label {
+            font-weight: 600;
+            width: 160px;
+            color: #0f395f;
+            }
+            .value {
+            flex: 1;
+            color: #333;
+            }
+            .image-box {
+            width: 200px;
+            border: 1px dashed #999;
+            border-radius: 6px;
+            background-color: #fff;
+            margin-top: 6px;
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            }
+            .page-break {
+            page-break-before: always;
+            }
+            .border {
+            border-bottom: 1px solid gray;
+            border-top: 1px solid gray;
+            }
+            .hr {
+            border-bottom: 2px solid gray;
+            width: 50%;
+            margin: auto;
+            }
+            li {
+            list-style: none;
+            position: relative;
+            }
+            li::before {
+            content: '•';
+            font-size: 18px;
+            position: absolute;
+            left: -20px;
+            top: -3px;
+            }
+            .warranty-termNcondition {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            }
+        </style>
+    </head>
+    
+    <body>
+        
+        <!-- ==================== PAGE 1 - TITLE ==================== -->
+        <apex:outputPanel rendered="{!isTitle}">
+            <table style="width:100%; border-collapse:collapse;">
+                <tr>
+                    <td style="width:60%; vertical-align:middle; padding:18px 10px 18px 20px;">
+                        <div style="font-size:15px; font-weight:bold; color:#0f395f; margin-bottom:5px;">{!companyinfo.Name}</div>
+                        <div style="font-size:11px; color:#555; line-height:1.9;">
+                            {!companyinfo.Street__c}<br/>
+                            {!companyinfo.City__c}, {!companyinfo.State_Province__c} - {!companyinfo.Postal_Code__c}<br/>
+                            Email: {!companyinfo.Email__c}<br/>
+                            Phone: {!companyinfo.Phone__c}
+                        </div> 
+                    </td>
+                    <td style="width:40%; text-align:right; vertical-align:middle; padding:18px 20px 18px 10px;">
+                        <apex:outputPanel rendered="{!NOT(ISBLANK(logoUrl))}">
+                            <img src="{!logoUrl}" height="80" width="220" />
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!ISBLANK(logoUrl)}">
+                            <div style="font-size:22px; font-weight:700; color:#0f395f; line-height:80px;">
+                                {!companyinfo.Name}
+                            </div>
+                        </apex:outputPanel>
+                    </td>
+                </tr>
+            </table>
+            <div style="height:1px; background:#cccccc; margin:0 20px;"></div>
+            <div style="height:22px;"></div>
+            <div style="background:#0f395f; color:white; padding:14px 20px; text-align:center; font-size:19px; font-weight:700; letter-spacing:1.5px; margin:0 20px; border-radius:5px;">
+                BASIC INFORMATION
+            </div>
+            <div style="height:22px;"></div>
+            <table style="width:100%; border-collapse:collapse; margin:0;">
+                <tr>
+                    <td style="width:50%; vertical-align:top; padding:10px 20px 10px 20px;">
+                        <div style="margin-bottom:16px;">
+                            <div style="font-size:10px; font-weight:700; color:#0f395f; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:5px;">Layout Name</div>
+                            <div style="font-size:13px; color:#333; border-left:3px solid #0f395f; padding:4px 0 4px 8px; background:#f7f9fc;">
+                                {!Quotes.QuoteForce__Layout_Name__c}
+                            </div>
+                        </div>
+                        <div>
+                            <div style="font-size:10px; font-weight:700; color:#0f395f; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:5px;">Date</div>
+                            <div style="font-size:13px; color:#333; border-left:3px solid #0f395f; padding:4px 0 4px 8px; background:#f7f9fc;">
+                                <apex:outputText value="{0, date, MMM d','  yyyy}">
+                                    <apex:param value="{!Quotes.createdDate}" />
+                                </apex:outputText>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="width:50%; vertical-align:top; padding:10px 20px 10px 20px;">
+                        <div style="font-size:10px; font-weight:700; color:#0f395f; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:5px;">Customer Address</div>
+                        <div style="font-size:13px; color:#333; border-left:3px solid #0f395f; padding:4px 0 4px 8px; background:#f7f9fc;">
+                            <b>{!Quotes.Name}</b><br/>
+                            {!Quotes.QuoteForce__Ship_To__Street__s}<br/>
+                            {!Quotes.QuoteForce__Ship_To__City__s}, {!Quotes.QuoteForce__Ship_To__StateCode__s} - {!Quotes.QuoteForce__Ship_To__PostalCode__s}<br/>
+                            {!Quotes.QuoteForce__Ship_To__CountryCode__s}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div style="height:24px;"></div>
+            <div style="height:1px; background:#e0e0e0; margin:0 20px;"></div>
+            <div style="height:20px;"></div>
+            <apex:outputPanel rendered="{!OR(NOT(ISBLANK(Quotes.Primary_Image__c)), NOT(ISBLANK(Quotes.Secondary_Image__c)))}">
+                <table style="width:100%; border-collapse:collapse;">
+                    <tr>
+                        <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(Quotes.Primary_Image__c))}">
+                            <td style="width:50%; vertical-align:top; padding:0 20px 20px 20px; text-align:center;">
+                                <div style="font-size:10px; font-weight:700; color:#0f395f; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:10px; text-align:left;">Primary Image</div>
+                                <img src="{!Quotes.QuoteForce__Primary_Image__c}" width="350" height="400" />
+                            </td>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(Quotes.Secondary_Image__c))}">
+                            <td style="width:50%; vertical-align:top; padding:0 20px 20px 20px; text-align:center;">
+                                <div style="font-size:10px; font-weight:700; color:#0f395f; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:10px; text-align:left;">Secondary Image</div>
+                                <img src="{!Quotes.QuoteForce__Secondary_Image__c}" width="350" height="400" />
+                            </td>
+                        </apex:outputPanel>
+                    </tr>
+                </table>
+            </apex:outputPanel>
+        </apex:outputPanel>
+        
+        <!-- ==================== PAGE 2 - CUSTOMER ADDRESS INFO ==================== -->
+        <apex:outputPanel rendered="{!isLetterFromOwner}">
+            <div style="page-break-before:always;"></div>
+            <div style="background:#0f395f; color:white; padding:14px 20px; text-align:center; font-size:19px; font-weight:700; letter-spacing:1.5px; margin:20px 20px 22px 20px; border-radius:5px;">
+                CUSTOMER ADDRESS INFO
+            </div>
+            <div style="margin:0 20px 16px 20px; padding-bottom:6px; border-bottom:2px solid #0f395f;">
+                <span style="font-size:14px; font-weight:700; color:#0f395f;">Personal Details</span>
+            </div>
+            <table style="width:100%; border-collapse:collapse; margin:0;">
+                <tr>
+                    <td style="width:50%; vertical-align:top; padding:0 10px 0 20px;">
+                        <div style="margin-bottom:20px;">
+                            <div style="font-size:10px; font-weight:700; color:#0f395f; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:5px;">First Name</div>
+                            <div style="font-size:13px; color:#333; border-left:3px solid #0f395f; padding:4px 0 4px 8px; background:#f7f9fc;">{!Quotes.QuoteForce__First_Name__c}</div>
+                        </div>
+                        <div style="margin-bottom:20px;">
+                            <div style="font-size:10px; font-weight:700; color:#0f395f; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:5px;">Street Address</div>
+                            <div style="font-size:13px; color:#333; border-left:3px solid #0f395f; padding:4px 0 4px 8px; background:#f7f9fc;">{!Quotes.QuoteForce__Street_Address__c}</div>
+                        </div>
+                        <div style="margin-bottom:20px;">
+                            <div style="font-size:10px; font-weight:700; color:#0f395f; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:5px;">State / Province</div>
+                            <div style="font-size:13px; color:#333; border-left:3px solid #0f395f; padding:4px 0 4px 8px; background:#f7f9fc;">{!Quotes.QuoteForce__State_Province__c}</div>
+                        </div>
+                    </td>
+                    <td style="width:50%; vertical-align:top; padding:0 20px 0 10px;">
+                        <div style="margin-bottom:20px;">
+                            <div style="font-size:10px; font-weight:700; color:#0f395f; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:5px;">Last Name</div>
+                            <div style="font-size:13px; color:#333; border-left:3px solid #0f395f; padding:4px 0 4px 8px; background:#f7f9fc;">{!Quotes.QuoteForce__Last_Name__c}</div>
+                        </div>
+                        <div style="margin-bottom:20px;">
+                            <div style="font-size:10px; font-weight:700; color:#0f395f; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:5px;">City</div>
+                            <div style="font-size:13px; color:#333; border-left:3px solid #0f395f; padding:4px 0 4px 8px; background:#f7f9fc;">{!Quotes.QuoteForce__City__c}</div>
+                        </div>
+                        <div style="margin-bottom:20px;">
+                            <div style="font-size:10px; font-weight:700; color:#0f395f; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:5px;">Zip / Postal Code</div>
+                            <div style="font-size:13px; color:#333; border-left:3px solid #0f395f; padding:4px 0 4px 8px; background:#f7f9fc;">{!Quotes.QuoteForce__Zip_code_Postal_code__c}</div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div style="height:1px; background:#e0e0e0; margin:10px 20px 30px 20px;"></div>
+            <div style="margin:0 20px; background:#f0f4f8; border-radius:8px; padding:18px 24px; border-left:4px solid #0f395f; margin-bottom:10px;">
+                <div style="font-size:11px; color:#0f395f; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:6px;">Full Address Summary</div>
+                <div style="font-size:12px; color:#555; line-height:1.8;">
+                    <b>{!Quotes.QuoteForce__First_Name__c} {!Quotes.QuoteForce__Last_Name__c}</b><br/>
+                    {!Quotes.QuoteForce__Street_Address__c}<br/>
+                    {!Quotes.QuoteForce__City__c}, {!Quotes.QuoteForce__State_Province__c} - {!Quotes.QuoteForce__Zip_code_Postal_code__c}
+                </div>
+            </div>
+            <div style="margin:0 20px; background:#f0f4f8; border-radius:8px; padding:18px 24px; border-left:4px solid #0f395f;">
+                <div style="font-size:11px; color:#0f395f; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:6px;">Note</div>
+                <div style="font-size:12px; color:#555; line-height:1.8;">
+                    The above address information has been recorded as provided. Please verify all details before proceeding with the quote. Contact us if any corrections are required.
+                </div>
+            </div>
+        </apex:outputPanel>
+        
+        <!-- ==================== PAGE 3 - QUOTE DETAILS ==================== -->
+        <apex:outputPanel rendered="{!isQuoteDetails}">
+            <div class="page-break"></div>
+            <div style="background:#0f395f; color:white; padding:14px 20px; text-align:center; font-size:19px; font-weight:700; letter-spacing:1.5px; margin:20px 20px 22px 20px; border-radius:5px;">
+                QUOTE DETAILS
+            </div>
+            <table width="85%" style="font-family:Arial,Helvetica,sans-serif; margin:auto;">
+                <thead>
+                    <tr>
+                        <th style="color:#004d66; font-size:26px; padding:30px 0;">
+                            <b>QUOTE DETAILS</b>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table style="font-family:Arial,Helvetica,sans-serif; border-collapse:collapse; margin:auto;" width="85%">
+                <apex:repeat value="{!sectionsData}" var="sw">
+                    <tr>
+                        <th colspan="4" style="padding:10px 0; font-size:13px; font-family:Arial,sans-serif; text-align:left;">
+                            <b>{!sw.section.Name}</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="border" style="width:42%; padding:10px 20px 10px 0; font-size:13px;">Item</th>
+                        <th class="border" style="padding:10px 30px 10px 0; font-size:13px; text-align:right;">Quantity</th>
+                        <th class="border" style="padding:10px 30px 10px 0; font-size:13px; text-align:right;">Price</th>
+                        <th class="border" style="padding:10px 0; font-size:13px; text-align:right;">Line Total</th>
+                    </tr>
+                    <apex:repeat value="{!sw.section.QuoteForce__QuoteLineItems__r}" var="qli">
+                        <tr style="font-size:13px; font-family:Arial,sans-serif;">
+                            <td style="padding:8px 20px 8px 0;">{!qli.QuoteForce__Product__r.Name}</td>
+                            <td style="padding:8px 30px 8px 0; text-align:right;">{!qli.Quantity__c}</td>
+                            <td style="padding:8px 30px 8px 0; text-align:right;">{!qli.Price__c}</td>
+                            <td style="text-align:right;">{!ROUND(qli.Quantity__c * qli.Price__c, 2)}</td>
+                        </tr>
+                    </apex:repeat>
+                    <tr>
+                        <td class="border" colspan="4"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px 10px 10px 0; font-size:13px;">Section Total: {!sw.section.Name}</td>
+                        <td></td><td></td>
+                        <td style="font-size:13px; text-align:right;">{!currencySymbol}{!sw.sectionTotal}</td>
+                    </tr>
+                    <!-- FIX: apex:outputPanel hataya, direct tr pe display control kiya -->
+                    <tr style="display:{!IF(ISBLANK(sw.section.Notes__c), 'none', 'table-row')};">
+                        <td colspan="4" style="font-size:12px; color:#555; font-style:italic; padding:6px 0 10px 0;">
+                            <apex:outputText value="{!sw.section.Notes__c}" escape="false"/>
+                        </td>
+                    </tr>
+                    <tr><td colspan="4" style="padding:10px 0;"></td></tr>
+                </apex:repeat>
+            </table>
+            <div style="page-break-inside:avoid; break-inside:avoid;">
+                <table width="85%" style="font-family:Arial,Helvetica,sans-serif; margin:auto; padding:0 0 50px 0; font-weight:600;">
+                    <tr>
+                        <td style="padding:5px 0; font-size:14px; text-align:left;">Grand Total</td>
+                        <td></td>
+                        <td></td>
+                        <td style="padding:5px 0; font-size:14px; text-align:right;">{!currencySymbol}{!grandTotal}</td>
+                    </tr>
+                </table>
+                <div class="hr"></div>
+            </div>
+        </apex:outputPanel>
+        
+        
+        <!-- ==================== PAGE 4 - WARRANTY ==================== -->
+        <apex:outputPanel rendered="{!isWarranty}">
+            <div class="page-break"></div>
+            <div class="header-second">Warranty</div>
+            <div class="section">
+                <table width="100%" style="border-collapse:collapse;">
+                    <tr>
+                        <td style="text-align:center; vertical-align:middle;">
+                            <img src="{!Quotes.QuoteForce__Warranty__c}" width="600" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </apex:outputPanel>
+        
+        <!-- ==================== PAGE 5 - TERMS AND CONDITIONS ==================== -->
+        <apex:outputPanel rendered="{!isTermsAndConditions}">
+            <div class="page-break"></div>
+            <div class="header-second">Terms and Conditions</div>
+            <div class="section">
+                <table width="100%" style="border-collapse:collapse;">
+                    <tr>
+                        <td style="text-align:center; vertical-align:middle;">
+                            <img src="{!Quotes.QuoteForce__Terms_Conditions__c}" alt="Terms and Conditions" width="560" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </apex:outputPanel>
+    </body>
+</apex:page>

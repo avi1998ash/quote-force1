@@ -1,0 +1,74 @@
+<template>
+
+    <section class="slds-modal slds-fade-in-open slds-modal_large">
+        <div class="slds-modal__container">
+
+            <header class="slds-modal__header">
+                <h2 class="slds-text-heading_medium">
+                    Send Invoice Email
+                </h2>
+            </header>
+
+            <div class="slds-modal__content slds-p-around_medium">
+
+                <lightning-input 
+                    label="To"
+                    required
+                    value={toEmail}
+                    onchange={handleToChange}>
+                </lightning-input>
+                <template if:true={toEmailError}>
+                    <p class="field-error">{toEmailError}</p>
+                </template>
+
+                <lightning-input 
+                    label="Cc"
+                    value={ccEmail}
+                    onchange={handleCcChange}>
+                </lightning-input>
+                <template if:true={ccEmailError}>
+                    <p class="field-error">{ccEmailError}</p>
+                </template>
+
+                <lightning-input 
+                    label="Bcc"
+                    value={bccEmail}
+                    onchange={handleBccChange}>
+                </lightning-input>
+                <template if:true={bccEmailError}>
+                    <p class="field-error">{bccEmailError}</p>
+                </template>
+
+                <lightning-input 
+                    label="Subject"
+                    value={subject}
+                    onchange={handleSubjectChange}>
+                </lightning-input>
+
+                <lightning-input-rich-text
+                    label="Body"
+                    value={body}
+                    onchange={handleBodyChange}>
+                </lightning-input-rich-text>
+
+            </div>
+
+            <footer class="slds-modal__footer footer-buttons">
+                <lightning-button 
+                    label="Cancel" 
+                    onclick={handleCancel}
+                    disabled={isLoading}>
+                </lightning-button>
+
+                <lightning-button 
+                    variant="brand" 
+                    label={sendButtonLabel}
+                    onclick={handleSendEmail}
+                    disabled={isLoading}>
+                </lightning-button>
+            </footer>
+
+        </div>
+    </section>
+
+</template>

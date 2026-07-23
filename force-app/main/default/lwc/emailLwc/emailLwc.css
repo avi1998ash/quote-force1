@@ -1,0 +1,37 @@
+.form {
+    background: white;
+}
+
+.popover {
+    left: -145px;
+    bottom: 52px;
+}
+.form {
+    background: white;
+}
+
+.popover {
+    left: -145px;
+    bottom: 52px;
+}
+
+.emailScrollContainer {
+    max-height: 65vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: #d9e2f2 transparent;
+}
+
+.emailScrollContainer::-webkit-scrollbar {
+    width: 6px;
+}
+
+.emailScrollContainer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.emailScrollContainer::-webkit-scrollbar-thumb {
+    background: #d9e2f2;
+    border-radius: 999px;
+}

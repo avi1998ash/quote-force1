@@ -1,0 +1,129 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 10-02-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <template if:true={loaded}>
+        <c-wave-loader></c-wave-loader>
+    </template>
+    <div style="background-color: white;">
+        <!-- Header -->
+        <div class="custom-header slds-p-around_medium">
+            <div class="slds-grid slds-grid_vertical-align-center slds-wrap">
+                <div class="slds-col slds-size_1-of-1 slds-text-align_center">
+                    <div class="slds-grid slds-grid_align-center slds-wrap">
+                        <!-- <lightning-icon icon-name="standard:quotes" alternative-text="Quotes Icon" size="large" class="slds-m-right_small"></lightning-icon> -->
+                        <div>
+                            <h1 class="slds-text-heading_large slds-text-color_inverse">Create Your Custom Quote</h1>
+                            <p class="slds-text-body_regular">Easily customize your quote details below</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Section -->
+        <div class="slds-m-around_medium">
+            <template if:true={isFirstStep}>
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input label="Quote Name" value={quoteName} onchange={handleInputChange} data-field="quoteName" required></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input label="Expiration Date" type="date" value={expirationDate} onchange={handleInputChange} data-field="expirationDate"
+                            required></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-combobox label="Status" value={status} options={statusOptions} onchange={handleInputChange} data-field="status" required></lightning-combobox>
+                    </div>
+                   <!-- <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input label="Tax" type="number" value={tax} onchange={handleInputChange} data-field="tax"></lightning-input>
+                    </div> -->
+
+                    <!-- Address Information Section -->
+                    <div class="slds-col slds-size_1-of-1 slds-m-top_medium">
+                        <h2 class="slds-text-heading_medium">Address Information</h2>
+                        <div class="slds-grid slds-wrap slds-gutters">
+                            <div class="slds-col slds-size_1-of-2">
+                                <h3 class="slds-text-heading_small">Bill To</h3>
+                                <lightning-input-address address-label="Address" street-label="Street" city-label="City" country-label="Country" province-label="Province"
+                                    postal-code-label="PostalCode" street={billingAddress.street} city={billingAddress.city} province={billingAddress.province}
+                                    postal-code={billingAddress.postalCode} field-level-help="Help Text for inputAddress field" country-options={countryOptions}
+                                    province-options={billingProvinceOptions} onchange={handleBillToAddressChange} show-address-lookup>
+                                </lightning-input-address>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <h3 class="slds-text-heading_small">Ship To</h3>
+                                <lightning-input-address address-label="Address" street-label="Street" city-label="City" country-label="Country" province-label="Province"
+                                    postal-code-label="PostalCode" street={shippingAddress.street} city={shippingAddress.city} province={shippingAddress.province}
+                                    postal-code={shippingAddress.postalCode} field-level-help="Help Text for inputAddress field" country-options={countryOptions}
+                                    province-options={shippingProvinceOptions} onchange={handleShipToAddressChange} show-address-lookup>
+                                </lightning-input-address>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Second Step: Summary or Other Details -->
+            <template if:true={isSecondStep}>
+                <lightning-radio-group name="radioGroup" label="Radio Group" options={options} value={selectedValue} onchange={handleRadioChange}
+                    type="radio"></lightning-radio-group>
+
+                <div>
+                    <h2>Summary of Quote Details</h2>
+                    <p>Quote Name: {quoteName}</p>
+                    <p>Expiration Date: {expirationDate}</p>
+                    <p>Status: {status}</p>
+                    <!-- Add any additional details to display here -->
+                </div>
+            </template>
+            <template if:true={isThirdStep}>
+                <c-custom-quote-c-m-p record-id={selectedValue}></c-custom-quote-c-m-p>
+            </template>
+        </div>
+        <!-- Success & Error Messages -->
+        <template if:true={successMessage}>
+            <div class="slds-text-color_success slds-m-top_small">{successMessage}</div>
+        </template>
+        <template if:true={errorMessage}>
+            <div class="slds-text-color_error slds-m-top_small">{errorMessage}</div>
+        </template>
+
+
+        <!-- Footer -->
+        <footer class="slds-grid slds-grid_align-center slds-p-top_medium slds-p-bottom_medium slds-text-align_center" style="background-color: #f4f6f9;">
+            <div class="slds-col slds-size_1-of-1 slds-text-align_center">
+                <div class="slds-m-bottom_small">
+                    <button class="custom-cancel-button slds-m-right_small slds-m-bottom_small " onclick={handleCancel}>
+                        Cancel
+                    </button>
+
+                    <template if:true={isFirstStep}>
+                        <button class="custom-button slds-m-bottom_small slds-m-right_x-small" onclick={saveAndNext}>
+                            Save & Next
+                        </button>
+                    </template>
+                    <template if:true={isSecondStep}>
+                        <button class="custom-button slds-m-bottom_small slds-m-right_x-small" onclick={handlePrevious}>
+                            Previous
+                        </button>
+                        <button class="custom-button slds-m-bottom_small slds-m-right_x-small" onclick={finalizeQuote}>
+                            Finish
+                        </button>
+                        <lightning-button class="slds-m-right_x-small" label="Next" onclick={handelnextpage}></lightning-button>
+                        <!-- <template if:true={isModalOpen}>
+                            <c-custom-quote-c-m-p record-id={recordId}>
+                            </c-custom-quote-c-m-p>
+                        </template> -->
+                    </template>
+                </div>
+
+                
+            </div>
+        </footer>
+    </div>
+</template>

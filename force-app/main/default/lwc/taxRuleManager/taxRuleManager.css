@@ -1,0 +1,69 @@
+.tax-manager {
+    display: grid;
+    gap: 1rem;
+}
+
+.tax-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.75rem;
+}
+
+.wide {
+    grid-column: 1 / -1;
+}
+
+.section-title {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.actions,
+.row-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.rule-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid #dddbda;
+}
+
+.rule-meta {
+    color: #706e6b;
+    font-size: 0.8125rem;
+}
+
+.default-pill {
+    background: #eaf5ee;
+    color: #2e844a;
+    border-radius: 999px;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+lightning-button {
+    --slds-c-button-radius-border: 1.5rem;
+}
+
+lightning-input {
+    --slds-c-input-radius-border: 1.5rem;
+}
+
+lightning-textarea {
+    --slds-c-textarea-radius-border: 1.5rem;
+}
+
+lightning-input-address {
+    --slds-c-input-radius-border: 1.5rem;
+    --slds-c-textarea-radius-border: 1.5rem;
+}
+
+lightning-combobox {
+    --slds-c-input-radius-border: 1.5rem;
+}

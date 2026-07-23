@@ -1,0 +1,37 @@
+<template>
+    <template if:true={loaded}>
+        <c-wave-loader></c-wave-loader>
+    </template>
+
+    <div class="slds-p-around_medium scroll">
+        <div class="slds-m-bottom_small">
+            <button class="btn-primary" onclick={downloadTemplate}>Download Sample Template</button>
+        </div>
+
+        <lightning-input data-id="products-file" type="file" label="Upload CSV" accept=".csv" onchange={handleFileChange}>
+        </lightning-input>
+
+        <template if:true={fileName}>
+            <div class="slds-m-top_x-small">{fileName}</div>
+        </template>
+
+        <div class="button-row">
+            <button class="btn-primary" onclick={handleValidate}>Validate & Preview</button>
+            <button class="btn-danger" onclick={handleClear}>Clear</button>
+        </div>
+
+        <template if:true={errorMessage}>
+            <div style="color:red; white-space: pre-line;">{errorMessage}</div>
+        </template>
+
+        <template if:true={previewRows.length}>
+            <div class="slds-m-top_medium">
+                <lightning-datatable key-field="_rowIndex" data={previewRows} columns={columns} hide-checkbox-column>
+                </lightning-datatable>
+                <div class="slds-m-top_small">
+                    <button class="btn-primary" onclick={handleImport}>Import to Salesforce</button>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

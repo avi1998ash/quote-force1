@@ -1,0 +1,691 @@
+<apex:page standardController="Invoice__c"
+           extensions="InvoiceController"
+           title="Invoice PDF"
+           renderAs="pdf"
+           showHeader="false"
+           sidebar="false"
+           applyBodyTag="false"
+           applyHtmlTag="false"
+           contentType="application/pdf#Invoice.pdf">
+
+    <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <title>Invoice</title>
+            <style type="text/css">
+
+                @page {
+                    size: 210mm 297mm;
+                    margin: 0;
+                }
+
+                body {
+                    font-family: Arial, Helvetica, sans-serif;
+                    font-size: 9pt;
+                    color: #0F395F;
+                    background: #ffffff;
+                    margin: 0;
+                    padding: 0;
+                    width: 210mm;
+                }
+
+                /* ── FOOTER SPACER (bottom-stick trick) ──
+                   Height is calculated server-side in InvoiceController.getSpacerHeight()
+                   based on how much content is on the page. On short invoices this pushes
+                   the footer down to the bottom; on long/multi-page invoices it collapses
+                   to 0 and the footer just flows after the content as normal. */
+                .footer-spacer {
+                    width: 100%;
+                    font-size: 0;
+                    line-height: 0;
+                }
+
+                /* ── HEADER ── */
+                .header-table {
+                    width: 100%;
+                    background-color: #FFFFFF;
+                    border-collapse: collapse;
+                }
+                .header-logo-cell {
+                    padding: 20pt 36pt 18pt 36pt;
+                    vertical-align: middle;
+                    width: 55%;
+                }
+                .header-title-cell {
+                    padding: 20pt 36pt 18pt 12pt;
+                    vertical-align: middle;
+                    text-align: right;
+                    width: 45%;
+                }
+                .invoice-word {
+                    font-size: 32pt;
+                    font-weight: bold;
+                    color: #0F395F;
+                    letter-spacing: 4pt;
+                    line-height: 1;
+                }
+                .invoice-num-label {
+                    font-size: 7pt;
+                    color: #0F395F;
+                    text-transform: uppercase;
+                    letter-spacing: 2pt;
+                    margin-top: 5pt;
+                }
+                .invoice-num-value {
+                    font-size: 10pt;
+                    color: #0F395F;
+                    font-family: 'Courier New', monospace;
+                    letter-spacing: 1pt;
+                    margin-top: 2pt;
+                }
+
+                /* ── BLUE BAR ── */
+                .gold-bar {
+                    width: 100%;
+                    height: 4pt;
+                    background-color: #0F395F;
+                    font-size: 0;
+                    line-height: 0;
+                }
+
+                /* ── META BAR ── */
+                .meta-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    background-color: #f4f2ff;
+                    border-bottom: 1pt solid #d8d0f0;
+                }
+                .meta-td {
+                    padding: 9pt 36pt;
+                    vertical-align: middle;
+                    width: 50%;
+                }
+                .meta-td-right {
+                    padding: 9pt 36pt 9pt 12pt;
+                    vertical-align: middle;
+                    text-align: right;
+                    width: 50%;
+                }
+                .meta-label {
+                    font-size: 6pt;
+                    text-transform: uppercase;
+                    letter-spacing: 1.5pt;
+                    color: #7b68ee;
+                    margin-bottom: 3pt;
+                    font-weight: bold;
+                }
+                .meta-value {
+                    font-size: 9pt;
+                    color: #0F395F;
+                    font-weight: bold;
+                }
+
+                /* ── BODY ── */
+                .body-wrap {
+                    padding: 16pt 36pt 0 36pt;
+                }
+
+                /* ── ADDRESS CARDS ── */
+                .addr-outer {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 14pt;
+                    page-break-inside: avoid;
+                }
+                .addr-col-left {
+                    width: 50%;
+                    vertical-align: top;
+                    padding-right: 8pt;
+                    max-width: 50%;
+                }
+                .addr-col-mid {
+                    width: 50%;
+                    vertical-align: top;
+                    padding-left: 8pt;
+                    max-width: 50%;
+                }
+                .addr-card {
+                    background-color: #fafafa;
+                    border: 1pt solid #e4e4e4;
+                    border-top: 3pt solid #7b68ee;
+                    padding: 9pt 11pt;
+                    box-sizing: border-box;
+                    overflow: hidden;
+                }
+                .addr-heading {
+                    font-size: 6pt;
+                    text-transform: uppercase;
+                    letter-spacing: 2pt;
+                    color: #7b68ee;
+                    font-weight: bold;
+                    margin-bottom: 5pt;
+                }
+                .addr-company {
+                    font-size: 9pt;
+                    font-weight: bold;
+                    color: #0F395F;
+                    margin-bottom: 3pt;
+                }
+                .addr-detail {
+                    font-size: 7.5pt;
+                    color: #555555;
+                    line-height: 1.6;
+                }
+
+                /* ── LINE ITEMS ── */
+                .items-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    table-layout: fixed;
+                }
+                /* Repeat the column header on every page of a multi-page invoice
+                   and keep column widths identical across pages, so long invoices
+                   with many line items stay perfectly aligned. */
+                .items-table thead {
+                    display: table-header-group;
+                }
+                .items-table tbody {
+                    display: table-row-group;
+                }
+                .items-table tr {
+                    page-break-inside: avoid;
+                }
+                .items-th {
+                    background-color: #0F395F;
+                    color: #FFFFFF;
+                    font-size: 7pt;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    letter-spacing: 1pt;
+                    padding: 7pt 10pt;
+                    text-align: left;
+                }
+                .items-th-right {
+                    background-color: #0F395F;
+                    color: #FFFFFF;
+                    font-size: 7pt;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    letter-spacing: 1pt;
+                    padding: 7pt 10pt;
+                    text-align: right;
+                }
+                .items-td {
+                    padding: 8pt 10pt;
+                    font-size: 8pt;
+                    color: #000000;
+                    border-bottom: 1pt solid #eeebff;
+                    vertical-align: top;
+                    text-align: left;
+                }
+                .items-td-right {
+                    padding: 8pt 10pt;
+                    font-size: 8pt;
+                    color: #000000;
+                    border-bottom: 1pt solid #eeebff;
+                    vertical-align: top;
+                    text-align: right;
+                }
+                .items-td-amount {
+                    padding: 8pt 10pt;
+                    font-size: 8pt;
+                    color: #000000;
+                    border-bottom: 1pt solid #eeebff;
+                    vertical-align: top;
+                    text-align: right;
+                }
+                .item-name {
+                    font-weight: bold;
+                    color: #0F395F;
+                    font-size: 8pt;
+                    margin-bottom: 2pt;
+                }
+                .item-desc {
+                    font-size: 7pt;
+                    color: #888888;
+                    line-height: 1.4;
+                    font-style: italic;
+                }
+                .row-num {
+                    font-size: 7pt;
+                    color: #000000;
+                }
+                /* Wrap long product names / descriptions so they never push the
+                   numeric columns out of alignment on busy invoices. */
+                .items-td, .item-name, .item-desc {
+                    word-wrap: break-word;
+                    overflow-wrap: break-word;
+                    word-break: break-word;
+                }
+
+                /* ── TOTALS ── */
+                .totals-outer {
+                    width: 100%;
+                    border-collapse: collapse;
+                    page-break-inside: avoid;
+                }
+                .totals-spacer {
+                    width: 55%;
+                    vertical-align: top;
+                }
+                .totals-block {
+                    width: 45%;
+                    vertical-align: top;
+                }
+                .totals-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                .totals-label {
+                    padding: 5pt 10pt;
+                    font-size: 8pt;
+                    color: #000000;
+                    text-align: left;
+                }
+                .totals-value {
+                    padding: 5pt 10pt;
+                    font-size: 8pt;
+                    color: #000000;
+                    text-align: right;
+                }
+                .totals-divider-td {
+                    padding: 2pt 0;
+                    border-top: 1pt solid #d8d0f0;
+                }
+                .grand-label {
+                    padding: 8pt 10pt;
+                    font-size: 10pt;
+                    font-weight: bold;
+                    color: #FFFFFF;
+                    background-color: #0F395F;
+                    text-align: left;
+                    letter-spacing: 0.5pt;
+                }
+                .grand-value {
+                    padding: 8pt 10pt;
+                    font-size: 10pt;
+                    color: #FFFFFF;
+                    background-color: #0F395F;
+                    text-align: right;
+                }
+
+                /* ── NOTES + TERMS ── */
+                .notes-terms-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    page-break-inside: avoid;
+                }
+                .bottom-notes-td {
+                    width: 50%;
+                    vertical-align: top;
+                    padding: 14pt 8pt 14pt 36pt;
+                    max-width: 50%;
+                }
+                .bottom-terms-td {
+                    width: 50%;
+                    vertical-align: top;
+                    padding: 14pt 36pt 14pt 8pt;
+                    max-width: 50%;
+                }
+                .notes-box {
+                    background-color: #f8f7ff;
+                    border: 1pt solid #d8d0f0;
+                    border-left: 3pt solid #7b68ee;
+                    padding: 10pt 12pt;
+                    overflow: hidden;
+                }
+                .notes-title {
+                    font-size: 6.5pt;
+                    text-transform: uppercase;
+                    letter-spacing: 2pt;
+                    color: #7b68ee;
+                    font-weight: bold;
+                    margin-bottom: 5pt;
+                }
+                .notes-text {
+                    font-size: 7.5pt;
+                    color: #555555;
+                    line-height: 1.6;
+                }
+                .terms-box {
+                    background-color: #f8f7ff;
+                    border: 1pt solid #d8d0f0;
+                    border-left: 3pt solid #7b68ee;
+                    padding: 10pt 12pt;
+                    overflow: hidden;
+                }
+                .terms-title {
+                    font-size: 6.5pt;
+                    text-transform: uppercase;
+                    letter-spacing: 2pt;
+                    color: #7b68ee;
+                    font-weight: bold;
+                    margin-bottom: 5pt;
+                }
+                .terms-text {
+                    font-size: 7.5pt;
+                    color: #666666;
+                    line-height: 1.6;
+                }
+
+                /* ══ GLOBAL OVERFLOW SAFETY NET ══
+                   Applies word-break protection to every text container that could
+                   receive long unbroken strings (URLs, emails, long names) from
+                   user-entered data. This prevents content bleeding past page margins
+                   regardless of org, font metrics, currency, or locale differences. */
+                .notes-text, .terms-text, .addr-detail, .addr-company,
+                .footer-td-left, .footer-td-center, .footer-td-right,
+                .invoice-num-value, .meta-value, .totals-value, .grand-value,
+                .items-td, .item-name, .item-desc {
+                    word-wrap: break-word;
+                    overflow-wrap: break-word;
+                    word-break: break-word;
+                    max-width: 100%;
+                }
+
+                /* ── SIGNATURE ── */
+                .sig-section-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    page-break-inside: avoid;
+                }
+                .sig-left-td {
+                    width: 55%;
+                    vertical-align: bottom;
+                    padding: 0 0 10pt 36pt;
+                }
+                .sig-right-td {
+                    width: 45%;
+                    vertical-align: bottom;
+                    text-align: right;
+                    padding: 8pt 36pt 10pt 0;
+                }
+                .sig-img {
+                    width: 160pt;
+                    height: 60pt;
+                }
+                .sig-line-div {
+                    width: 160pt;
+                }
+
+                /* ── FOOTER ── */
+                /* The whole document is wrapped in .doc-table; the footer sits in its
+                   table footer group, which the Salesforce PDF engine repeats at the bottom
+                   of every page and never splits across a page break. This replaces both the
+                   old spacer-height trick and the unsupported position:fixed approach. */
+                .doc-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                .doc-table > tfoot {
+                    display: table-footer-group;
+                }
+                .doc-cell {
+                    padding: 0;
+                }
+                .fixed-footer {
+                    width: 100%;
+                    page-break-inside: avoid;
+                }
+                .footer-gold-bar {
+                    width: 100%;
+                    height: 3pt;
+                    background-color: #7b68ee;
+                    font-size: 0;
+                    line-height: 0;
+                }
+                .footer-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    background-color: #0F395F;
+                }
+                .footer-td-left {
+                    padding: 9pt 12pt 9pt 36pt;
+                    vertical-align: middle;
+                    font-size: 7pt;
+                    color: #FFFFFF;
+                    width: 33%;
+                }
+                .footer-td-center {
+                    padding: 9pt 12pt;
+                    vertical-align: middle;
+                    font-size: 7pt;
+                    color: #FFFFFF;
+                    text-align: center;
+                    width: 34%;
+                }
+                .footer-td-right {
+                    padding: 9pt 36pt 9pt 12pt;
+                    vertical-align: middle;
+                    font-size: 7pt;
+                    color: #FFFFFF;
+                    text-align: right;
+                    width: 33%;
+                }
+                .footer-gold-text {
+                    color: #FFFFFF;
+                    font-weight: bold;
+                }
+
+            </style>
+        </head>
+        <body>
+            <!-- Whole document in one table: footer goes in the table footer group so the
+                 PDF engine repeats it at the bottom of every page and never splits it. -->
+            <table class="doc-table" cellpadding="0" cellspacing="0">
+             <!--    <tfoot>
+                    <tr><td class="doc-cell">
+                        <div class="fixed-footer">
+                            <div class="footer-gold-bar">&#160;</div>
+                            <table class="footer-table" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td class="footer-td-left">
+                                        <span class="footer-gold-text">{!companyName}</span><br/>
+                                        {!emailText}
+                                    </td>
+                                    <td class="footer-td-center">
+                                        Thank you for your business!
+                                    </td>
+                                    <td class="footer-td-right">
+                                        {!phoneText}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td></tr>
+                </tfoot>   -->
+                <tbody>
+                    <tr><td class="doc-cell">
+
+                        <!-- ══ HEADER ══ -->
+                        <table class="header-table" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td class="header-logo-cell">
+                                    <apex:outputPanel rendered="{!NOT(ISBLANK(logoUrl))}">
+                                        <img src="{!logoUrl}" height="80" width="220"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!ISBLANK(logoUrl)}">
+                                        <div style="font-size:20pt; font-weight:bold; color:#0F395F;">
+                                            {!companyName}
+                                        </div>
+                                    </apex:outputPanel>
+                                </td>
+                                <td class="header-title-cell">
+                                    <div class="invoice-word">INVOICE</div>
+                                    <div class="invoice-num-label">Invoice Number</div>
+                                    <div class="invoice-num-value">
+                                        <apex:outputText value="#{!invoiceRecord.QuoteForce__Invoice_Number__c}"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- ══ BLUE BAR ══ -->
+                        <div class="gold-bar">&#160;</div>
+
+                        <!-- ══ META BAR (Issue Date / Due Date) ══ -->
+                        <table class="meta-table" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td class="meta-td">
+                                    <div class="meta-label">Issue Date</div>
+                                    <div class="meta-value">{!invoiceDateLabel}</div>
+                                </td>
+                                <td class="meta-td-right">
+                                    <div class="meta-label">Due Date</div>
+                                    <div class="meta-value">{!dueDateLabel}</div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- ══ BODY ══ -->
+                        <div class="body-wrap">
+
+                            <!-- ADDRESS CARDS -->
+                            <table class="addr-outer" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td class="addr-col-left">
+                                        <div class="addr-card">
+                                            <div class="addr-heading">From</div>
+                                            <div class="addr-company">{!companyName}</div>
+                                            <div class="addr-detail">
+                                                <apex:outputText value="{!companyAddress}" escape="false"/>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="addr-col-mid">
+                                        <div class="addr-card">
+                                            <div class="addr-heading">Ship To</div>
+                                            <div class="addr-detail">
+                                                <apex:outputText value="{!shippingDetails}" escape="false"/>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- LINE ITEMS -->
+                            <table class="items-table" cellpadding="0" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th class="items-th"       style="width:5%;">NO</th>
+                                        <th class="items-th"       style="width:42%;">Product / Description</th>
+                                        <th class="items-th-right" style="width:11%;">Qty</th>
+                                        <th class="items-th-right" style="width:21%;">Unit Price</th>
+                                        <th class="items-th-right" style="width:21%;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <apex:variable var="rowIndex" value="{!0}"/>
+                                    <apex:repeat value="{!lineItems}" var="item">
+                                        <apex:variable var="rowIndex" value="{!rowIndex + 1}"/>
+                                        <tr>
+                                            <td class="items-td row-num">{!rowIndex}</td>
+                                            <td class="items-td">
+                                                <div class="item-name">{!item.name}</div>
+
+                                            </td>
+                                            <td class="items-td-right">
+                                                <apex:outputText value="{0,number,#,##0.##}">
+                                                    <apex:param value="{!item.qty}"/>
+                                                </apex:outputText>
+                                            </td>
+                                            <!-- FIX 1: currencySymbol now returns INR/USD/EUR etc from linked Quote -->
+                                            <td class="items-td-right">
+                                                <apex:outputText value="{0,number,#,##0.00}">
+                                                    <apex:param value="{!item.price}"/>
+                                                </apex:outputText>
+                                            </td>
+                                            <td class="items-td-amount">
+                                                <apex:outputText value="{0,number,#,##0.00}">
+                                                    <apex:param value="{!item.total}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                    </apex:repeat>
+                                </tbody>
+                            </table>
+
+                            <!-- TOTALS -->
+                            <table class="totals-outer" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td class="totals-spacer">&#160;</td>
+                                    <td class="totals-block">
+                                        <table class="totals-table" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td class="totals-label">SubTotal</td>
+                                                <td class="totals-value">
+                                                    <span style="white-space:nowrap;">{!currencySymbol}<apex:outputText value="{0,number,#,##0.00}">
+                                                        <apex:param value="{!subTotal}"/>
+                                                    </apex:outputText></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="totals-label">
+                                                    Tax (<apex:outputText value="{!effectiveTax}"/>%)
+                                                </td>
+                                                <td class="totals-value">
+                                                    <span style="white-space:nowrap;">{!currencySymbol}<apex:outputText value="{0,number,#,##0.00}">
+                                                        <apex:param value="{!tax}"/>
+                                                    </apex:outputText></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="totals-divider-td">&#160;</td>
+                                                <td class="totals-divider-td">&#160;</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="grand-label">TOTAL DUE</td>
+                                                <td class="grand-value">
+                                                    <span style="white-space:nowrap;">{!currencySymbol}<apex:outputText value="{0,number,#,##0.00}">
+                                                        <apex:param value="{!grandTotal}"/>
+                                                    </apex:outputText></span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div><!-- /body-wrap -->
+
+                        <!-- NOTES + TERMS -->
+                        <table class="notes-terms-table" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td class="bottom-notes-td">
+                                    <div class="notes-box">
+                                        <div class="notes-title">Notes</div>
+                                        <div class="notes-text">
+                                            <apex:outputText value="{!notesText}" escape="false"/>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="bottom-terms-td">
+                                    <div class="terms-box">
+                                        <div class="terms-title">Terms &amp; Conditions</div>
+                                        <div class="terms-text">
+                                            <apex:outputText value="{!termsText}" escape="false"/>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- SIGNATURE -->
+                        <table class="sig-section-table" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td class="sig-left-td">&#160;</td>
+                                <td class="sig-right-td">
+                                    <apex:outputPanel rendered="{!NOT(ISBLANK(signatureUrl))}">
+                                        <img src="{!signatureUrl}" alt="Signature" class="sig-img"/>
+                                        <div class="sig-line-div">&#160;</div>
+                                    </apex:outputPanel>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td></tr>
+                </tbody>
+            </table>
+        </body>
+    </html>
+</apex:page>

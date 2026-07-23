@@ -1,0 +1,42 @@
+<template>
+    <template if:true={loaded}>
+        <c-wave-loader></c-wave-loader>
+    </template>
+
+    <div class="container">
+        <lightning-input required type="text" name="bundleName" label="Bundle Name" value={bundleNameValue} onchange={handleChangeBundle} class="input-box"></lightning-input>
+        <lightning-input type="text" name="bundleDescription" label="Description" value={bundleDescription} onchange={handleChangeBundle} class="input-box"></lightning-input>
+        <lightning-combobox name="bundleCurrency" label="Bundle Currency" value={bundleCurrency} options={currencyOptions} onchange={handleChangeBundle} class="input-box"></lightning-combobox>
+
+        <div class="button-row">
+            <button class="btn-primary" onclick={downloadTemplate}>
+                Download Sample Template
+            </button>
+        </div>
+
+        <lightning-input data-id="bundle-products-file" type="file" label="Upload CSV" accept=".csv" onchange={handleFileChange} class="input-file"></lightning-input>
+        <template if:true={fileName}>
+            <div class="slds-m-top_x-small">{fileName}</div>
+        </template>
+
+        <div class="button-row">
+            <button class="btn-primary" onclick={handleValidate}>Validate & Preview</button>
+            <button class="btn-danger" onclick={handleClear}>Clear</button>
+        </div>
+
+        <template if:true={errorMessage}>
+            <div class="error-text">{errorMessage}</div>
+        </template>
+
+        <template if:true={previewRows.length}>
+            <div class="table-section">
+                <lightning-datatable key-field="_rowIndex" data={previewRows} columns={columns} hide-checkbox-column class="preview-table"></lightning-datatable>
+                <div class="button-row">
+                    <button class="btn-primary" onclick={handleImport}>
+                        Import to Salesforce
+                    </button>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,375 @@
+<apex:page renderAs="pdf" sidebar="false" showHeader="false" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false">
+    <head>
+        <style>
+            @page {
+            size: A4;
+            margin: 0;
+            background: #b7c4cf;
+            }
+            
+            body {
+            font-family: 'Segoe UI', 'Helvetica', sans-serif;
+            font-size: 13px;
+            color: #2b2b2b;
+            background-color: #fff;
+            }
+            
+            .header-second {
+            background-color: #0f395f;
+            color: #fff;
+            padding: 15px;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            margin-top: 8px;
+            }
+            
+            .header {
+            background-color: #0f395f;
+            color: #fff;
+            padding: 15px;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            }
+            
+            .section {
+            background-color: #f2f4f7;
+            border: 1px solid #dbe1e8;
+            padding: 18px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            page-break-inside: avoid;
+            }
+            
+            .section-title {
+            font-size: 16px;
+            color: #0f395f;
+            font-weight: 600;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #ccd4de;
+            padding-bottom: 4px;
+            }
+            
+            .field {
+            margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+            }
+            
+            .label {
+            font-weight: 600;
+            width: 160px;
+            color: #0f395f;
+            }
+            
+            .value {
+            flex: 1;
+            color: #333;
+            }
+            
+            .image-box {
+            width: 200px;
+            height: 120px;
+            border: 1px dashed #999;
+            border-radius: 6px;
+            text-align: center;
+            line-height: 120px;
+            color: #999;
+            background-color: #fff;
+            margin-top: 6px;
+            }
+            
+            .page-break {
+            page-break-before: always;
+            }
+            
+            body {
+            font-family: 'Helvetica', sans-serif;
+            color: #333;
+            }
+            
+            .section-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #0f395f;
+            }
+            
+            .table-container {
+            width: 100%;
+            border-collapse: collapse;
+            }
+            
+            .table-header {
+            background-color: #0f395f;
+            color: #ffffff;
+            font-weight: bold;
+            }
+            
+            .table-container td,
+            .table-container th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            }
+            
+            .table-row {
+            background-color: #f9f9f9;
+            }
+            
+            .section-total {
+            text-align: right;
+            font-size: 14px;
+            margin-top: 10px;
+            font-weight: bold;
+            }
+            
+            .note {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #555;
+            }
+            
+            .warranty-termNcondition{
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            }
+            
+        </style>
+    </head>
+    <body>
+        
+        <!-- Page 1 -->
+        <div class="header">Title</div>
+        
+        <div class="section">
+            <div class="section-title">Basic Information</div>
+            <div class="field"><div class="label">Layout Name:</div><div class="value">test 23</div></div>
+            <div class="field"><div class="label">Date:</div><div class="value">31-Dec-2024</div></div>
+            <div class="field">
+                <div class="label">Primary Image:</div>
+                <div class="value">
+                    <div class="image-box">No file chosen</div>
+                    <!-- <div class="image-box">No file chosen</div> -->
+                </div>
+            </div>
+            <div class="field">
+                <div class="label">Secondary Image:</div>
+                <div class="value">
+                    <div class="image-box">No file chosen</div>
+                    <!-- <div class="image-box">No file chosen</div> -->
+                </div>
+            </div>
+            
+            <div class="field"><div class="label">Comapny Address</div><div class="value">4/11/2025 
+                1019 S Heatherwilde Blvd
+                Suite 120 
+                Pflugerville, TX 78660
+                info@quickdryrestoration.com
+                512-540-4747</div></div>
+            
+        </div>
+        
+        <!-- Page 2 -->
+        <div class="page-break"></div>
+        <div class="header-second">Customer Address Info</div>
+        
+        <div class="section">
+            <div class="section-title">Personal Details</div>
+           
+        </div>
+        
+        <!-- Page 3 -->
+        <div class="page-break"></div>
+        <div class="header-second">Quote Details</div>
+        
+        <!-- Repeatable Sections
+<apex:repeat value="{!ListOfSections}" var="sec"> 
+<div class="section-name">{!sec.Name}</div>
+<table class="table-container">
+<tr>
+<th>Item</th><th>Quantity</th><th>Price</th><th>Line Total</th>
+</tr>
+<tr class="table-row">
+<td>Installation: Industrial - High</td><td>0</td><td>25</td><td>0</td>
+</tr>
+<tr class="table-row">
+<td>SLA: Gold</td><td>1</td><td>10</td><td>10</td>
+</tr>
+</table>
+<div class="section-total">Section Total: 10</div>
+<div class="note">Note:</div>
+</apex:repeat>  -->
+        
+        <div class="section">
+            <div class="section-name">
+                Water Mitigation Standard Services - 0
+            </div>
+            
+            <!-- Table -->
+            <table class="table-container">
+                <tr class="table-header">
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Line Total</th>
+                </tr>
+                <tr class="table-row">
+                    <td>Installation: Industrial - High</td>
+                    <td>0</td>
+                    <td>25</td>
+                    <td>0</td>
+                </tr>
+                <tr class="table-row">
+                    <td>SLA: Gold</td>
+                    <td>1</td>
+                    <td>10</td>
+                    <td>10</td>
+                </tr>
+            </table>
+            
+            <!-- Section Total -->
+            <div class="section-total">
+                Section Total: 10
+            </div>
+            
+            <!-- Note -->
+            <div class="note">
+                Note: 
+            </div>
+            
+            <div class="section-name">
+                Water Mitigation Standard Services - 1
+            </div>
+            
+            <!-- Table -->
+            <table class="table-container">
+                <tr class="table-header">
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Line Total</th>
+                </tr>
+                <tr class="table-row">
+                    <td>Installation: Industrial - High</td>
+                    <td>0</td>
+                    <td>25</td>
+                    <td>0</td>
+                </tr>
+                <tr class="table-row">
+                    <td>SLA: Gold</td>
+                    <td>1</td>
+                    <td>10</td>
+                    <td>10</td>
+                </tr>
+            </table>
+            
+            <!-- Section Total -->
+            <div class="section-total">
+                Section Total: 10
+            </div>
+            
+            <!-- Note -->
+            <div class="note">
+                Note: 
+            </div>
+            
+            <div class="section-name">
+                Water Mitigation Standard Services - 2
+            </div>
+            
+            <!-- Table -->
+            <table class="table-container">
+                <tr class="table-header">
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Line Total</th>
+                </tr>
+                <tr class="table-row">
+                    <td>Installation: Industrial - High</td>
+                    <td>0</td>
+                    <td>25</td>
+                    <td>0</td>
+                </tr>
+                <tr class="table-row">
+                    <td>SLA: Gold</td>
+                    <td>1</td>
+                    <td>10</td>
+                    <td>10</td>
+                </tr>
+            </table>
+            
+            <!-- Section Total -->
+            <div class="section-total">
+                Section Total: 10
+            </div>
+            
+            <!-- Note -->
+            <div class="note">
+                Note: 
+            </div>
+            
+            <div class="section-name">
+                Water Mitigation Standard Services - 3
+            </div>
+            
+            <!-- Table -->
+            <table class="table-container">
+                <tr class="table-header">
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Line Total</th>
+                </tr>
+                <tr class="table-row">
+                    <td>Installation: Industrial - High</td>
+                    <td>0</td>
+                    <td>25</td>
+                    <td>0</td>
+                </tr>
+                <tr class="table-row">
+                    <td>SLA: Gold</td>
+                    <td>1</td>
+                    <td>10</td>
+                    <td>10</td>
+                </tr>
+            </table>
+            
+            <!-- Section Total -->
+            <div class="section-total">
+                Section Total: 10
+            </div>
+            
+            <!-- Note -->
+            <div class="note">
+                Note: 
+            </div>
+        </div>
+        
+        <!-- Page 4 -->
+        <div class="page-break"></div>
+        <div class="header-second">Warranty</div>
+        
+        <div class="section">
+            
+            <div class="field"><img src="https://imgv2-1-f.scribdassets.com/img/document/456993261/original/cdaaf05192/1?v=1" alt="Trulli" width="700" /></div>
+        </div>
+        
+        <!-- Page 5 -->
+        <div class="page-break"></div>
+        <div class="header-second">Terms and Conditions</div>
+        
+        <div class="section">
+            
+            <div class="field"><img src="https://images.template.net/94586/warranty-terms-and-conditions-template-1m9h3.jpg" alt="Trulli" width="615" /></div>
+        </div>
+    </body>
+</apex:page>

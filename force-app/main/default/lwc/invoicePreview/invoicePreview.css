@@ -1,0 +1,42 @@
+/* Increase modal width */
+.slds-modal__container {
+    max-width: 110rem !important;
+    width: 98% !important;
+    border-radius: 20px !important;
+    overflow: hidden;
+}
+
+/* modal height */
+.slds-modal__content {
+    height: 80vh;
+}
+
+/* gap between subject and rich text */
+lightning-input-rich-text {
+
+    margin-top: 14px;
+      min-height: 320px !important;
+}
+
+/* spacing between fields */
+.slds-modal__content lightning-input {
+    margin-bottom: 12px;
+}
+
+/* footer alignment */
+.footer-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+}
+
+/* smooth rich text corners */
+.slds-rich-text-editor {
+    border-radius: 8px;
+}
+.field-error {
+    color: #c23934;
+    font-size: 12px;
+    margin-top: 4px;
+    margin-bottom: 8px;
+}

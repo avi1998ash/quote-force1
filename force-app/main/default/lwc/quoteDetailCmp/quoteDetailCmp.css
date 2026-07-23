@@ -1,0 +1,390 @@
+.section-container {
+    margin-bottom: 20px;
+    border: 1px solid #d9d9d9;
+    border-radius: 5px;
+    padding: 16px;
+    background: #f9f9f9;
+}
+
+.section-title {
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 8px;
+    background: #e6e6e6;
+    border-radius: 5px;
+}
+
+.action-button {
+    margin-left: 10px;
+}
+
+.input-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #d9d9d9;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.text-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 5px;
+    background: #f4f4f4;
+}
+
+
+
+.item-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.item-input {
+    flex: 2;
+    padding: 8px;
+    border: 1px solid #d9d9d9;
+    border-radius: 5px;
+    font-size: 14px;
+    background: #f4f4f4;
+    margin-right: 10px;
+}
+
+.measure-unit,
+.line-total {
+    flex: 1;
+    text-align: center;
+    font-size: 14px;
+    padding: 8px;
+}
+
+.quantity-input,
+.price-input,
+.tax-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #d9d9d9;
+    border-radius: 5px;
+    background: #f4f4f4;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.delete-icon {
+    color: red;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.btn-delete {
+    background: #eb1f1f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: 0.5rem 0.7rem;
+    border: none;
+    border-radius: 22px;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform-style: preserve-3d;
+}
+
+.del-section {
+    background: #eb1f1f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: 0.5rem 0.7rem;
+    border: none;
+    margin-top: 7.5%;
+    float: right;
+    border-radius: 22px;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform-style: preserve-3d;
+}
+
+.section-total {
+    text-align: right;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+    padding-right: 10px;
+    color: #333;
+}
+
+.note-container {
+    margin-top: 16px;
+}
+
+.note-textarea {
+    width: 100%;
+    height: 50px;
+    padding: 8px;
+    border: 1px solid #d9d9d9;
+    border-radius: 5px;
+    font-size: 14px;
+    background: #ffffff;
+    resize: none;
+}
+
+lightning-button {
+    --slds-c-button-radius-border: 3rem;
+}
+
+lightning-combobox {
+    --slds-c-input-radius-border: 1.5rem;
+}
+
+.quote-pricebook-combobox {
+    width: 50%;
+}
+
+.custom-combobox {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    width: 100%;
+}
+
+.custom-combobox__control {
+    position: relative;
+}
+
+.custom-combobox--compact {
+    min-width: 18rem;
+    max-width: 100%;
+}
+
+.custom-combobox__control--open .custom-combobox__trigger {
+    border-color: #1b96ff;
+    box-shadow: 0 0 0 1px #1b96ff;
+}
+
+.custom-combobox__trigger {
+    width: 100%;
+    min-height: 2rem;
+    border: 1px solid #c9c9c9;
+    border-radius: 3rem;
+    background: #fff;
+    padding: 0.5rem 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.custom-combobox__trigger-text {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #181818;
+}
+
+.custom-combobox__dropdown {
+    position: absolute;
+    top: calc(100% + 0.3rem);
+    left: 0;
+    width: max(100%, 18rem);
+    max-width: min(28rem, calc(100vw - 2rem));
+    z-index: 9000;
+    background: #fff;
+    border: 1px solid #d8dde6;
+    border-radius: 1rem;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+    overflow: hidden;
+}
+
+.custom-combobox__search {
+    padding: 0.75rem 0.75rem 0.5rem;
+    border-bottom: 1px solid #eef1f6;
+}
+
+.custom-combobox__options {
+    max-height: 220px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.35rem;
+}
+
+.custom-combobox__option {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    color: #181818;
+}
+
+.custom-combobox__option:hover {
+    background: #f3f8ff;
+}
+
+.custom-combobox__empty {
+    padding: 0.8rem 0.75rem;
+    color: #6b7785;
+    font-size: 0.9rem;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.confirm-modal {
+    background: white;
+    border-radius: 16px;
+    width: 420px;
+    max-width: 90%;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.confirm-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.confirm-title {
+    font-weight: 700;
+}
+
+.confirm-footer {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.btn-yes {
+    background: #003366;
+    color: white;
+    padding: 0.5rem 2rem;
+    border: none;
+    border-radius: 2rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.confirm-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
+lightning-input {
+    --slds-c-input-radius-border: 3rem;
+}
+
+lightning-input-rich-text {
+    --slds-c-input-radius-border: 3rem;
+}
+
+:host {
+    --slds-c-textarea-radius-border: 3rem;
+}
+.drag-icon {
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.btn-delete lightning-icon {
+    --slds-c-icon-color-foreground-default: white;
+}
+.delete-icon-wrapper {
+    width: 44px;
+    height: 44px;
+    background: #ef4444;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 1rem auto;
+}
+
+.delete-icon-wrapper lightning-icon {
+    --slds-c-icon-color-foreground-default: white;
+}
+
+.confirm-message {
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    color: #333;
+}
+
+.confirm-subtext {
+    color: #777;
+    margin-top: 0.4rem;
+}
+
+.cancel-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 2rem;
+    padding: 0.6rem 1.8rem;
+    cursor: pointer;
+}
+
+.delete-btn {
+    background: #0f2f66;
+    color: white;
+    border: none;
+    border-radius: 2rem;
+    padding: 0.6rem 1.8rem;
+    cursor: pointer;
+}
+.image-delete-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #E53935;
+    margin: 0 auto;
+}
+
+.image-delete-dustbin {
+    --lwc-colorTextIconDefault: #fff;
+}
+.btn-cancel {
+    background-color: #eb1f1f;
+    color: white;
+    padding: 0.5rem 2rem;
+    border: none;
+    border-radius: 2rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+}

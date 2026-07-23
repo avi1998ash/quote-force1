@@ -1,0 +1,16 @@
+<template>
+    <template if:true={visible}>
+        <div class="custom-toast {typeClass} fade-in">
+            <div class="toast-content">
+                <lightning-icon icon-name={iconName} size="small" class="icon"></lightning-icon>
+                <div class="text">
+                    <strong>{title}</strong>
+                    <p>{message}</p>
+                </div>
+                <button class="close-btn" onclick={closeToast}>
+                    <lightning-icon icon-name="utility:close" size="x-small"></lightning-icon>
+                </button>
+            </div>
+        </div>
+    </template>
+</template>

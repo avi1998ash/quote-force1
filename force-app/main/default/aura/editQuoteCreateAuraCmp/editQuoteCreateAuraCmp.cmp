@@ -1,0 +1,9 @@
+<aura:component implements="lightning:isUrlAddressable,force:hasRecordId,flexipage:availableForRecordHome" access="global">
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="pageReference" type="Object"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="aura:locationChange" action="{!c.doInit}"/>
+    
+    <c:customQuoteCreateCmp recordId="{!v.recordId}" />
+</aura:component>

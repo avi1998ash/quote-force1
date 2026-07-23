@@ -1,0 +1,243 @@
+/* Main Wrapper */
+/* Main Wrapper as Center Box */
+.admin-wrapper {
+	max-width: 900px;
+	/* control width */
+	margin: 2rem auto;
+	/* center horizontally */
+	background: #fff;
+	border-radius: 16px;
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+	padding: 2rem;
+}
+
+/* Section Cards inside Box */
+.admin-card {
+	background: #fff;
+	border-radius: 14px;
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+	margin-bottom: 1.5rem;
+	overflow: visible;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* .admin-card:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+} */
+
+/* Header */
+.admin-card-header {
+	background: linear-gradient(135deg, #0f395f, #145080);
+	color: #fff;
+	font-weight: 600;
+	padding: 0.8rem 1.2rem;
+	font-size: 1rem;
+	letter-spacing: 0.5px;
+	border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+}
+
+/* Body */
+.admin-card-body {
+	padding: 1.2rem;
+	font-size: 0.95rem;
+	color: #333;
+}
+
+/* header Buttons (inside box bottom) */
+.header-btns {
+	text-align: right;
+	margin-bottom: 1.5rem;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 1rem;
+}
+
+.header-btns lightning-button {
+	margin-left: 0.6rem;
+	border-radius: 25px;
+	font-weight: 600;
+}
+
+/* Footer Buttons (inside box bottom) */
+.footer-btns {
+	text-align: right;
+	margin-top: 1.5rem;
+	border-top: 1px solid #eee;
+	padding-top: 1rem;
+}
+
+.footer-btns lightning-button {
+	margin-left: 0.6rem;
+	border-radius: 25px;
+	font-weight: 600;
+}
+
+
+.save {
+	background-color: #003366;
+	color: white;
+	border-radius: 1.5rem;
+	height: 34px;
+	width: 61px;
+	margin-left: 6px;
+}
+
+
+.admin-card-body b {
+	color: #0f395f;
+}
+
+/* File Upload */
+lightning-file-upload {
+	display: block;
+	margin: 1rem 0;
+	border: 2px dashed #0f395f;
+	border-radius: 12px;
+	padding: 0.8rem;
+	background: #f7fbff;
+	transition: background 0.3s ease;
+}
+
+lightning-file-upload:hover {
+	background: #eaf2f9;
+}
+
+/* Company Logo & Docs */
+.company-logo {
+	max-height: 60px;
+	margin-bottom: 0.6rem;
+}
+
+.doc-icon {
+	max-height: 40px;
+	margin-left: 8px;
+}
+
+/* Footer Buttons */
+/* .footer-btns {
+	text-align: right;
+	margin-top: 1rem;
+}
+
+.footer-btns lightning-button {
+	margin-left: 0.6rem;
+	border-radius: 25px;
+	font-weight: 600;
+	transition: all 0.3s ease;
+}
+
+Neutral Button .footer-btns lightning-button[variant="neutral"] {
+	--slds-c-button-neutral-color-border: #dcdcdc;
+	--slds-c-button-neutral-color-background: #ffffff;
+	--slds-c-button-neutral-color-text: #0f395f;
+}
+
+.footer-btns lightning-button[variant="neutral"]:hover {
+	--slds-c-button-neutral-color-background: #f5f5f5;
+	transform: translateY(-2px);
+	box-shadow: 0 3px 8px rgba(15, 57, 95, 0.2);
+}
+
+.footer-btns lightning-button[variant="brand"] {
+	--slds-c-button-brand-color-background: linear-gradient(135deg, #0f395f, #145080);
+	--slds-c-button-brand-color-border: transparent;
+	--slds-c-button-brand-color-text: #fff;
+}
+
+.footer-btns lightning-button[variant="brand"]:hover {
+	--slds-c-button-brand-color-background: linear-gradient(135deg, #09314f, #124770);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(15, 57, 95, 0.3);
+}
+
+.footer-btns lightning-button[variant="destructive"] {
+	--slds-c-button-destructive-color-background: #e63946;
+}
+
+.footer-btns lightning-button[variant="destructive"]:hover {
+	--slds-c-button-destructive-color-background: #c62828;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
+} */
+
+.custom-container {
+	color: black;
+}
+
+lightning-button {
+	--slds-c-button-radius-border: 1.5rem;
+}
+
+lightning-input {
+	--slds-c-input-radius-border: 1.5rem;
+}
+
+lightning-textarea {
+	--slds-c-textarea-radius-border: 1.5rem;
+}
+
+lightning-input-address {
+	--slds-c-input-radius-border: 1.5rem;
+	--slds-c-textarea-radius-border: 1.5rem;
+}
+
+lightning-combobox {
+	--slds-c-input-radius-border: 1.5rem;
+}
+
+.preview-card {
+	border: 1px solid #ddd;
+	border-radius: 12px;
+	padding: 12px;
+	margin: 8px 0;
+	background: #f9f9f9;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.preview-image {
+	max-width: 150px;
+	max-height: 80px;
+	object-fit: contain;
+	border-radius: 8px;
+	border: 1px solid #ccc;
+	background: white;
+	padding: 4px;
+}
+
+.preview-doc {
+	max-width: 60px;
+	max-height: 60px;
+	object-fit: contain;
+	border-radius: 6px;
+	border: 1px solid #ccc;
+	background: white;
+	padding: 3px;
+}
+
+.delete-btn {
+	margin-left: 16px;
+}
+
+.view-btn {
+	margin-left: 16px;
+
+}
+
+.slds-modal__container {
+
+	overflow: hidden;
+}
+
+.slds-modal__content {
+	 overflow-y: auto;      /* scroll add */
+    max-height: 70vh;      /* height limit */
+    padding: 1rem
+}
+.button-group {
+    display: flex;
+    gap: 10px;
+}
