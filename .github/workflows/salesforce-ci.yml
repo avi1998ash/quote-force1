@@ -48,4 +48,3 @@ jobs:
         run: |
           sf project deploy preview \
             --source-dir force-app \
-            --wait 120
