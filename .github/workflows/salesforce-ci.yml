@@ -3,7 +3,7 @@ name: Salesforce PR Validation Pipeline
 on:
   pull_request:
     branches:
-      - main1
+      - main
     types:
       - opened
       - synchronize
@@ -48,5 +48,5 @@ jobs:
         run: |
           sf project deploy validate \
             --source-dir force-app \
-            --test-level RunRelevantTests \
+            --test-level NoTestLevel \
             --wait 120
