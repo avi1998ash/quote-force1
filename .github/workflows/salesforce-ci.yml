@@ -46,7 +46,6 @@ jobs:
       # Validate Deployment (No Changes Committed)
       - name: Validate Deployment
         run: |
-          sf project deploy start \
+          sf project deploy preview \
             --source-dir force-app \
-            --dry-run \
             --wait 120
