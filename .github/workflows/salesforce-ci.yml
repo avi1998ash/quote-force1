@@ -3,7 +3,7 @@ name: Salesforce PR Validation Pipeline
 on:
   pull_request:
     branches:
-      - main1
+      - main
     types:
       - opened
       - synchronize
