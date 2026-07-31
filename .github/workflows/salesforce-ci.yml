@@ -1,5 +1,4 @@
 name: Salesforce PR Validation Pipeline
-
 on:
   pull_request:
     branches:
@@ -12,26 +11,42 @@ on:
 jobs:
   salesforce-validation:
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout Repository
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # need full history to diff against base branch
 
-      # Install Salesforce CLI
       - name: Install Salesforce CLI
-        run: |
-          npm install -g @salesforce/cli
-      # Verify CLI
+        run: npm install -g @salesforce/cli
+
       - name: Verify Salesforce CLI
         run: sf --version
 
-      # Create JWT Key
-      - name: Create JWT Key File
+      - name: Get Changed Files in force-app
+        id: changed-files
         run: |
-          echo "${{ secrets.SF_JWT_KEY }}" > server.key
-      # Authenticate Org
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          CHANGED=$(git diff --name-only --diff-filter=ACMR \
+            origin/${{ github.event.pull_request.base.ref }}...HEAD -- force-app)
+
+          if [ -z "$CHANGED" ]; then
+            echo "No changed files under force-app. Skipping validation."
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+          # sf accepts --source-dir multiple times or comma-separated
+          echo "$CHANGED" | paste -sd "," - > changed_files.txt
+          echo "files=$(cat changed_files.txt)" >> $GITHUB_OUTPUT
+
+      - name: Create JWT Key File
+        if: steps.changed-files.outputs.has_changes == 'true'
+        run: echo "${{ secrets.SF_JWT_KEY }}" > server.key
+
       - name: Authenticate Salesforce
+        if: steps.changed-files.outputs.has_changes == 'true'
         run: |
           sf org login jwt \
             --client-id "${{ secrets.SF_CLIENT_ID }}" \
@@ -39,12 +54,21 @@ jobs:
             --username "${{ secrets.SF_USERNAME }}" \
             --instance-url "${{ secrets.SF_INSTANCE_URL }}" \
             --set-default
-      # Verify Authentication
+
+      - name: Remove JWT Key File
+        if: always()
+        run: rm -f server.key
+
       - name: Display Org
+        if: steps.changed-files.outputs.has_changes == 'true'
+        run: sf org display
+
+      - name: Validate Deployment (Changed Files Only)
+        if: steps.changed-files.outputs.has_changes == 'true'
         run: |
-          sf org display
-      # Validate Deployment (No Changes Committed)
-      - name: Validate Deployment
-        run: |
-          sf project deploy preview \
-            --source-dir force-app \
+          sf project deploy start \
+            --dry-run \
+            --source-dir ${{ steps.changed-files.outputs.files }} \
+            --test-level NoTestRun \
+            --ignore-conflicts \
+            --json
