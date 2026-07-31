@@ -1,70 +1,52 @@
-name: Salesforce CI Pipeline
+name: Salesforce PR Validation Pipeline
 
 on:
-  push:
-    branches:
-      - develop
-
   pull_request:
     branches:
-      - develop
-
+      - main1
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 jobs:
   salesforce-validation:
-
     runs-on: ubuntu-latest
 
     steps:
-
       # Checkout Repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-
       # Install Salesforce CLI
       - name: Install Salesforce CLI
         run: |
-          npm install @salesforce/cli --global
-
-
-      # Verify Salesforce CLI
+          npm install -g @salesforce/cli
+      # Verify CLI
       - name: Verify Salesforce CLI
-        run: |
-          sf --version
+        run: sf --version
 
-
-      # Create JWT Key File
+      # Create JWT Key
       - name: Create JWT Key File
-        shell: bash
         run: |
           echo "${{ secrets.SF_JWT_KEY }}" > server.key
-
-
-      # Verify Key Filea
-      - name: Verify Key File
-        run: |
-          ls -l server.key
-          head -1 server.key
-          tail -1 server.key
-
-
-      # Authenticate Salesforce Org
+      # Authenticate Org
       - name: Authenticate Salesforce
         run: |
           sf org login jwt \
             --client-id "${{ secrets.SF_CLIENT_ID }}" \
             --jwt-key-file server.key \
             --username "${{ secrets.SF_USERNAME }}" \
-            --instance-url "${{ secrets.SF_INSTANCE_URL }}"
+            --instance-url "${{ secrets.SF_INSTANCE_URL }}" \
             --set-default
-
-      # Display Authenticated Org
+      # Verify Authentication
       - name: Display Org
         run: |
           sf org display
-
-      # Display Repository Files
-      - name: Display Repository Files
+      # Validate Deployment (No Changes Committed)
+      - name: Validate Deployment
         run: |
-          ls -la
+          sf project deploy validate \
+            --source-dir force-app \
+            --test-level RunRelevantTests \
+            --wait 120
