@@ -155,8 +155,7 @@ public with sharing class AdminSettingController {
         List<QuoteForce__Admin_Configuration__c> defaults = [
             SELECT Id
             FROM QuoteForce__Admin_Configuration__c WITH USER_MODE
-            ORDER BY CreatedDate ASC
-            LIMIT 1
+            ORDER BY CreatedDate ASC LIMIT 1
         ];
         if (!defaults.isEmpty()) {
             return defaults[0].Id;
