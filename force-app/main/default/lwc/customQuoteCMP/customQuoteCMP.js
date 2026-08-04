@@ -690,7 +690,10 @@ handlePriceBookChangeFromChild(event) {
             .then(() => {})
             .catch(error => console.error('updateCustomPage error:', JSON.stringify(error)));
     }
-
+    handleCustomPageTypeCardClick(event) {
+        const type = event.currentTarget.dataset.value;
+        this.handleRadioChange({ detail: { value: type } });
+    }
     handleInputChange(event) {
         this.recordName = event.target.value;
     }

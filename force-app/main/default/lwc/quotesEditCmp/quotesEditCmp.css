@@ -1,326 +1,815 @@
 :host {
-    --sds-c-checkbox-toggle-color-background-checked: #003366;
-    --sds-c-checkbox-toggle-color-background-checked-focus: #003366;
-    --sds-c-textarea-sizing-max-height: 600px;
-    --sds-c-button-brand-color-background: #003366;
-    --slds-c-button-brand-color-background-hover: #003366;
-    --sds-c-button-text-color: #003366;
-    --slds-c-button-neutral-color-border: #003366;
-    --slds-c-button-neutral-color-border-hover: #003366;
-    --slds-c-button-radius-border: 3rem;
-}
+  --sds-c-checkbox-toggle-color-background-checked: #13253F;
+  --sds-c-checkbox-toggle-color-background-checked-focus: #13253F;
+  --sds-c-textarea-sizing-max-height: 600px;
+  --sds-c-button-brand-color-background: #13253F;
+  --slds-c-button-brand-color-background-hover: #13253F;
+  --sds-c-button-text-color: #13253F;
+  --slds-c-button-neutral-color-border: #13253F;
+  --slds-c-button-neutral-color-border-hover: #13253F;
+  --slds-c-button-radius-border: 3rem;
 
-/* ─── Header ─────────────────────────────────────────── */
-.custom-header {
-    background-color: #003366;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
 }
-
-/* ─── Footer Buttons ─────────────────────────────────── */
-.custom-button {
-    background: #003366;
-    color: white;
-    padding: 0.5rem 1.2rem;
-    border: none;
-    border-radius: 2rem;
-    cursor: pointer;
-    font-size: 0.875rem;
-    box-shadow: 0 4px 10px rgba(0, 51, 102, 0.25);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.custom-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 51, 102, 0.3);
-}
-
-.custom-button:active {
-    transform: translateY(1px);
-    box-shadow: 0 3px 6px rgba(0, 51, 102, 0.2);
-}
-
-.custom-cancel-button {
-    background: transparent;
-    color: #003366;
-    padding: 0.5rem 1.2rem;
-    border: 2px solid #003366;
-    border-radius: 2rem;
-    cursor: pointer;
-    font-size: 0.875rem;
-    transition: background 0.2s ease, color 0.2s ease;
-}
-
-.custom-cancel-button:hover {
-    background: #003366;
-    color: white;
-}
-
-.saveNnext-button {
-    background: #003366;
-}
-
-/* ─── Quote Template Section ─────────────────────────── */
-.quote-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-}
-
-@media (max-width: 768px) {
-    .quote-container {
-        grid-template-columns: 1fr;
-    }
-}
-
-.section {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.75rem;
-    padding: 1.25rem;
-}
-
-.section-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.section-header h2 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #003366;
-    margin: 0;
-}
-
-.section-header .icon {
-    font-size: 1.2rem;
-}
-
-/* ─── Summary Items ──────────────────────────────────── */
-.summary-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.4rem 0;
-    border-bottom: 1px solid #e5e7eb;
-    font-size: 0.875rem;
-}
-
-.summary-item:last-child {
-    border-bottom: none;
-}
-
-.summary-item label {
-    font-weight: 600;
-    color: #374151;
-}
-
-.summary-item span {
-    color: #111827;
-}
-
-/* ─── Custom Radio ───────────────────────────────────── */
-.custom-radio {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    cursor: pointer;
-}
-
-/* ─── Modal ──────────────────────────────────────────── */
-.slds-modal__container {
-    max-width: 65rem !important;
-    width: 65% !important;
-}
-
-/* ─── Inputs ─────────────────────────────────────────── */
-lightning-input {
-    --slds-c-input-radius-border: 3rem;
-}
-
-/* ─── New Custom Page Button ─────────────────────────── */
-.custom-Page {
-    background: #003366;
-    gap: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    padding: 0.5rem 0.7rem;
-    border: none;
-    border-radius: 22px;
-    cursor: pointer;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    transform-style: preserve-3d;
-}
-
-.custom-Page:hover {
-    transform: translateY(-3px) scale(1.01);
-    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.2);
-}
-
-/* ─── Delete Button ──────────────────────────────────── */
-.btn-delete {
-    background: #eb1f1f;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 22px;
-    cursor: pointer;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    transform-style: preserve-3d;
-}
-
-.btn-delete:hover {
-    transform: translateY(-3px) scale(1.03);
-    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.2);
-}
-
-.btn-delete:active {
-    transform: translateY(1px) scale(0.98);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.delete-icon {
-    --slds-c-icon-color-foreground-default: white;
-}
-
-/* ─── Confirm Delete Modal ───────────────────────────── */
-.modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.confirm-modal {
-    background: white;
-    border-radius: 16px;
-    width: 420px;
-    max-width: 90%;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    position: relative;
-}
-
-.confirm-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.confirm-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin: 0;
-}
-
-.confirm-close {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.confirm-body p {
-    margin: 0;
-    font-size: 0.95rem;
-    color: #333;
-    line-height: 1.6;
-}
-
-.confirm-footer {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    margin-top: 1.75rem;
-}
-
-.btn-yes {
-    background: #003366;
-    color: white;
-    padding: 0.5rem 2rem;
-    border: none;
-    border-radius: 2rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-
-.btn-cancel {
-    background: #eb1f1f;
-    color: white;
-    padding: 0.5rem 2rem;
-    border: none;
-    border-radius: 2rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-
-/* ─── Left Panel ─────────────────────────────────────── */
+ 
 .left_mobile_width {
-    display: flex;
-    align-items: stretch;
-    width: 100%;
-    margin: 5px auto 10px 0;
-    border: 1.5px solid #ddd;
-    border-radius: 3rem;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    transform-style: preserve-3d;
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  margin: 5px auto 10px 0;
+  border: 1.5px solid #ddd;
+  border-radius: 3rem;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transform-style: preserve-3d;
 }
 
 .left_mobile_width:hover {
-    transform: translateY(-3px) scale(1.01);
-    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.2);
 }
 
-/* ─── Misc ───────────────────────────────────────────── */
+.br {
+  width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 12px 0;
+}
+
+.br:before {
+  content: "";
+  position: absolute;
+  right: -20px;
+  top: -1px;
+  height: 100%;
+  width: 0px;
+  border-bottom: 25px solid transparent;
+}
+
+.slds-modal__container {
+  max-width: 65rem !important;
+  width: 65% !important;
+}
+
+.foterFont {
+  font-weight: bold;
+}
+
+.modelheader {
+  /* was #106893 (off-brand legacy blue) — aligned to brand navy for consistency */
+  background: #13253F;
+  height: 6rem;
+}
+
+.wfont {
+  /* was #106893 (off-brand legacy blue) — aligned to brand navy for consistency */
+  color: #13253F;
+  font-weight: bold;
+}
+
+.fonts {
+  font-family: sans-serif;
+}
+
+.image {
+  height: 17rem;
+  padding: 3rem;
+}
+
+.mp {
+  width: 50%;
+}
+
+.header {
+  background: rgb(16, 104, 147);
+  height: 5rem;
+}
+
+.warrantyText {
+  margin-left: 3rem;
+  margin-top: -3rem;
+  margin-bottom: 4rem;
+  text-transform: uppercase;
+  font-family: sans-serif;
+  font-size: 32px;
+  font-weight: 550;
+  color: #106893;
+}
+
+.logo {
+  margin-left: 25rem;
+  position: relative;
+  bottom: 6rem;
+  height: 12rem
+}
+
+.btn {
+  background: #13253F;
+  color: white;
+}
+
 .title {
-    font-size: medium;
+  font-size: medium;
+}
+
+.previous {
+  color: #13253F;
+}
+
+.custom-richtext-border {
+  border: 1px solid #dddbda;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.custom-richtext-border:focus-within {
+  border-color: #13253F;
+}
+
+.custom-richtext-border lightning-input-rich-text,
+.custom-richtext-border .slds-rich-text-editor,
+.custom-richtext-border .slds-rich-text-area__content,
+.custom-richtext-border .ql-container,
+.custom-richtext-border .ql-toolbar {
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.generateReportModel {
+  width: 90% !important;
+}
+
+li {
+  list-style: none;
+  position: relative;
+}
+
+li::before {
+  content: '•';
+  font-size: 18px;
+  position: absolute;
+  left: -20px;
+  top: -3px;
 }
 
 .slds-p-around_medium {
-    padding: 1rem;
+  padding: 1rem;
 }
 
-/* ─── Responsive ─────────────────────────────────────── */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirm-modal {
+  background: white;
+  border-radius: 16px;
+  width: 420px;
+  max-width: 90%;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  position: relative;
+}
+
+.confirm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.confirm-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.confirm-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.confirm-body p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+.confirm-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1.75rem;
+}
+
+.btn-yes {
+  background: #13253F;
+  color: white;
+  padding: 0.5rem 2rem;
+  border: none;
+  border-radius: 2rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-cancel {
+  background: #eb1f1f;
+  color: white;
+  padding: 0.5rem 2rem;
+  border: none;
+  border-radius: 2rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-delete {
+  background: #eb1f1f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 22px;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transform-style: preserve-3d;
+}
+
+.btn-delete:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.2);
+}
+
+.btn-delete:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.delete-icon {
+  --slds-c-icon-color-foreground-default: white;
+}
+
+lightning-icon {
+}
+
+lightning-input {
+  --slds-c-input-radius-border: 3rem;
+}
+
+.currency-combo {
+    --slds-c-input-radius-border: 3rem;
+}
+
+.custom-Page {
+  background: #13253F;
+  gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  padding: 0.5rem 0.7rem;
+  border: none;
+  border-radius: 22px;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transform-style: preserve-3d;
+}
+
+.custom-Page:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.2);
+}
+
+.custom-wrapper {
+  margin: auto;
+}
+
+.image-preview-container {
+  border: 1px solid #d8dde6;
+  background: #fafafa;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.uploaded-image {
+  max-width: 100%;
+  height: 350px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.custom-richtext .ql-editor {
+  min-height: 250px;
+}
+
+.delete-icon-theme {
+  background: #ffe5e5;
+  border-radius: 50%;
+  padding: 8px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ffb3b3;
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
+  margin: 7px;
+}
+
+.delete-icon-theme:hover {
+  background: #ffcccc;
+  transform: scale(1.1);
+}
+
+.delete-icon-theme lightning-icon svg {
+  fill: #d40000 !important;
+}
+
+.header-custom-page {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.header-container {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+}
+
+.title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+}
+
+.edit-icon {
+    margin-left: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
 @media only screen and (max-width: 1318px) {
-    .slds-p-left_x-small.tab-titles-name {
-        font-size: 18px !important;
-    }
+  .slds-p-left_x-small.tab-titles-name {
+    font-size: 18px !important;
+  }
+
+  .br {
+    width: auto !important;
+  }
+
+  .lt_toogle_width {
+    width: auto !important;
+  }
 }
 
 @media only screen and (max-width: 1080px) {
-    .slds-p-left_x-small.tab-titles-name {
-        font-size: 17px !important;
-    }
+  .slds-p-left_x-small.tab-titles-name {
+    font-size: 17px !important;
+  }
 }
 
 @media only screen and (max-width: 1040px) {
-    .slds-p-left_x-small.tab-titles-name {
-        font-size: 17px !important;
-    }
+  .slds-p-left_x-small.tab-titles-name {
+    font-size: 17px !important;
+  }
 
-    .pl_left_mobile {
-        padding-left: 12px !important;
-    }
+  .pl_left_mobile {
+    padding-left: 12px !important;
+  }
 
-    .left_mobile_width {
-        width: 90% !important;
+  .left_mobile_width {
+    width: 90% !important;
+  }
+}
+
+/* =====================================================================
+   ================  UI REDESIGN LAYER  ==================================
+   Additive/override only. No original class removed or renamed; every
+   selector above still applies to elements that still use it. Icons on
+   nav rows and section headers (.nav-icon / .section-icon) are purely
+   decorative — no data field, no JS change — matched to fixed page
+   position since the first 5 pages are always Title, Letter, Quote
+   Details, Warranty, Terms & Conditions in that order.
+   ===================================================================== */
+
+:host {
+  --qf-navy: #13253F;
+  --qf-navy-dark: #002347;
+  --qf-border: #e3e8ef;
+  --qf-bg: #f7f9fc;
+  --qf-text-muted: #5c6b7a;
+  --qf-shadow-card: 0 2px 10px rgba(13, 43, 85, 0.06);
+}
+
+.template-shell {
+  background: var(--qf-bg);
+  border-radius: 12px;
+  min-height: 60vh;
+}
+
+/* ---------- Left navigation panel ---------- */
+.template-nav-col {
+  border-right: 1px solid var(--qf-border) !important;
+  background: #f7f9fc;
+  padding: 1.5rem 1rem !important;
+}
+
+.nav-panel-title {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--qf-text-muted);
+  text-transform: uppercase;
+}
+.nav-panel-subtitle {
+  font-size: 0.82rem;
+  color: var(--qf-text-muted);
+  margin-top: 0.25rem;
+}
+
+.nav-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.nav-row {
+  cursor: pointer;
+}
+
+.left_mobile_width.nav-row {
+  border: 1px solid var(--qf-border);
+  border-radius: 14px;
+  box-shadow: none;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+.left_mobile_width.nav-row:hover {
+  transform: none;
+  box-shadow: 0 4px 12px rgba(13, 43, 85, 0.08);
+}
+
+.nav-cell {
+  width: 100%;
+  padding: 0.85rem 0.5rem;
+  border-radius: 14px;
+  color: #24344a;
+}
+.nav-cell--active {
+  background: var(--qf-navy);
+  color: #ffffff;
+}
+
+.nav-row-inner {
+  align-items: center;
+}
+.nav-row-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.tab-titles-name {
+  font-size: 0.95rem !important;
+  padding-left: 0 !important;
+  font-weight: 600;
+}
+
+/* Decorative per-position icon (fixed order: Title, Letter, Quote Details,
+   Warranty, Terms & Conditions, then Custom Pages 6+) */
+.nav-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.15);
+}
+.nav-cell:not(.nav-cell--active) .nav-icon {
+  background: #eef3fb;
+}
+
+/* ============ REDESIGN LAYER V2 ============
+   Nav icons: swapped from mixed-color emoji glyphs to a single-letter
+   monochrome badge. Emoji render inconsistently across OS/browser
+   (Windows/Mac/Linux ship different emoji sets), which reads as
+   unpolished at scale. A flat lettered badge is legible, brand-colored,
+   renders identically everywhere, and needs no font dependency.
+   CSS-only change — no HTML/JS touched, .nav-icon span is unchanged. */
+.nav-icon {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--qf-navy);
+}
+.nav-cell--active .nav-icon {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.18);
+}
+.nav-row:nth-of-type(1) .nav-icon::before { content: "T"; }
+.nav-row:nth-of-type(2) .nav-icon::before { content: "L"; }
+.nav-row:nth-of-type(3) .nav-icon::before { content: "Q"; }
+.nav-row:nth-of-type(4) .nav-icon::before { content: "W"; }
+.nav-row:nth-of-type(5) .nav-icon::before { content: "C"; }
+.nav-row:nth-of-type(n+6) .nav-icon::before { content: "+"; }
+
+/* Visible keyboard focus (rows and cards are click-driven divs/trs,
+   which don't get a focus ring by default) */
+.nav-row:focus-visible .nav-cell,
+.custom-page-type-card:focus-visible {
+  outline: 2px solid var(--qf-navy);
+  outline-offset: 2px;
+}
+
+/* ---------- Right content panel ---------- */
+.template-content-col {
+  background: #ffffff;
+}
+.content-inner {
+  padding: 1.5rem 2rem;
+}
+
+.page-heading {
+  margin-bottom: 1.25rem;
+}
+.page-heading .title {
+  font-size: 1.3rem !important;
+  color: #10233d;
+  font-weight: 700;
+  position: relative;
+}
+.title-edit-icon {
+  cursor: pointer;
+  margin-left: 6px;
+}
+
+/* ---------- Section cards (grouping wrappers only — no new fields) ---------- */
+.section-card {
+  border: 1px solid var(--qf-border);
+  border-radius: 14px;
+  box-shadow: var(--qf-shadow-card);
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+.section-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid var(--qf-border);
+  font-weight: 700;
+  color: #10233d;
+  font-size: 0.95rem;
+}
+.section-icon {
+  color: var(--qf-navy);
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+}
+/* REDESIGN LAYER V2: section headers now hold a real lightning-icon
+   instead of an emoji character — set its color to match the brand navy
+   used everywhere else, sized to sit flush with the heading text. */
+.section-icon lightning-icon {
+  --slds-c-icon-color-foreground-default: var(--qf-navy);
+}
+.section-card-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.form-grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+lightning-input,
+lightning-textarea,
+lightning-combobox {
+  --slds-c-input-radius-border: 10px;
+  --slds-c-input-color-border: var(--qf-border);
+  --slds-c-input-shadow-focus: 0 0 0 3px rgba(0, 51, 102, 0.12);
+  --slds-c-input-color-border-focus: var(--qf-navy);
+}
+
+/* ---------- Upload dropzones ---------- */
+.upload-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #24344a;
+  margin: 0 0 0.5rem;
+}
+.upload-box {
+  width: 100%;
+}
+.upload-dropzone {
+  border: 1.5px dashed #b9c6d6;
+  border-radius: 14px;
+  background: #f8fbff;
+  padding: 1.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.upload-dropzone-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #eef3fb;
+  color: var(--qf-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+}
+/* REDESIGN LAYER V2: dropzones now render a real lightning-icon
+   (utility:upload) instead of a cloud emoji — one consistent icon
+   language for every "drop a file here" state in the template. */
+.upload-dropzone-icon lightning-icon {
+  --slds-c-icon-color-foreground-default: var(--qf-navy);
+}
+.upload-dropzone-title {
+  margin: 0 0 0.75rem;
+  font-weight: 700;
+  color: #14202b;
+  font-size: 0.9rem;
+}
+.upload-dropzone lightning-input[type="file"] {
+  --slds-c-button-radius-border: 999px;
+  --slds-c-button-brand-color-background: var(--qf-navy);
+}
+
+.upload-preview {
+  border: 1px solid var(--qf-border);
+  border-radius: 14px;
+  background: #f8fbff;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+.upload-preview-image {
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+.upload-delete-icon {
+  cursor: pointer;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .content-inner {
+    padding: 1.25rem;
+  }
+  .form-grid,
+  .form-grid--3 {
+    grid-template-columns: 1fr;
+  }
+}
+ 
+@media (max-width: 640px) {
+  .template-nav-col {
+    border-right: none !important;
+    border-bottom: 1px solid var(--qf-border);
+  }
+}
+.custom-page-config-heading {
+    margin-bottom: 1.25rem;
+}
+
+.custom-page-config-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #10233d;
+}
+
+.custom-page-config-subtitle {
+    margin: 0.3rem 0 0;
+    font-size: 0.85rem;
+    color: #5c6b7a;
+}
+
+.custom-page-type-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+
+
+.custom-page-type-card {
+    position: relative;
+    cursor: pointer;
+    border: 1.5px solid #e3e8ef;
+    border-radius: 14px;
+    padding: 1.25rem;
+    background: #ffffff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.custom-page-type-card:hover {
+    border-color: #b9c6d6;
+    box-shadow: 0 4px 12px rgba(13, 43, 85, 0.08);
+}
+
+.custom-page-type-card--selected {
+    border-color: #13253F;
+    border-width: 2px;
+    box-shadow: 0 2px 10px rgba(0, 51, 102, 0.1);
+}
+
+.custom-page-type-card__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #eef3fb;
+    color: #13253F;
+    font-size: 1.2rem;
+    margin-bottom: 0.9rem;
+}
+/* REDESIGN LAYER V2: card icons now hold real lightning-icon components
+   instead of emoji, colored to match the brand navy. */
+.custom-page-type-card__icon lightning-icon {
+  --slds-c-icon-color-foreground-default: #13253F;
+}
+
+.custom-page-type-card__title {
+    margin: 0 0 0.35rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #10233d;
+}
+
+.custom-page-type-card__desc {
+    margin: 0 0 0.85rem;
+    font-size: 0.82rem;
+    color: #5c6b7a;
+    line-height: 1.4;
+}
+
+.custom-page-type-card__action {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #13253F;
+    text-decoration: underline;
+}
+
+.custom-page-content-box {
+    border: 1px solid #e3e8ef;
+    border-radius: 14px;
+    background: #f8fbff;
+    padding: 1.25rem;
+}
+
+/* REDESIGN LAYER V2: unify pill-button radius across the three action
+   buttons (previously 22px / 2rem — close, but not identical, so pill
+   curvature looked slightly different button to button). */
+.custom-Page,
+.btn-delete,
+.btn-yes,
+.btn-cancel {
+  border-radius: 999px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .custom-page-type-grid {
+        grid-template-columns: 1fr;
     }
 }

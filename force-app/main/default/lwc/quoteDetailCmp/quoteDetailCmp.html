@@ -39,43 +39,54 @@
             </template>
         </div> -->
 
-        <div class="custom-combobox quote-pricebook-combobox" onclick={handleDropdownContainerClick}>
-            <div class={priceBookComboboxClass}>
-                <button type="button" class="custom-combobox__trigger" onclick={openPriceBookDropdown} disabled={isPriceBookLocked}
-                    aria-haspopup="listbox" aria-expanded={isPriceBookDropdownOpen}>
-                    <span class="custom-combobox__trigger-text">{selectedPriceBookLabel}</span>
-                    <lightning-icon icon-name="utility:down" size="xx-small" alternative-text="Open"></lightning-icon>
-                </button>
-                <template if:true={isPriceBookDropdownOpen}>
-                    <div class="custom-combobox__dropdown">
-                        <div class="custom-combobox__search">
-                            <lightning-input variant="label-hidden" type="search" label="Search Pricebook"
-                                placeholder="Search Pricebook" value={priceBookSearchTerm}
-                                onkeyup={handlePriceBookSearch} onchange={handlePriceBookSearch}>
-                            </lightning-input>
-                        </div>
-                        <div class="custom-combobox__options" role="listbox">
-                            <template if:true={hasFilteredPriceBookOptions}>
-                                <template for:each={filteredPriceBookOptions} for:item="option">
-                                    <button key={option.value} type="button" class="custom-combobox__option"
-                                        data-value={option.value} onclick={handlePriceBookOptionSelect}>
-                                        {option.label}
-                                    </button>
-                                </template>
-                            </template>
-                            <template if:false={hasFilteredPriceBookOptions}>
-                                <div class="custom-combobox__empty">No pricebooks found</div>
+        <!-- ✅ CONFIGURATION CARD - PRICE BOOK / BUNDLE - RESTYLED WRAPPER, UNCHANGED LOGIC -->
+        <div class="quote-config-card">
+            <div class="quote-config-card__grid">
+                <div class="quote-config-card__field">
+                    <p class="quote-config-card__label">Price Book</p>
+                    <div class="custom-combobox quote-pricebook-combobox" onclick={handleDropdownContainerClick}>
+                        <div class={priceBookComboboxClass}>
+                            <button type="button" class="custom-combobox__trigger" onclick={openPriceBookDropdown} disabled={isPriceBookLocked}
+                                aria-haspopup="listbox" aria-expanded={isPriceBookDropdownOpen}>
+                                <span class="custom-combobox__trigger-text">{selectedPriceBookLabel}</span>
+                                <lightning-icon icon-name="utility:down" size="xx-small" alternative-text="Open"></lightning-icon>
+                            </button>
+                            <template if:true={isPriceBookDropdownOpen}>
+                                <div class="custom-combobox__dropdown">
+                                    <div class="custom-combobox__search">
+                                        <lightning-input variant="label-hidden" type="search" label="Search Pricebook"
+                                            placeholder="Search Pricebook" value={priceBookSearchTerm}
+                                            onkeyup={handlePriceBookSearch} onchange={handlePriceBookSearch}>
+                                        </lightning-input>
+                                    </div>
+                                    <div class="custom-combobox__options" role="listbox">
+                                        <template if:true={hasFilteredPriceBookOptions}>
+                                            <template for:each={filteredPriceBookOptions} for:item="option">
+                                                <button key={option.value} type="button" class="custom-combobox__option"
+                                                    data-value={option.value} onclick={handlePriceBookOptionSelect}>
+                                                    {option.label}
+                                                </button>
+                                            </template>
+                                        </template>
+                                        <template if:false={hasFilteredPriceBookOptions}>
+                                            <div class="custom-combobox__empty">No pricebooks found</div>
+                                        </template>
+                                    </div>
+                                </div>
                             </template>
                         </div>
                     </div>
-                </template>
+                </div>
+
+                <div class="quote-config-card__field">
+                    <p class="quote-config-card__label">Bundle Package (Optional)</p>
+                    <lightning-combobox class="quote-config-card__bundle" name="progress" value={selectedProductBundleId} placeholder="Select Bundle" options={productBundleList}
+                        onchange={handleChangeProductBundle} variant="label-hidden" disabled={isBundleSelectionDisabled}>
+                    </lightning-combobox>
+                </div>
             </div>
+            <p class="quote-config-card__hint">{bundleSelectionHint}</p>
         </div>
-        <div class="slds-p-top_x-small"></div>
-        <lightning-combobox style="width:50%;" name="progress" value={selectedProductBundleId} placeholder="Select Bundle" options={productBundleList}
-            onchange={handleChangeProductBundle} variant="label-hidden" disabled={isBundleSelectionDisabled}>
-        </lightning-combobox>
-        <p class="slds-text-body_small slds-text-color_weak slds-m-top_x-small">{bundleSelectionHint}</p>
 
         <template if:true={bundleSelectModel}>
             <section role="dialog" tabindex="-1" aria-labelledby="modal-heading1-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
@@ -127,206 +138,190 @@
             </section>
             <div class="slds-backdrop slds-backdrop_open"></div>
         </template>
+
+        <!-- ✅ ITEM SECTIONS - RESTYLED AS CARDS, UNCHANGED LOGIC/BINDINGS -->
         <template for:each={sectionList} for:item="section" for:index="secIndex">
             <div key={section.title}>
-                <div class=" scroll-container">
-                    <!-- <div class="" style="background: #e6e6e6; padding: 4px;">
-                                    <span class="title">Section title</span>
-                                    <lightning-button variant="neutral" label="Down" title="Down" class="slds-m-left_x-small" data-id={section.id} onclick={moveSectionDown}></lightning-button>
-                                    <lightning-button variant="neutral" label="Up" title="Up" class="slds-m-left_x-small" data-id={section.id} onclick={moveSectionUp}></lightning-button>
-                                </div> -->
-                    <div class="slds-grid slds-wrap ">
-                        <div class="slds-col slds-size_6-of-12">
-                            <lightning-input type="text" label="Section Name" value={section.title} data-id={section.id} name="title" onblur={handleSectionTitle}>
+                <div class="scroll-container quote-section-card">
+
+                    <div class="quote-section-card__header">
+                        <div class="quote-section-card__title-wrap">
+                            <span class="quote-section-card__icon" aria-hidden="true">&#9776;</span>
+                            <lightning-input class="quote-section-title-input" type="text" label="Section Name" variant="label-hidden" value={section.title}
+                                data-id={section.id} name="title" onblur={handleSectionTitle}>
                             </lightning-input>
                         </div>
-                        <div class="slds-col slds-size_6-of-12">
-                            <span class="slds-m-left_small">
-                                <!-- <lightning-button 
-                                                    style="margin-top: 7.5%; float: right;" 
-                                                    class="del-section" 
-                                                    data-index={secIndex} 
-                                                    alternative-text="delete section" 
-                                                    variant="destructive"
-                                                    size="x-small" 
-                                                    label="Delete Sec."
-                                                    data-id={section.id} 
-                                                    onclick={deleteSection}>
-                                            </lightning-button> -->
-                                <button class="del-section" data-index={secIndex} data-id={section.id} onclick={handleDeleteSection}>Delete Section</button>
-                            </span>
-                        </div>
+                        <button 
+                        class="del-section quote-section-card__delete" 
+                        data-index={secIndex} 
+                        data-id={section.id} 
+                        onclick={handleDeleteSection}
+                        aria-label="Delete Section"
+                        title="Delete Section"
+                    >
+                        <lightning-icon 
+                            icon-name="utility:delete" 
+                            size="x-small" 
+                            alternative-text="Delete Section" 
+                            class="quote-section-card__delete-icon"
+                        ></lightning-icon>
+                        <span class="delete-btn-text">Delete Section</span>
+                    </button>
                     </div>
 
-                    <table class="slds-m-top_medium slds-m-bottom_medium slds-table slds-table_cell-buffer" style="width: 100%;">
-                        <thead>
-                            <th style=" width:45%; 
-                                                    height:40px;
-                                                    background: #162055;
-                                                    color: white;
-                                                    border-radius: 10px 0 0 0;">Item</th>
-                            <!-- <th style="width:15%;">Measure Unit</th> -->
-                            <th style=" width:15%;    
-                                                    background: #162055;
-                                                    color: white;"><span class="">Quantity</span></th>
-                            <th style=" width:15%;
-                                                    background: #162055;
-                                                    color: white;"><span class="">Price</span></th>
-                            <!-- <th style="width:10%;"><span class="">Tax</span></th> -->
-                            <th style=" width:15%;
-                                                    background: #162055;
-                                                    color: white;">Line Total</th>
-                            <th style=" width:10%;
-                                                    background: #162055;
-                                                    color: white;
-                                                    border-radius: 0 10px 0 0px;"></th>
-                        </thead>
-                        <template for:each={section.products} for:item="prod" for:index="index">
-                            <!-- <tr key={prod.id} class="Items" draggable="true" 
-                                            ondrop={Drop} 
-                                            ondragstart={DragStart} 
-                                            ondragover={DragOver} 
-                                            title={index}> -->
-                            <tr key={prod.id} class="Items" title={index}>
+                    <div class="quote-section-card__body">
 
-                                <td style="width:45%; padding-left: 6px;">
-                                    <div class="slds-grid" style="align-items: center;">
-                                        <div class="slds-col slds-size_1-of-12" style="display: inline; width:100%;">
-                                            <lightning-icon icon-name="utility:drag_and_drop" alternative-text="Drag and Drop" size="small"
-                                                style="margin-left: 13px; cursor: no-drop; display:inline-block;"></lightning-icon>
-                                            <div class="custom-combobox custom-combobox--compact" onclick={handleDropdownContainerClick} style="width: 70%; display:inline-block;">
-                                                <div class="custom-combobox__control">
-                                                    <button type="button" class="custom-combobox__trigger" data-id={prod.id} data-sectionid={section.id}
-                                                        onclick={openSectionEntryDropdown} disabled={isSectionEntryPickerDisabled} aria-haspopup="listbox"
-                                                        aria-expanded={prod.isEntryDropdownOpen}>
-                                                        <span class="custom-combobox__trigger-text">{prod.priceBookEntryLabel}</span>
-                                                        <lightning-icon icon-name="utility:down" size="xx-small" alternative-text="Open"></lightning-icon>
-                                                    </button>
-                                                    <template if:true={prod.isEntryDropdownOpen}>
-                                                        <div class="custom-combobox__dropdown">
-                                                            <div class="custom-combobox__search">
-                                                                <lightning-input variant="label-hidden" type="search" label="Search Price Book Entry"
-                                                                    placeholder="Search Price Book Entry" data-id={prod.id} data-sectionid={section.id}
-                                                                    value={prod.entrySearchTerm} onkeyup={handleSectionEntrySearch} onchange={handleSectionEntrySearch}>
-                                                                </lightning-input>
-                                                            </div>
-                                                            <div class="custom-combobox__options" role="listbox">
-                                                                <template if:true={prod.hasFilteredEntryOptions}>
-                                                                    <template for:each={prod.filteredEntryOptions} for:item="option">
-                                                                        <button key={option.value} type="button" class="custom-combobox__option"
-                                                                            data-id={prod.id} data-sectionid={section.id} data-value={option.value}
-                                                                            onclick={handleSectionEntryOptionSelect}>
-                                                                            {option.label}
-                                                                        </button>
+                        <table class="slds-m-top_medium slds-m-bottom_medium slds-table slds-table_cell-buffer quote-items-table" style="width: 100%;">
+                            <thead>
+                                <th class="quote-items-table__th" style="width:45%;">Item / SKU</th>
+                                <!-- <th style="width:15%;">Measure Unit</th> -->
+                                <th class="quote-items-table__th quote-items-table__th--center" style="width:15%;"><span class="">Quantity</span></th>
+                                <th class="quote-items-table__th quote-items-table__th--center" style="width:15%;"><span class="">Unit Price</span></th>
+                                <!-- <th style="width:10%;"><span class="">Tax</span></th> -->
+                                <th class="quote-items-table__th quote-items-table__th--center" style="width:15%;">Line Total</th>
+                                <th class="quote-items-table__th" style="width:10%;"></th>
+                            </thead>
+                            <template for:each={section.products} for:item="prod" for:index="index">
+                                <!-- <tr key={prod.id} class="Items" draggable="true" 
+                                                ondrop={Drop} 
+                                                ondragstart={DragStart} 
+                                                ondragover={DragOver} 
+                                                title={index}> -->
+                                <tr key={prod.id} class="Items quote-items-table__row" title={index}>
+
+                                    <td style="width:45%; padding-left: 6px;">
+                                        <div class="slds-grid" style="align-items: center;">
+                                            <div class="slds-col slds-size_1-of-12" style="display: inline; width:100%;">
+                                                <lightning-icon icon-name="utility:drag_and_drop" alternative-text="Drag and Drop" size="small"
+                                                    style="margin-left: 13px; cursor: no-drop; display:inline-block;"></lightning-icon>
+                                                <div class="custom-combobox custom-combobox--compact" onclick={handleDropdownContainerClick} style="width: 70%; display:inline-block;">
+                                                    <div class="custom-combobox__control">
+                                                        <button type="button" class="custom-combobox__trigger" data-id={prod.id} data-sectionid={section.id}
+                                                            onclick={openSectionEntryDropdown} disabled={isSectionEntryPickerDisabled} aria-haspopup="listbox"
+                                                            aria-expanded={prod.isEntryDropdownOpen}>
+                                                            <span class="custom-combobox__trigger-text">{prod.priceBookEntryLabel}</span>
+                                                            <lightning-icon icon-name="utility:down" size="xx-small" alternative-text="Open"></lightning-icon>
+                                                        </button> 
+                                                        <template if:true={prod.isEntryDropdownOpen}>
+                                                            <div class="custom-combobox__dropdown">
+                                                                <div class="custom-combobox__search">
+                                                                    <lightning-input variant="label-hidden" type="search" label="Search Price Book Entry"
+                                                                        placeholder="Search Price Book Entry" data-id={prod.id} data-sectionid={section.id}
+                                                                        value={prod.entrySearchTerm} onkeyup={handleSectionEntrySearch} onchange={handleSectionEntrySearch}>
+                                                                    </lightning-input>
+                                                                </div>
+                                                                <div class="custom-combobox__options" role="listbox">
+                                                                    <template if:true={prod.hasFilteredEntryOptions}>
+                                                                        <template for:each={prod.filteredEntryOptions} for:item="option">
+                                                                            <button key={option.value} type="button" class="custom-combobox__option"
+                                                                                data-id={prod.id} data-sectionid={section.id} data-value={option.value}
+                                                                                onclick={handleSectionEntryOptionSelect}>
+                                                                                {option.label}
+                                                                            </button>
+                                                                        </template>
                                                                     </template>
-                                                                </template>
-                                                                <template if:false={prod.hasFilteredEntryOptions}>
-                                                                    <div class="custom-combobox__empty">No entries found</div>
-                                                                </template>
+                                                                    <template if:false={prod.hasFilteredEntryOptions}>
+                                                                        <div class="custom-combobox__empty">No entries found</div>
+                                                                    </template>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </template>
+                                                        </template>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <!-- <td>{prod.MeasurementType}</td> -->
-                                <td>
-                                    <lightning-input type="number" label="Quantity" data-sectionid={section.id} data-id={prod.id} name="quantity" value={prod.Quantity}
-                                        variant="label-hidden" onblur={handleProductQuantity}>
-                                    </lightning-input>
-                                </td>
- <td>
-    <div class="slds-form-element">
-        <div class="slds-form-element__control">
-            <div class="slds-input-has-icon slds-input-has-icon_left">
-                <span class="slds-icon_container slds-input__icon slds-input__icon_left">
-                    {currencySymbol}
-                </span>
-                <lightning-input 
-                    class="price"
-                    label="Price" 
-                    variant="label-hidden"
-                    type="number"
-                    step="0.01"
-                    data-sectionid={section.id} 
-                    data-id={prod.id} 
-                    name="price" 
-                    value={prod.Price} 
-                    onblur={handleProductPrice}>
-                </lightning-input>
-            </div>
-        </div>
-    </div>
-</td>
-                                <!-- <td>
-                                                <lightning-input 
-                                                    type="number"  
-                                                    label="Tax" 
-                                                    data-sectionid={section.id}
-                                                    data-id={prod.id} 
-                                                    name="tax" 
-                                                    value={prod.Tax}
-                                                    variant="label-hidden"   
-                                                    onchange={handleInputValueChange}>
-                                                </lightning-input>
-                                            </td> -->
-                                <td>
-        <lightning-formatted-number
-            value={prod.lineTotal}
-            format-style="currency"
-            currency-code={effectiveCurrency}>
-        </lightning-formatted-number>
-    </td>
-                                <td>
-                                <button class="btn-delete" onclick={deleteRow} data-id={prod.id}>
-        <lightning-icon 
-            icon-name="utility:delete"
-            size="x-small"
-            alternative-text="Delete">
-        </lightning-icon>
-    </button>
-                                </td>
-                            </tr>
-                        </template>
-
-                    </table>
-
-
-                    <div class="slds-m-top_x-large">
-                        <!-- <lightning-button variant="brand" label="Show All Items" title="Show All Items" style="margin-right: 11px;"></lightning-button> -->
-                        <lightning-button variant="brand" label="Add Item" data-id={section.id} onclick={addRowSectionProduct}>
-                        </lightning-button>
-
-                        <!-- <lightning-button 
-                                        label="Save Records" 
-                                        onclick={loadSectionData} 
-                                        variant="brand" 
-                                        class="slds-m-left_medium">
-                                    </lightning-button> -->
-
-                        <span>
-                            <span class="slds-clearfix">
-                                <span class="slds-float_right">
-                                    <span class="total"><b>Section Total: </b> &nbsp; &nbsp;
-                                        <lightning-formatted-number value={section.total} format-style="currency" currency-code={effectiveCurrency} style="font-weight: bold; font-size: 13px;">
+                                    </td>
+                                    <!-- <td>{prod.MeasurementType}</td> -->
+                                    <td>
+                                        <lightning-input type="number" label="Quantity" data-sectionid={section.id} data-id={prod.id} name="quantity" value={prod.Quantity}
+                                            variant="label-hidden" onblur={handleProductQuantity}>
+                                        </lightning-input>
+                                    </td>
+                                    <td>
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-input-has-icon slds-input-has-icon_left">
+                                                    <span class="slds-icon_container slds-input__icon slds-input__icon_left">
+                                                        {currencySymbol}
+                                                    </span>
+                                                    <lightning-input 
+                                                        class="price"
+                                                        label="Price" 
+                                                        variant="label-hidden"
+                                                        type="number"
+                                                        step="0.01"
+                                                        data-sectionid={section.id} 
+                                                        data-id={prod.id} 
+                                                        name="price" 
+                                                        value={prod.Price} 
+                                                        onblur={handleProductPrice}>
+                                                    </lightning-input>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <!-- <td>
+                                                    <lightning-input 
+                                                        type="number"  
+                                                        label="Tax" 
+                                                        data-sectionid={section.id}
+                                                        data-id={prod.id} 
+                                                        name="tax" 
+                                                        value={prod.Tax}
+                                                        variant="label-hidden"   
+                                                        onchange={handleInputValueChange}>
+                                                    </lightning-input>
+                                                </td> -->
+                                    <td>
+                                        <lightning-formatted-number
+                                            value={prod.lineTotal}
+                                            format-style="currency"
+                                            currency-code={effectiveCurrency}>
                                         </lightning-formatted-number>
-                                    </span>
-                                </span>
-                            </span>
-                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn-delete-pill" onclick={deleteRow} data-id={prod.id}>
+                                            <lightning-icon  icon-name="utility:delete" size="x-small" alternative-text="Delete">
+                                            </lightning-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+
+                        </table>
+
+                        <div class="quote-section-card__footer-row">
+                            <!-- <lightning-button variant="brand" label="Show All Items" title="Show All Items" style="margin-right: 11px;"></lightning-button> -->
+                            <lightning-button variant="brand" label="Add Item" data-id={section.id} onclick={addRowSectionProduct} class="quote-add-item-btn">
+                            </lightning-button>
+
+                            <!-- <lightning-button 
+                                            label="Save Records" 
+                                            onclick={loadSectionData} 
+                                            variant="brand" 
+                                            class="slds-m-left_medium">
+                                        </lightning-button> -->
+
+                            <div class="quote-section-total">
+                                <span class="quote-section-total__label">Section Total</span>
+                                <lightning-formatted-number value={section.total} format-style="currency" currency-code={effectiveCurrency} class="quote-section-total__value">
+                                </lightning-formatted-number>
+                            </div>
+                        </div>
+
+                        <div class="quote-section-notes">
+                            <lightning-textarea data-id={section.id} value={section.notes} label="Section Notes (Visible to Client)"
+                                placeholder="Provide additional context for the line items in this section..." name="notes" onblur={handleSectionNote}>
+                            </lightning-textarea>
+                        </div>
+
                     </div>
-
-                    <lightning-textarea data-id={section.id} value={section.notes} label="Note" name="notes" onblur={handleSectionNote}></lightning-textarea>
-
-
                 </div>
             </div>
             <br key={section.id} />
         </template>
         <div class="slds-p-top_medium"></div>
-        <div>
+        <div style="margin-left: 10px;margin-bottom: 10px;">
             <lightning-button label="Add Section" variant="brand" title="Add Section" onclick={addSection}></lightning-button>
             </br>
 

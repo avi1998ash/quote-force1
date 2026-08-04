@@ -1,21 +1,40 @@
 <template>
-    <c-header-cmp title="Quotation System Configuration" title-sec="Centralize your admin settings and maintain consistency across all quotes.">
-    </c-header-cmp>
+    <!-- Existing header component call preserved exactly (not removed). -->
+    <!-- Visually collapsed via CSS (.legacy-hero) to match the reference's compact header. -->
+    <!-- If you'd rather delete this line outright instead of hiding it, say so and I'll remove it. -->
+    <div class="legacy-hero">
+        <c-header-cmp title="Quotation System Configuration" title-sec="Centralize your admin settings and maintain consistency across all quotes.">
+        </c-header-cmp>
+    </div>
+
     <template if:true={loaded}>
-        <!-- <lightning-spinner style="height: 100vh;" alternative-text="Loading"></lightning-spinner> -->
         <c-wave-loader></c-wave-loader>
     </template>
+
     <lightning-card>
         <div class="admin-wrapper">
 
-            <div class="header-btns">
-                <template if:false={isEditMode}>
-                    <lightning-button variant="neutral" label="Edit" onclick={toggleEdit}></lightning-button>
-                </template>
-                <template if:true={isEditMode}>
-                    <lightning-button variant="neutral" label="Cancel" onclick={toggleEdit}></lightning-button>
-                    <button class="save" onclick={handleSave}>Save</button>
-                </template>
+            <!-- Breadcrumb + Title + Editing badge (new markup, uses existing isEditMode, no JS change) -->
+            <div class="page-header">
+                <!-- <div class="breadcrumb">Home&nbsp;/&nbsp;Administration&nbsp;/&nbsp;<span>Admin Configuration</span></div> -->
+                <div class="page-title-row">
+                    <div>
+                        <h1 class="page-title">Admin Configuration</h1>
+                        <p class="page-subtitle">Centralize your admin settings and maintain consistency across all quotes.</p>
+                    </div>
+                    <div class="header-btns">
+                        <template if:true={isEditMode}>
+                            <span class="editing-badge">Editing</span>
+                        </template>
+                        <template if:false={isEditMode}>
+                            <lightning-button variant="neutral" label="Edit" onclick={toggleEdit}></lightning-button>
+                        </template>
+                        <template if:true={isEditMode}>
+                            <lightning-button variant="neutral" label="Discard Changes" onclick={toggleEdit}></lightning-button>
+                            <button class="save" onclick={handleSave}>Save Changes</button>
+                        </template>
+                    </div>
+                </div>
             </div>
 
             <!-- Contact Information -->
@@ -49,211 +68,238 @@
                         <lightning-textarea label="Street Address" value={configRecord.QuoteForce__Street__c} onchange={handleInputChange} data-field="street">
                         </lightning-textarea>
 
-                        <!-- City -->
-                        <lightning-input label="City" value={configRecord.QuoteForce__City__c} onchange={handleInputChange} data-field="city">
-                        </lightning-input>
+                                <div class="slds-grid slds-gutters">
+                                    <div class="slds-col">
+                                        <lightning-input label="Postal Code" value={configRecord.QuoteForce__Postal_Code__c} onchange={handleInputChange} data-field="postalCode">
+                                        </lightning-input>
+                                    </div>
+                                    <div class="slds-col">
+                                        <lightning-input label="State" value={configRecord.QuoteForce__State_Province__c} onchange={handleInputChange} data-field="state">
+                                        </lightning-input>
+                                    </div>
+                                </div>
 
-                        <!-- Postal Code + State in same row -->
-                        <div class="slds-grid slds-gutters">
-                            <div class="slds-col">
-                                <lightning-input label="Postal Code" value={configRecord.QuoteForce__Postal_Code__c} onchange={handleInputChange} data-field="postalCode">
+                                <lightning-input label="Country" value={configRecord.QuoteForce__Country__c} onchange={handleInputChange} data-field="country">
                                 </lightning-input>
-                            </div>
-                            <div class="slds-col">
-                                <lightning-input label="State" value={configRecord.QuoteForce__State_Province__c} onchange={handleInputChange} data-field="state">
-                                </lightning-input>
-                            </div>
+                            </template>
                         </div>
+                    </div>
 
-                        <!-- Country -->
-                        <lightning-input label="Country" value={configRecord.QuoteForce__Country__c} onchange={handleInputChange} data-field="country">
-                        </lightning-input>
-                    </template>
-                </div>
-            </div>
-
-            <!-- Company Details -->
-            <div class="admin-card">
-                <div class="admin-card-header">Company Details</div>
-                <div class="admin-card-body">
-                    <!-- READ ONLY -->
-                    <template if:false={isEditMode}>
-                        <p><b>Company Logo:</b></p>
-                        <template if:true={logoUrl}>
-                            <div class="preview-card">
-                                <img src={logoUrl} alt="Company Logo" class="preview-image" />
-                                <lightning-button label="View" variant="neutral" onclick={handleViewLogo} class="view-btn">
-                                </lightning-button>
-                            </div>
-                        </template>
-
-                        <p><b>Warranty:</b></p>
-                        <template if:true={warrantyUrl}>
-                            <div class="preview-card">
-                                <img src={warrantyUrl} class="preview-doc" />
-                                <!-- <iframe src={warrantyUrl} width="100%" height="400px" style="border-radius: 1rem !important;"></iframe> -->
-                                <lightning-button label="View" variant="neutral" onclick={handleViewWarranty} class="view-btn">
-                                </lightning-button>
-                            </div>
-                        </template>
-
-                        <p><b>Terms & Conditions:</b></p>
-                        <template if:true={termsUrl}>
-                            <div class="preview-card">
-                                <img src={termsUrl} class="preview-doc" />
-                                <!-- <iframe src={termsUrl} width="100%" height="400px" style="border-radius: 1rem !important;"></iframe> -->
-                                <lightning-button label="View" variant="neutral" onclick={handleViewTerms} class="view-btn">
-                                </lightning-button>
-                            </div>
-                        </template>
-                    </template>
-
-                    <!-- EDIT MODE -->
-                    <template if:true={isEditMode}>
-                        <!-- Logo -->
-                        <p><b>Company Logo:</b></p>
-                        <template if:false={logoUrl}>
-                            <lightning-file-upload label="Upload Company Logo" record-id={configRecord.QuoteForce__Id} accept=".png,.jpg,.jpeg,.gif"
-                                onuploadfinished={handleLogoUpload}>
-                            </lightning-file-upload>
-                        </template>
-                        <template if:true={logoUrl}>
-                            <div class="preview-card">
-                                <img src={logoUrl} alt="Company Logo" class="preview-image" />
-                                <div class="button-group">
-                                    <lightning-button label="View" variant="neutral" onclick={handleViewLogo}></lightning-button>
-                                    <lightning-button label="Delete" variant="destructive" onclick={openDeleteLogo}></lightning-button>
+                    <!-- Company Details -->
+                    <div class="admin-card">
+                        <div class="admin-card-header">Company Details</div>
+                        <div class="admin-card-body">
+                            <!-- READ ONLY -->
+                            <template if:false={isEditMode}>
+                                <div class="doc-block">
+                                    <span class="field-label">Company Logo</span>
+                                    <template if:true={logoUrl}>
+                                        <div class="preview-card">
+                                            <img src={logoUrl} alt="Company Logo" class="preview-image" />
+                                            <lightning-button label="View" variant="neutral" onclick={handleViewLogo} class="view-btn">
+                                            </lightning-button>
+                                        </div>
+                                    </template>
                                 </div>
-                            </div>
-                        </template>
 
-                        <!-- Warranty -->
-                        <p><b>Warranty:</b></p>
-                        <template if:false={warrantyUrl}>
-                            <lightning-file-upload label="Upload Warranty" record-id={configRecord.QuoteForce__Id} accept=".png,.jpg,.jpeg,.gif"
-                                onuploadfinished={handleWarrantyUpload}>
-                            </lightning-file-upload>
-                        </template>
-                        <template if:true={warrantyUrl}>
-                            <div class="preview-card">
-                                <img src={warrantyUrl} class="preview-doc" />
-                                <div class="button-group">
-                                    <lightning-button label="View" variant="neutral" onclick={handleViewWarranty}></lightning-button>
-                                    <lightning-button label="Delete" variant="destructive" onclick={openDeleteWarranty}></lightning-button>
+                                <div class="doc-block">
+                                    <span class="field-label">Warranty</span>
+                                    <template if:true={warrantyUrl}>
+                                        <div class="preview-card">
+                                            <img src={warrantyUrl} class="preview-doc" />
+                                            <lightning-button label="View" variant="neutral" onclick={handleViewWarranty} class="view-btn">
+                                            </lightning-button>
+                                        </div>
+                                    </template>
                                 </div>
-                            </div>
-                        </template>
 
-                        <!-- Terms & Conditions -->
-                        <p><b>Terms & Conditions:</b></p>
-                        <template if:false={termsUrl}>
-                            <lightning-file-upload label="Upload Terms & Conditions" record-id={configRecord.QuoteForce__Id} accept=".png,.jpg,.jpeg,.gif"
-                                onuploadfinished={handleTermsUpload}>
-                            </lightning-file-upload>
-                        </template>
-                        <template if:true={termsUrl}>
-                            <div class="preview-card">
-                                <img src={termsUrl} class="preview-doc" />
-                                <!-- <iframe src={termsUrl} width="100%" height="400px" style="border-radius: 1rem !important;"></iframe> -->
-                                <div class="button-group">
-                                    <lightning-button label="View" variant="neutral" onclick={handleViewTerms}></lightning-button>
-                                    <lightning-button label="Delete" variant="destructive" onclick={openDeleteTerms}></lightning-button>
+                                <div class="doc-block">
+                                    <span class="field-label">Terms &amp; Conditions</span>
+                                    <template if:true={termsUrl}>
+                                        <div class="preview-card">
+                                            <img src={termsUrl} class="preview-doc" />
+                                            <lightning-button label="View" variant="neutral" onclick={handleViewTerms} class="view-btn">
+                                            </lightning-button>
+                                        </div>
+                                    </template>
                                 </div>
-                            </div>
-                        </template>
-                    </template>
-                </div>
+                            </template>
 
-            </div>
-
-            <!-- Default Active Pages -->
-            <div class="admin-card">
-                <div class="admin-card-header">Default Active Pages For Quote Template</div>
-                <div class="admin-card-body">
-                    <template if:false={isEditMode}>
-                        <p><b>Active Pages:</b></p>
-                        <lightning-checkbox-group options={checkboxOptions} value={selectedCheckboxes} onchange={handleCheckboxChange} disabled></lightning-checkbox-group>
-                    </template>
-                    <template if:true={isEditMode}>
-                        <lightning-checkbox-group options={checkboxOptions} value={selectedCheckboxes} onchange={handleCheckboxChange}></lightning-checkbox-group>
-                    </template>
-                </div>
-            </div>
-
-            <!-- Default Values Estimate -->
-            <div class="admin-card">
-                <div class="admin-card-header">Default Values Estimate</div>
-                <div class="admin-card-body">
-                    <template if:false={isEditMode}>
-                        <p><b>Default Currency:</b> {configRecord.QuoteForce__Currency__c}</p>
-                        <p><b>Link With Opportunity:</b> <lightning-input type="checkbox" disabled variant="label-hidden"
-                                checked={configRecord.QuoteForce__Link_With_Opportunity__c} onchange={handleInputChange}></lightning-input></p>
-                        <p><b>Fetch Address From Account:</b> <lightning-input type="checkbox" disabled variant="label-hidden" label="Fetch Address From Account"
-                                checked={configRecord.QuoteForce__Fecth_Address_From_Account__c} onchange={handleInputChange}></lightning-input></p>
-
-                    </template>
-
-                    <template if:true={isEditMode}>
-                        <lightning-combobox label="Default Currency" value={configRecord.QuoteForce__Currency__c} options={currencyOptions} onchange={handleCurrencyChange}>
-                        </lightning-combobox>
-
-                        <lightning-input type="checkbox" label="Link With Opportunity" checked={configRecord.QuoteForce__Link_With_Opportunity__c}
-                            onchange={handleInputChange}></lightning-input>
-                        <lightning-input type="checkbox" label="Fetch Address From Account" checked={configRecord.QuoteForce__Fecth_Address_From_Account__c}
-                            onchange={handleInputChange}></lightning-input>
-                    </template>
-                </div>
-            </div>
-
-            <div class="admin-card">
-                <div class="admin-card-header">Invoice Details</div>
-                <div class="admin-card-body">
-                    <template if:false={isEditMode}>
-                        <p><b>Invoice Terms & Conditions:</b></p>
-                        <lightning-formatted-rich-text value={configRecord.QuoteForce__Invoice_Terms_Condition__c}></lightning-formatted-rich-text>
-
-                        <p><b>Notes:</b> {configRecord.QuoteForce__Notes__c}</p>
-
-                        <p><b>Signature:</b></p>
-                        <template if:true={signatureUrl}>
-                            <div class="preview-card">
-                                <img src={signatureUrl} alt="Signature" class="preview-image" />
-                                <lightning-button label="View" variant="neutral" onclick={handleViewSignature} class="view-btn">
-                                </lightning-button>
-                            </div>
-                        </template>
-                    </template>
-
-                    <template if:true={isEditMode}>
-                        <p><b>Invoice Terms & Conditions:</b></p>
-                        <lightning-input-rich-text variant="label-hidden" label="Invoice Terms & Conditions" value={configRecord.QuoteForce__Invoice_Terms_Condition__c}
-                            onchange={handleInputChange}>
-                        </lightning-input-rich-text>
-
-                        <p><b>Notes:</b></p>
-                        <lightning-input variant="label-hidden" label="Notes" value={configRecord.QuoteForce__Notes__c} onchange={handleInputChange}>
-                        </lightning-input>
-
-                        <p><b>Signature:</b></p>
-                        <template if:false={signatureUrl}>
-                            <lightning-file-upload label="Upload Signature" record-id={configRecord.QuoteForce__Id} accept=".png,.jpg,.jpeg,.gif"
-                                onuploadfinished={handleSignatureUpload}>
-                            </lightning-file-upload>
-                        </template>
-                        <template if:true={signatureUrl}>
-                            <div class="preview-card">
-                                <img src={signatureUrl} alt="Signature" class="preview-image" />
-                                <div class="button-group">
-                                    <lightning-button label="View" variant="neutral" onclick={handleViewSignature}></lightning-button>
-                                    <lightning-button label="Delete" variant="destructive" onclick={openDeleteSignature}></lightning-button>
+                            <!-- EDIT MODE -->
+                            <template if:true={isEditMode}>
+                                <!-- Logo -->
+                                <div class="doc-block">
+                                    <span class="field-label">Company Logo</span>
+                                    <template if:false={logoUrl}>
+                                        <lightning-file-upload label="Upload Company Logo" record-id={configRecord.QuoteForce__Id} accept=".png,.jpg,.jpeg,.gif"
+                                            onuploadfinished={handleLogoUpload}>
+                                        </lightning-file-upload>
+                                    </template>
+                                    <template if:true={logoUrl}>
+                                        <div class="preview-card">
+                                            <img src={logoUrl} alt="Company Logo" class="preview-image" />
+                                            <div class="button-group">
+                                                <lightning-button label="View" variant="neutral" onclick={handleViewLogo}></lightning-button>
+                                                <lightning-button label="Delete" class="delete-btn" variant="destructive" onclick={openDeleteLogo}></lightning-button>
+                                            </div>
+                                        </div>
+                                    </template>
                                 </div>
-                            </div>
-                        </template>
-                    </template>
+
+                                <!-- Warranty -->
+                                <div class="doc-block">
+                                    <span class="field-label">Warranty</span>
+                                    <template if:false={warrantyUrl}>
+                                        <lightning-file-upload label="Upload Warranty" record-id={configRecord.QuoteForce__Id} accept=".png,.jpg,.jpeg,.gif"
+                                            onuploadfinished={handleWarrantyUpload}>
+                                        </lightning-file-upload>
+                                    </template>
+                                    <template if:true={warrantyUrl}>
+                                        <div class="preview-card">
+                                            <img src={warrantyUrl} class="preview-doc" />
+                                            <div class="button-group">
+                                                <lightning-button label="View" variant="neutral" onclick={handleViewWarranty}></lightning-button>
+                                                <lightning-button label="Delete" class="delete-btn" variant="destructive" onclick={openDeleteWarranty}></lightning-button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+
+                                <!-- Terms & Conditions -->
+                                <div class="doc-block">
+                                    <span class="field-label">Terms &amp; Conditions</span>
+                                    <template if:false={termsUrl}>
+                                        <lightning-file-upload label="Upload Terms & Conditions" record-id={configRecord.QuoteForce__Id} accept=".png,.jpg,.jpeg,.gif"
+                                            onuploadfinished={handleTermsUpload}>
+                                        </lightning-file-upload>
+                                    </template>
+                                    <template if:true={termsUrl}>
+                                        <div class="preview-card">
+                                            <img src={termsUrl} class="preview-doc" />
+                                            <div class="button-group">
+                                                <lightning-button label="View" variant="neutral" onclick={handleViewTerms}></lightning-button>
+                                                <lightning-button label="Delete" class="delete-btn" variant="destructive" onclick={openDeleteTerms}></lightning-button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Row 2: Default Active Pages + Default Values Estimate -->
+                <div class="grid-row">
+                    <!-- Default Active Pages -->
+                    <div class="admin-card">
+                        <div class="admin-card-header">Default Active Pages For Quote Template</div>
+                        <div class="admin-card-body">
+                            <p class="section-label">Active Pages</p>
+                            <template if:false={isEditMode}>
+                                <lightning-checkbox-group options={checkboxOptions} value={selectedCheckboxes} onchange={handleCheckboxChange} disabled></lightning-checkbox-group>
+                            </template>
+                            <template if:true={isEditMode}>
+                                <lightning-checkbox-group options={checkboxOptions} value={selectedCheckboxes} onchange={handleCheckboxChange}></lightning-checkbox-group>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Default Values Estimate -->
+                    <div class="admin-card">
+                        <div class="admin-card-header">Default Values Estimate</div>
+                        <div class="admin-card-body">
+                            <template if:false={isEditMode}>
+                                <div class="field-row"><span class="field-label">Default Currency</span><span class="field-value">{configRecord.QuoteForce__Currency__c}</span></div>
+                                <div class="field-row">
+                                    <span class="field-label">Link With Opportunity</span>
+                                    <lightning-input type="checkbox" disabled variant="label-hidden"
+                                        checked={configRecord.QuoteForce__Link_With_Opportunity__c} onchange={handleInputChange}></lightning-input>
+                                </div>
+                                <div class="field-row">
+                                    <span class="field-label">Fetch Address From Account</span>
+                                    <lightning-input type="checkbox" disabled variant="label-hidden" label="Fetch Address From Account"
+                                        checked={configRecord.QuoteForce__Fecth_Address_From_Account__c} onchange={handleInputChange}></lightning-input>
+                                </div>
+                            </template>
+
+                            <template if:true={isEditMode}>
+                                <lightning-combobox label="Default Currency" value={configRecord.QuoteForce__Currency__c} options={currencyOptions} onchange={handleCurrencyChange}>
+                                </lightning-combobox>
+
+                                <lightning-input type="checkbox" label="Link With Opportunity" checked={configRecord.QuoteForce__Link_With_Opportunity__c}
+                                    onchange={handleInputChange}></lightning-input>
+                                <lightning-input type="checkbox" label="Fetch Address From Account" checked={configRecord.QuoteForce__Fecth_Address_From_Account__c}
+                                    onchange={handleInputChange}></lightning-input>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Invoice Details (full width) -->
+                <div class="grid-row grid-row-single">
+                    <div class="admin-card">
+                        <div class="admin-card-header">Invoice Details</div>
+                        <div class="admin-card-body">
+                            <template if:false={isEditMode}>
+                                <div class="invoice-grid">
+                                    <div>
+                                        <p class="section-label">Invoice Terms &amp; Conditions</p>
+                                        <div class="text-block">
+                                            <lightning-formatted-rich-text value={configRecord.QuoteForce__Invoice_Terms_Condition__c}></lightning-formatted-rich-text>
+                                        </div>
+                                        <p class="section-label">Notes</p>
+                                        <div class="text-block">{configRecord.QuoteForce__Notes__c}</div>
+                                    </div>
+                                    <div>
+                                        <p class="section-label">Signature</p>
+                                        <template if:true={signatureUrl}>
+                                            <div class="preview-card signature-card">
+                                                <img src={signatureUrl} alt="Signature" class="preview-image" />
+                                                <lightning-button label="View" variant="neutral" onclick={handleViewSignature} class="view-btn">
+                                                </lightning-button>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template if:true={isEditMode}>
+                                <div class="invoice-grid">
+                                    <div>
+                                        <p class="section-label">Invoice Terms &amp; Conditions</p>
+                                        <lightning-input-rich-text variant="label-hidden" label="Invoice Terms & Conditions" value={configRecord.QuoteForce__Invoice_Terms_Condition__c}
+                                            onchange={handleInputChange}>
+                                        </lightning-input-rich-text>
+
+                                        <p class="section-label">Notes</p>
+                                        <lightning-input variant="label-hidden" label="Notes" value={configRecord.QuoteForce__Notes__c} onchange={handleInputChange}>
+                                        </lightning-input>
+                                    </div>
+                                    <div>
+                                        <p class="section-label">Signature</p>
+                                        <template if:false={signatureUrl}>
+                                            <lightning-file-upload label="Upload Signature" record-id={configRecord.QuoteForce__Id} accept=".png,.jpg,.jpeg,.gif"
+                                                onuploadfinished={handleSignatureUpload}>
+                                            </lightning-file-upload>
+                                        </template>
+                                        <template if:true={signatureUrl}>
+                                            <div class="preview-card signature-card">
+                                                <img src={signatureUrl} alt="Signature" class="preview-image" />
+                                                <div class="button-group">
+                                                    <lightning-button label="View" variant="neutral" onclick={handleViewSignature}></lightning-button>
+                                                    <lightning-button label="Delete" class="delete-btn" variant="destructive" onclick={openDeleteSignature}></lightning-button>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
-            
             <!-- Delete Confirmation Modal -->
             <template if:true={isDeleteModalOpen}>
                 <c-delete-confirm-modal
@@ -270,8 +316,8 @@
                     <lightning-button variant="neutral" label="Edit" onclick={toggleEdit}></lightning-button>
                 </template>
                 <template if:true={isEditMode}>
-                    <lightning-button variant="neutral" label="Cancel" onclick={toggleEdit}></lightning-button>
-                    <button class="save" onclick={handleSave}>Save</button>
+                    <lightning-button variant="neutral" label="Discard Changes" onclick={toggleEdit}></lightning-button>
+                    <button class="save" onclick={handleSave}>Save Changes</button>
                 </template>
             </div>
         </div>
@@ -280,7 +326,6 @@
         <template if:true={isModalOpen}>
             <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
                 <div class="slds-modal__container">
-                    <!-- Header -->
                     <header class="slds-modal__header">
                         <h2 class="slds-text-heading_medium">{modalTitle}</h2>
                         <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={closeModal}>
@@ -288,15 +333,12 @@
                         </button>
                     </header>
 
-                    <!-- Body -->
                     <div class="slds-modal__content" style="text-align:center;">
                         <template if:true={modalFileUrl}>
                             <img src={modalFileUrl} alt={modalTitle} style="max-width:100%;max-height:500px;object-fit:contain;" />
-                            <!-- <iframe if:false={modalIsImg} src={modalFileUrl}></iframe> -->
                         </template>
                     </div>
 
-                    <!-- Footer -->
                     <footer class="slds-modal__footer">
                         <lightning-button label="Close" onclick={closeModal}></lightning-button>
                     </footer>

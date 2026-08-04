@@ -13,25 +13,44 @@
         <div class="slds-modal__container">
             <!-- Modal/Popup Header -->
             <header class="slds-modal__header">
+                <div class="modal-header-left">
+                    <span class="modal-header-icon" aria-hidden="true">
+                        <lightning-icon icon-name="utility:file" size="x-small"></lightning-icon>
+                    </span>
+                    <div class="modal-header-text">
+                        <h2 class="slds-text-heading_medium">{templateType}</h2>
+                        <p class="modal-header-subtitle">Configure the structure and default styles for your quotation document.</p>
+                    </div>
+                </div>
                 <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
                     <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
                     <span class="slds-assistive-text">Close</span>
                 </button>
-                <h2 class="slds-text-heading_medium">{templateType}</h2>
             </header>
 
             <!-- Modal/Popup Body -->
-            <div class="slds-modal__content slds-p-around_medium" >
+            <div class="slds-modal__content slds-p-around_medium" style="min-height: 80%;">
 
                 <c-custom-quote-c-m-p record-id={recordId} onclosemodal={closeModal} currency={currencyType}></c-custom-quote-c-m-p>
             </div>
 
             <!-- Modal/Popup Footer -->
-            <footer class="slds-modal__footer" style="display: flex; justify-content: center; gap: 2rem;">
-                <button class="clear-btn" onclick={closeModal}>Cancel</button>
-                <!-- <lightning-button label="Cancel" variant="neutral" onclick={closeModal}></lightning-button> -->
-                <button class="save-btn" onclick={handleSave}>Save</button>
-                <!-- <lightning-button class="slds-p-left_x-small" label="Save" variant="brand" onclick={handleSave}></lightning-button> -->
+            <footer class="slds-modal__footer">
+                <p class="modal-footer-note">
+                    <span class="modal-footer-note-icon" aria-hidden="true">
+                        <lightning-icon icon-name="utility:info" size="xx-small"></lightning-icon>
+                    </span>
+                    All changes are autosaved to draft.
+                </p>
+                <div class="modal-footer-actions">
+                    <button class="clear-btn" onclick={closeModal}>Cancel</button>
+                    <!-- <lightning-button label="Cancel" variant="neutral" onclick={closeModal}></lightning-button> -->
+                    <button class="save-btn" onclick={handleSave}>
+                        Save &amp; Continue
+                        <span class="save-btn-arrow" aria-hidden="true">&#8594;</span>
+                    </button>
+                    <!-- <lightning-button class="slds-p-left_x-small" label="Save" variant="brand" onclick={handleSave}></lightning-button> -->
+                </div>
             </footer>
 
         </div>

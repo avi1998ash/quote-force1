@@ -211,3 +211,161 @@ lightning-combobox {
     max-width: 80vw !important;
     width: 60%;
 }
+/* ============================================================ */
+/* QuoteForce page shell — nav, hero, panels                      */
+/* ============================================================ */
+
+.qf-page {
+  --qf-navy: #1e3a5f;
+  --qf-navy-dark: #16304f;
+  --qf-brand: #003366;
+  --qf-border: #d7dde3;
+  --qf-text-muted: #6b7280;
+  --qf-bg-page: #f2f4f7;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--qf-bg-page);
+  color: #1c1c1c;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.qf-topnav {
+  display: flex; align-items: center; justify-content: space-between;
+  background: #ffffff; padding: 16px 40px; border-bottom: 1px solid var(--qf-border);
+}
+.qf-topnav-left { display: flex; align-items: center; gap: 36px; }
+.qf-logo { font-size: 22px; font-weight: 800; color: #13253f ; letter-spacing: -0.5px; }
+.qf-nav-links { display: flex; gap: 28px; }
+.qf-nav-links a { text-decoration: none; color: #333; font-size: 15px; font-weight: 500; }
+.qf-topnav-right { display: flex; align-items: center; gap: 20px; }
+.qf-search-box {
+  display: flex; align-items: center; gap: 8px;
+  background: #f1f3f6; border: 1px solid var(--qf-border); border-radius: 8px;
+  padding: 9px 14px; min-width: 220px; color: var(--qf-text-muted); font-size: 14px;
+}
+.qf-icon-btn { cursor: pointer; }
+.qf-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--qf-brand); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+}
+
+.qf-hero {
+  margin: 24px 20px 0;
+  background: #13253f ;
+  max-height: 130px;
+  border-radius: 12px; padding: 40px 20px; text-align: center;
+}
+.qf-hero h1 { color: #ffffff; font-size: 40px; font-weight: 800; margin: 0 0 8px; letter-spacing: -0.5px; }
+.qf-hero p { color: #b7c7dc; font-size: 16px; margin: 0; }
+
+.qf-content { margin: 24px 20px 40px; display: grid; grid-template-columns: 1fr; gap: 24px; }
+.qf-main-col { display: flex; flex-direction: column; gap: 24px; }
+.qf-panel { background: #ffffff; border: 1px solid var(--qf-border); border-radius: 12px; padding: 28px 32px; }
+.qf-panel-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+.qf-panel-title-group { display: flex; gap: 16px; align-items: flex-start; }
+.qf-panel-icon {
+  width: 46px; height: 46px; border-radius: 10px; background: #13253f ;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.qf-panel-title-group h3 { margin: 0 0 4px; font-size: 20px; font-weight: 700; }
+.qf-panel-title-group p { margin: 0; color: var(--qf-text-muted); font-size: 14px; }
+
+.qf-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 28px; }
+.qf-field label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #333; }
+.qf-req { color: #d9534f; margin-left: 2px; }
+
+.qf-actions-panel { display: flex; align-items: center; justify-content: space-between; }
+.qf-btn {
+  padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--qf-border); background: #fff; color: #333;
+}
+.qf-btn-group { display: flex; gap: 14px; flex-wrap: wrap; }
+.qf-btn-primary {
+  background: #13253f ; color: #fff; border: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.qf-btn-primary lightning-icon { --slds-c-icon-color-foreground-default: #ffffff; }
+
+.qf-site-footer {
+  background: #e9ebee; padding: 24px 40px; display: flex; justify-content: space-between;
+  align-items: center; color: var(--qf-text-muted); font-size: 14px;
+}
+.qf-footer-links { display: flex; gap: 28px; }
+.qf-footer-links a { color: var(--qf-text-muted); text-decoration: none; }
+
+@media only screen and (max-width: 900px) {
+  .qf-form-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================ */
+/* Address Information — Billing / Shipping cards                */
+/* ============================================================ */
+
+.address-info-wrapper {
+  background: #f7f9fc; border: 1px solid #e3e8f0; border-radius: 20px;
+  padding: 1.5rem 1.75rem 1.75rem;
+}
+.address-info-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
+.address-info-header-left { display: flex; align-items: center; gap: 0.85rem; }
+.address-info-icon {
+  width: 42px; height: 42px; min-width: 42px; border-radius: 12px;
+  background: linear-gradient(135deg, #003366 0%, #0a5aa8 100%);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 14px rgba(0, 51, 102, 0.25);
+}
+.address-info-title { font-size: 1.05rem; font-weight: 700; color: #0b1f33; }
+.address-info-subtitle { font-size: 0.82rem; color: #6b7789; margin-top: 2px; }
+
+.address-cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+@media only screen and (max-width: 900px) { .address-cards-grid { grid-template-columns: 1fr; } }
+
+.address-card {
+  background: #ffffff; border: 1px solid #e6e9ef; border-radius: 18px; padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(15, 30, 60, 0.06);
+}
+.address-card__header { display: flex; align-items: center; gap: 0.85rem; }
+.address-card__badge {
+  width: 38px; height: 38px; min-width: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+.address-card__badge_billing { background: linear-gradient(135deg, #003366 0%, #0a5aa8 100%); }
+.address-card__badge_shipping { background: linear-gradient(135deg, #0c7a4b 0%, #12a566 100%); }
+.address-card__heading { display: flex; flex-direction: column; line-height: 1.25; }
+.address-card__label { font-size: 1rem; font-weight: 700; color: #0b1f33; }
+.address-card__sublabel { font-size: 0.75rem; color: #8792a3; margin-top: 1px; }
+.address-card__divider {
+  height: 1px; background: linear-gradient(90deg, #e9edf3 0%, rgba(233, 237, 243, 0) 100%);
+  margin: 1rem 0 1.1rem;
+}
+/* Match input/combobox corner radius to the qf- panel design (overrides the 1.5rem pill radius above) */
+.qf-field lightning-input,
+.qf-field lightning-combobox {
+  --slds-c-input-radius-border: 8px;
+}
+
+.address-card lightning-input-address {
+  --slds-c-input-radius-border: 8px;
+}
+.qf-template-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.qf-tpl-card{position:relative;border:1.5px solid #E4E6EA;border-radius:8px;padding:12px 14px;
+    display:flex;align-items:center;gap:10px;cursor:pointer;background:#FCFCFD;transition:border-color .15s,background .15s;}
+.qf-tpl-card:hover{border-color:#D4D7DD;background:#fff;}
+.qf-tpl-card:has(.qf-tpl-radio-input:checked){border-color:#3654E0;background:#EEF1FE;}
+.qf-tpl-radio-input{position:absolute;opacity:0;width:0;height:0;}
+.qf-tpl-radio-dot{width:16px;height:16px;border-radius:50%;border:1.5px solid #D4D7DD;flex-shrink:0;position:relative;background:#fff;}
+.qf-tpl-card:has(.qf-tpl-radio-input:checked) .qf-tpl-radio-dot{border-color:#3654E0;}
+.qf-tpl-card:has(.qf-tpl-radio-input:checked) .qf-tpl-radio-dot::after{content:'';position:absolute;inset:3px;border-radius:50%;background:#3654E0;}
+.qf-tpl-name{font-size:13.5px;font-weight:500;color:#14171F;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;}
+.qf-pagination{display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid #E4E6EA;}
+.qf-pg-btns{display:flex;gap:8px;}
+.qf-pg-label{font-size:12.5px;color:#9CA3AF;}
+.qf-summary-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.qf-stat{background:#FAFBFC;border:1px solid #E4E6EA;border-radius:10px;padding:12px 14px;}
+.qf-stat-label{font-size:11.5px;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;margin:0 0 6px;font-weight:500;}
+.qf-stat-value{font-size:14.5px;font-weight:600;color:#14171F;margin:0;}
+.qf-stat-mono{font-family:monospace;font-size:13px;}
+.qf-status-chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;color:#B7791F;background:#FEF6E7;padding:3px 10px;border-radius:6px;}
+.qf-status-chip::before{content:'';width:6px;height:6px;border-radius:50%;background:#B7791F;}

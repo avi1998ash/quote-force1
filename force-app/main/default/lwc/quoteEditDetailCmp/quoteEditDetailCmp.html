@@ -9,11 +9,11 @@
                 <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
                     <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
                     <span class="slds-assistive-text">Close</span>
-                </button>
+                </button> 
                 <div class="slds-modal__content slds-p-around_medium">
                     <div class="slds-grid slds-wrap">
                     </div>
-                    <div style="background-color: #106893; color: white; font-family: sans-serif;">
+                    <div class="confirm-modal-header-band">
                     </div>
                 </div>
                 <footer class="slds-modal__footer">
@@ -27,50 +27,59 @@
     <!-- 14-11-2024 -->
 
     <template if:true={showCatalogManagement}>
-        <div class="slds-m-bottom_small">
-            <span class="slds-badge slds-theme_inverse">{currencyBadgeLabel}</span>
-            <template if:true={selectedBundleCurrencyLabel}>
-                <span class="slds-badge slds-theme_success slds-m-left_x-small">{selectedBundleCurrencyLabel}</span>
-            </template>
-        </div>
+        <div class="qd-selector-card">
+            <div class="slds-m-bottom_small">
+                <span class="slds-badge slds-theme_inverse">{currencyBadgeLabel}</span>
+                <template if:true={selectedBundleCurrencyLabel}>
+                    <span class="slds-badge slds-theme_success slds-m-left_x-small">{selectedBundleCurrencyLabel}</span>
+                </template>
+            </div>
 
-        <div class="custom-combobox quote-pricebook-combobox" onclick={handleDropdownContainerClick}>
-            <div class={priceBookComboboxClass}>
-                <button type="button" class="custom-combobox__trigger" onclick={openPriceBookDropdown} disabled={isPriceBookLocked}
-                    aria-haspopup="listbox" aria-expanded={isPriceBookDropdownOpen}>
-                    <span class="custom-combobox__trigger-text">{selectedPriceBookLabel}</span>
-                    <lightning-icon icon-name="utility:down" size="xx-small" alternative-text="Open"></lightning-icon>
-                </button>
-                <template if:true={isPriceBookDropdownOpen}>
-                    <div class="custom-combobox__dropdown">
-                        <div class="custom-combobox__search">
-                            <lightning-input variant="label-hidden" type="search" label="Search Pricebook"
-                                placeholder="Search Pricebook" value={priceBookSearchTerm}
-                                onkeyup={handlePriceBookSearch} onchange={handlePriceBookSearch}>
-                            </lightning-input>
-                        </div>
-                        <div class="custom-combobox__options" role="listbox">
-                            <template if:true={hasFilteredPriceBookOptions}>
-                                <template for:each={filteredPriceBookOptions} for:item="option">
-                                    <button key={option.value} type="button" class="custom-combobox__option"
-                                        data-value={option.value} onclick={handlePriceBookOptionSelect}>
-                                        {option.label}
-                                    </button>
-                                </template>
-                            </template>
-                            <template if:false={hasFilteredPriceBookOptions}>
-                                <div class="custom-combobox__empty">No pricebooks found</div>
+            <div class="qd-selector-grid">
+                <div>
+                    <div class="qd-field-label">Price Book</div>
+                    <div class="custom-combobox quote-pricebook-combobox" onclick={handleDropdownContainerClick}>
+                        <div class={priceBookComboboxClass}>
+                            <button type="button" class="custom-combobox__trigger" onclick={openPriceBookDropdown} disabled={isPriceBookLocked}
+                                aria-haspopup="listbox" aria-expanded={isPriceBookDropdownOpen}>
+                                <span class="custom-combobox__trigger-text">{selectedPriceBookLabel}</span>
+                                <lightning-icon icon-name="utility:down" size="xx-small" alternative-text="Open"></lightning-icon>
+                            </button>
+                            <template if:true={isPriceBookDropdownOpen}>
+                                <div class="custom-combobox__dropdown">
+                                    <div class="custom-combobox__search">
+                                        <lightning-input variant="label-hidden" type="search" label="Search Pricebook"
+                                            placeholder="Search Pricebook" value={priceBookSearchTerm}
+                                            onkeyup={handlePriceBookSearch} onchange={handlePriceBookSearch}>
+                                        </lightning-input>
+                                    </div>
+                                    <div class="custom-combobox__options" role="listbox">
+                                        <template if:true={hasFilteredPriceBookOptions}>
+                                            <template for:each={filteredPriceBookOptions} for:item="option">
+                                                <button key={option.value} type="button" class="custom-combobox__option"
+                                                    data-value={option.value} onclick={handlePriceBookOptionSelect}>
+                                                    {option.label}
+                                                </button>
+                                            </template>
+                                        </template>
+                                        <template if:false={hasFilteredPriceBookOptions}>
+                                            <div class="custom-combobox__empty">No pricebooks found</div>
+                                        </template>
+                                    </div>
+                                </div>
                             </template>
                         </div>
                     </div>
-                </template>
+                </div>
+                <div>
+                    <div class="qd-field-label">Bundle Package (Optional)</div>
+                    <lightning-combobox name="progress" value={selectedProductBundleId} placeholder="Select Bundle" options={productBundleList}
+                        onchange={handleChangeProductBundle} variant="label-hidden" disabled={isBundleSelectionDisabled}>
+                    </lightning-combobox>
+                </div>
             </div>
+            <p class="qd-field-hint">{bundleSelectionHint}</p>
         </div>
-        <div class="slds-p-top_x-small"></div>
-        <lightning-combobox style="width:50%;" name="progress" value={selectedProductBundleId} placeholder="Select Bundle" options={productBundleList}
-            onchange={handleChangeProductBundle} variant="label-hidden" disabled={isBundleSelectionDisabled}>
-        </lightning-combobox>
-        <p class="slds-text-body_small slds-text-color_weak slds-m-top_x-small">{bundleSelectionHint}</p>
     </template>
 
     <template if:true={bundleSelectModel}>
@@ -85,7 +94,7 @@
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id1-1">
                     <div class="slds-p-around_medium">
-                        <div class="slds-m-bottom_medium" style="font-weight: bold;">{selectedProdBundleName}</div>
+                        <div class="slds-m-bottom_medium" style="font-weight: 600;">{selectedProdBundleName}</div>
                         <template for:each={getProductLineItemList} for:item="product">
                             <lightning-input key={product.Id} type="checkbox" onchange={handleProductLineItemCheckboxChange} data-id={product.Id} label={product.Name}
                                 checked={product.macProCheck}></lightning-input>
@@ -133,32 +142,22 @@
                     <template if:true={showDeleteActions}>
                         <div class="slds-col slds-size_6-of-12">
                             <span class="slds-m-left_small">
-                                <button class="del-section" data-index={secIndex} data-id={section.id} onclick={handleDeleteSection}>Delete Section</button>
+                                <button class="del-section" data-index={secIndex} data-id={section.id} onclick={handleDeleteSection}>
+                                    <lightning-icon icon-name="utility:delete" size="xx-small" alternative-text="Delete"></lightning-icon>
+                                    Delete Section
+                                </button>
                             </span>
                         </div>
                     </template>
                 </div>
 
                 <table class="slds-m-top_medium slds-m-bottom_medium slds-table slds-table_cell-buffer" style="width: 100%;">
-                    <thead>
-                        <th style=" width:45%; 
-                                                height:40px;
-                                                background: #003366;
-                                                color: white;
-                                                border-radius: 10px 0 0 0;">Item</th>
-                        <th style=" width:15%;    
-                                                background: #003366;
-                                                color: white;"><span class="">Quantity</span></th>
-                        <th style=" width:15%;
-                                                background: #003366;
-                                                color: white;"><span class="">Price</span></th>
-                        <th style=" width:15%;
-                                                background: #003366;
-                                                color: white;">Line Total</th>
-                        <th style=" width:10%;
-                                                background: #003366;
-                                                color: white;
-                                                border-radius: 0 10px 0 0px;"></th>
+                    <thead class="quote-table-head">
+                        <th style="width:45%;">Item / SKU</th>
+                        <th style="width:15%;"><span class="">Quantity</span></th>
+                        <th style="width:15%;"><span class="">Unit Price</span></th>
+                        <th style="width:15%;">Line Total</th>
+                        <th style="width:10%;"></th>
                     </thead>
                     <template for:each={section.products} for:item="prod" for:index="index">
                         <tr key={prod.id} class="Items" title={index}>
@@ -293,7 +292,7 @@
                         <span class="slds-clearfix">
                             <span class="slds-float_right">
                                 <span class="total"><b>Section Total: </b> &nbsp; &nbsp;
-                                    {currencySymbol}<lightning-formatted-number value={section.total} format-style="decimal" style="font-weight: bold; font-size: 13px;">
+                                    {currencySymbol}<lightning-formatted-number value={section.total} format-style="decimal" style="font-weight: 600; font-size: 13px;">
                                     </lightning-formatted-number>
                                 </span>
                             </span>

@@ -5,6 +5,7 @@ import customStyle from '@salesforce/resourceUrl/customStyle';
 import insertProduct from '@salesforce/apex/ProductConfigureController.insertProduct';
 import getAdminConfig from '@salesforce/apex/AdminSettingController.getAdminConfig';
 import updatePriceBookEntriesPrice from '@salesforce/apex/ProductConfigureController.updatePriceBookEntriesPrice';
+import upsertPriceBook from '@salesforce/apex/ProductConfigureController.upsertPriceBook';
 import listPriceBooks from '@salesforce/apex/ProductConfigureController.listPriceBooks';
 import createProductWithPricing from '@salesforce/apex/ProductConfigureController.createProductWithPricing';
 import getPriceBookEntriesByProduct from '@salesforce/apex/ProductConfigureController.getPriceBookEntriesByProduct';
@@ -29,6 +30,14 @@ import hasChildRecords from '@salesforce/apex/ProductConfigureController.hasChil
 
 const NEW_PRICEBOOK_OPTION = '__new__';
 
+const EMPTY_NEW_PRICEBOOK_FORM = {
+    Name: '',
+    QuoteForce__Currency__c: 'USD',
+    QuoteForce__Description__c: '',
+    QuoteForce__Is_Active__c: true,
+    QuoteForce__Is_Default__c: false
+};
+
 function createDraftPriceBook(currencyCode = 'USD') {
     return {
         Name: '',
@@ -38,7 +47,7 @@ function createDraftPriceBook(currencyCode = 'USD') {
         isDefault: false
     };
 }
-
+ 
 function createPricingRow(sequence, currencyCode = 'USD') {
     return {
         id: `pricing-row-${sequence}`,
@@ -54,6 +63,7 @@ function createPricingRow(sequence, currencyCode = 'USD') {
         currency: currencyCode,
         isActive: true,
         isNewPriceBook: false,
+        isLocked: false,
         draftPriceBook: createDraftPriceBook(currencyCode)
     };
 }
@@ -125,27 +135,29 @@ export default class ProductConfigureCmp extends LightningElement {
         return this.productDelete ? 'Delete Product' : 'Clear Product';
     }
 
+    get existingBundlePriceBookName() {
+        return this.existingBundlePriceBookSearchTerm || 'No Pricebook Selected';
+    }
+
     get modalMessage() {
-        return this.productDelete
-            ? 'Are you sure you want to delete this product?'
-            : 'Are you sure you want to reset all values?';
+        if (this.productDelete) {
+            return this.hasPriceBookEntriesWarning
+                ? 'Are you sure you want to delete this product? Deleting this product will also delete all its associated Price Book Entries.'
+                : 'Are you sure you want to delete this product?';
+        }
+        return 'Are you sure you want to reset all values?';
     }
 
     get modalButtonLabel() {
         return this.productDelete ? 'Delete' : 'Create';
     }
+
     get notDeleteMessage() {
-    if (this.blockedByPriceBook && this.blockedByBundle) {
-        return 'You cannot delete this Product because it is linked to one or more Price Books and is also used in a Product Bundle. Please remove those associations first.';
+        if (this.blockedByBundle) {
+            return 'You cannot delete this Product because it is used in a Product Bundle. Please remove it from the bundle first.';
+        }
+        return 'You cannot delete this Product because it has related records linked to it.';
     }
-    if (this.blockedByPriceBook) {
-        return 'You cannot delete this Product because it is linked to one or more Price Books. Please remove those Price Book Entries first.';
-    }
-    if (this.blockedByBundle) {
-        return 'You cannot delete this Product because it is used in a Product Bundle. Please remove it from the bundle first.';
-    }
-    return 'You cannot delete this Product because it has related records linked to it.';
-}
 
     handleConfirm() {
         if (this.productDelete) {
@@ -165,6 +177,7 @@ export default class ProductConfigureCmp extends LightningElement {
     @track searchVal = '';
     @track searchValBundle = '';
     @track productNameValue = '';
+    @track hasPriceBookEntriesWarning = false;
     @track ProductCodeValue = '';
     @track productDescriptionValue = '';
     @track UOMValue = '';
@@ -197,7 +210,9 @@ export default class ProductConfigureCmp extends LightningElement {
     pricingRowSequence = 0;
     @track isShowRemovePricingRowModal = false;
     _pendingRemoveRowId = null;
-    @track blockedByPriceBook = false;
+    @track isNewPriceBookPopupOpen = false;
+    @track newPriceBookForm = { ...EMPTY_NEW_PRICEBOOK_FORM };
+    activePricingRowId = null;
     @track blockedByBundle = false;
     @track isShowModalNotDelete = false;
     @track bundleCurrency = '';
@@ -224,6 +239,65 @@ export default class ProductConfigureCmp extends LightningElement {
 	@track selectedCurrency = 'USD';
     @track orgDefaultCurrency = '';
     documentClickHandler;
+
+    // ============================================================
+    // MAIN TAB BAR (UI-only replacement for <lightning-tabset>)
+    // lightning-tabset is a Salesforce base component with its own
+    // internal shadow DOM — CSS here cannot reach its nav bar to make
+    // it the floating overlapping card the design calls for. This is
+    // a plain, self-contained tab bar with identical tab labels and
+    // identical tab content (Products / Price Books / Price Book
+    // Entries / Bundles); no Apex calls or other logic are affected —
+    // switching tabs never triggered any side effects before, and it
+    // still doesn't now.
+    // ============================================================
+    @track activeMainTab = 'products';
+
+    get isProductsMainTabActive() {
+        return this.activeMainTab === 'products';
+    }
+    get isPriceBooksMainTabActive() {
+        return this.activeMainTab === 'priceBooks';
+    }
+    get isPriceBookEntriesMainTabActive() {
+        return this.activeMainTab === 'priceBookEntries';
+    }
+    get isBundlesMainTabActive() {
+        return this.activeMainTab === 'bundles';
+    }
+
+    get productsMainTabClass() {
+        return this.getMainTabClass('products');
+    }
+    get priceBooksMainTabClass() {
+        return this.getMainTabClass('priceBooks');
+    }
+    get priceBookEntriesMainTabClass() {
+        return this.getMainTabClass('priceBookEntries');
+    }
+    get bundlesMainTabClass() {
+        return this.getMainTabClass('bundles');
+    }
+
+    getMainTabClass(tab) {
+        return `qf-tabbar-item${this.activeMainTab === tab ? ' qf-tabbar-item--active' : ''}`;
+    }
+
+    handleMainTabClick(event) {
+        this.activeMainTab = event.currentTarget.dataset.tab;
+    }
+
+    // ============================================================
+    // PAGINATION (UI-only addition — see notes below)
+    // Products keep loading exactly as before via getProductRecord()/
+    // GetProducts(). productRecords still holds the FULL filtered
+    // list returned by Apex. Pagination only slices that array for
+    // rendering via the paginatedProductRecords getter; nothing about
+    // search, currency filtering, or CRUD calls is changed.
+    // ============================================================
+    @track currentPage = 1;
+    @track pageSize = 8;
+    _resizeHandler;
 
     get isSingleInsertRow() {
         return this.productItemListInsert.length <= 1;
@@ -304,6 +378,15 @@ export default class ProductConfigureCmp extends LightningElement {
         this.loadPriceBookOptions();
         this.initializePricingRows();
         this.loadOrgDefaultCurrency();
+
+        // Pagination: compute initial page size from viewport width and
+        // keep it in sync on resize (debounced).
+        this.updatePageSize();
+        this._resizeHandler = () => {
+            window.clearTimeout(this._resizeTimeout);
+            this._resizeTimeout = window.setTimeout(() => this.updatePageSize(), 150);
+        };
+        window.addEventListener('resize', this._resizeHandler);
     }
 
     async loadOrgDefaultCurrency() {
@@ -319,7 +402,93 @@ export default class ProductConfigureCmp extends LightningElement {
         if (this.documentClickHandler) {
             document.removeEventListener('click', this.documentClickHandler);
         }
+        if (this._resizeHandler) {
+            window.removeEventListener('resize', this._resizeHandler);
+        }
+        window.clearTimeout(this._resizeTimeout);
     }
+
+    // ---------------- Pagination helpers ----------------
+
+    updatePageSize() {
+        const width = window.innerWidth;
+        let columns = 1;
+        if (width >= 1200) {
+            columns = 4;
+        } else if (width >= 900) {
+            columns = 3;
+        } else if (width >= 600) {
+            columns = 2;
+        } else {
+            columns = 1;
+        }
+        const newSize = columns * 2;
+        if (newSize !== this.pageSize) {
+            this.pageSize = newSize;
+            this.currentPage = 1;
+        }
+    }
+
+    get totalPages() {
+        const total = this.productRecords ? this.productRecords.length : 0;
+        return Math.max(1, Math.ceil(total / this.pageSize));
+    }
+
+    get paginatedProductRecords() {
+        if (!this.productRecords || this.productRecords.length === 0) {
+            return [];
+        }
+        if (this.currentPage > this.totalPages) {
+            this.currentPage = this.totalPages;
+        }
+        const start = (this.currentPage - 1) * this.pageSize;
+        return this.productRecords.slice(start, start + this.pageSize);
+    }
+
+    get showPagination() {
+        return this.totalPages > 1;
+    }
+
+    get isFirstPage() {
+        return this.currentPage <= 1;
+    }
+
+    get isLastPage() {
+        return this.currentPage >= this.totalPages;
+    }
+
+    get pageNumbers() {
+        return Array.from({ length: this.totalPages }, (_, i) => {
+            const pageValue = i + 1;
+            const isActive = pageValue === this.currentPage;
+            return {
+                value: pageValue,
+                label: `${pageValue}`,
+                className: isActive ? 'qf-page-btn qf-page-btn--active' : 'qf-page-btn'
+            };
+        });
+    }
+
+    handlePrevPage() {
+        if (this.currentPage > 1) {
+            this.currentPage = this.currentPage - 1;
+        }
+    }
+
+    handleNextPage() {
+        if (this.currentPage < this.totalPages) {
+            this.currentPage = this.currentPage + 1;
+        }
+    }
+
+    handleGoToPage(event) {
+        const page = Number(event.currentTarget.dataset.page);
+        if (page >= 1 && page <= this.totalPages) {
+            this.currentPage = page;
+        }
+    }
+
+    // ------------------------------------------------------
 
     get bundlePriceBookFilterOptions() {
         return [
@@ -340,8 +509,8 @@ export default class ProductConfigureCmp extends LightningElement {
 
       getProductRecord(search) {
         console.log('### LWC getProductRecord called: search="' + search + '", currencyFilter="' + this.currencyFilter + '"');
-        
-        GetProducts({
+    
+    GetProducts({
             searchKey: search,
             currencyFilter: this.currencyFilter
         })
@@ -353,6 +522,7 @@ export default class ProductConfigureCmp extends LightningElement {
                 const rawPrice = prod.QuoteForce__Default_Price__c != null ? prod.QuoteForce__Default_Price__c : 0;
                 const normalizedCurrencyCode = normalizeCurrencyCode(prod.QuoteForce__Currency__c);
                 const currencySymbol = this.currencySymbols[normalizedCurrencyCode] || ' ';
+                const isProductActive = prod.QuoteForce__Active__c === true;
 
                 return {
                     ...prod,
@@ -364,7 +534,12 @@ export default class ProductConfigureCmp extends LightningElement {
                         : prod.Name,
                     productImageUrl: buildProductImageUrl(prod.QuoteForce__ContentDocumentLink_Id__c),
                     productInitial: (prod.Name || 'P').trim().split(/\s+/)[0],
-                    defaultPriceLabel: `${currencySymbol}${rawPrice}`
+                    defaultPriceLabel: `${currencySymbol}${rawPrice}`,
+                    isProductActive,
+                    activeStatusLabel: isProductActive ? 'Active' : 'Inactive',
+                    activeStatusClass: isProductActive
+                        ? 'status-pill status-pill--active'
+                        : 'status-pill status-pill--inactive'
                 };
             });
             console.log('### LWC mapped productRecords:', JSON.stringify(this.productRecords));
@@ -401,12 +576,13 @@ export default class ProductConfigureCmp extends LightningElement {
                 }));
 
                 if (!stillExists || !currentId) {
-                    this.selectedProdBundleId = toSelectId;
-                    const selectedBundle = filtered.find(b => b.bundleId === toSelectId);
-                    this.bundlePriceBookId = selectedBundle?.priceBookId || '';
-                    this.existingBundlePriceBookSearchTerm = selectedBundle?.priceBookName || '';
-                    this.getProductItems(toSelectId);
-                }
+                this.selectedProdBundleId = toSelectId;
+                const selectedBundle = filtered.find(b => b.bundleId === toSelectId);
+                this.bundlePriceBookId = selectedBundle?.priceBookId || '';
+                this.bundleCurrency = selectedBundle?.currencyCode || '';
+                this.existingBundlePriceBookSearchTerm = selectedBundle?.priceBookName || '';
+                this.getProductItems(toSelectId);
+            }
             }
 
             this.isShow = filtered.length > 0;
@@ -426,6 +602,7 @@ export default class ProductConfigureCmp extends LightningElement {
     handleSearchChange(event) {
         const searchTerm = event.target.value;
         this.searchVal = searchTerm;
+        this.currentPage = 1;
         this.getProductRecord(this.searchVal);
     }
 
@@ -501,15 +678,115 @@ export default class ProductConfigureCmp extends LightningElement {
     }
 
     getProductModalTabClass(step) {
-        return `product-modal-tab${this.currentProductModalStep === step ? ' product-modal-tab--active' : ''}`;
+        // UI-only enhancement: previously this returned just the base class
+        // plus "--active". It still does exactly that, and additionally
+        // marks steps that come before the current one as "--completed"
+        // (used purely for the checkmark styling on the stepper). No new
+        // @track property, no change to currentProductModalStep itself,
+        // and no change to any caller's usage.
+        const stepOrder = ['basic', 'image', 'pricing'];
+        const currentIndex = stepOrder.indexOf(this.currentProductModalStep);
+        const stepIndex = stepOrder.indexOf(step);
+
+        if (this.currentProductModalStep === step) {
+            return 'product-modal-tab product-modal-tab--active';
+        }
+        if (stepIndex !== -1 && currentIndex !== -1 && stepIndex < currentIndex) {
+            return 'product-modal-tab product-modal-tab--completed';
+        }
+        return 'product-modal-tab';
+    }
+
+    // ============================================================
+    // VALIDATION: Product Image / Pricing Setup steps must not be
+    // reachable until Basic Information (Product Name, Product Code,
+    // Default Quantity) is complete. This is additive — it does not
+    // touch validateNewProductForm()/validateEditProductForm() (the
+    // full Save-time validation), it only gates step navigation.
+    // ============================================================
+    get isBasicInfoValid() {
+        const nameOk = !!(this.productNameValue && this.productNameValue.trim() !== '');
+        const codeOk = !!(this.ProductCodeValue && this.ProductCodeValue.trim() !== '');
+        const qty = Number(this.productDQValue);
+        const qtyOk = this.productDQValue !== '' && this.productDQValue !== null
+            && this.productDQValue !== undefined && !isNaN(qty) && qty >= 1;
+        return nameOk && codeOk && qtyOk;
+    }
+
+    get isProductImageTabDisabled() {
+        return !this.isBasicInfoValid;
+    }
+
+    get isPricingSetupTabDisabled() {
+        return !this.isBasicInfoValid;
+    }
+
+    validateBasicInfoStepFields() {
+        let isValid = true;
+
+        const nameInput = this.template.querySelector('lightning-input[name="Product Name"]');
+        if (nameInput) {
+            if (!this.productNameValue || this.productNameValue.trim() === '') {
+                nameInput.setCustomValidity('Product Name is required.');
+                isValid = false;
+            } else {
+                nameInput.setCustomValidity('');
+            }
+            nameInput.reportValidity();
+        } else if (!this.productNameValue || this.productNameValue.trim() === '') {
+            isValid = false;
+        }
+
+        const codeInput = this.template.querySelector('lightning-input[name="Product Code"]');
+        if (codeInput) {
+            if (!this.ProductCodeValue || this.ProductCodeValue.trim() === '') {
+                codeInput.setCustomValidity('Product Code is required.');
+                isValid = false;
+            } else {
+                codeInput.setCustomValidity('');
+            }
+            codeInput.reportValidity();
+        } else if (!this.ProductCodeValue || this.ProductCodeValue.trim() === '') {
+            isValid = false;
+        }
+
+        const qtyInput = this.template.querySelector('.modal-step-panel lightning-input[name="Default Quantity"]');
+        const qty = Number(this.productDQValue);
+        const qtyInvalid = this.productDQValue === '' || this.productDQValue === null
+            || this.productDQValue === undefined || isNaN(qty) || qty < 1;
+        if (qtyInput) {
+            if (qtyInvalid) {
+                qtyInput.setCustomValidity('Default Quantity must be a valid number greater than or equal to 1.');
+                isValid = false;
+            } else {
+                qtyInput.setCustomValidity('');
+            }
+            qtyInput.reportValidity();
+        } else if (qtyInvalid) {
+            isValid = false;
+        }
+
+        if (!isValid) {
+            this.showToast('Error', 'Please complete Product Name, Product Code, and Default Quantity before continuing.', 'error');
+        }
+
+        return isValid;
     }
 
     handleProductModalStepChange(event) {
-        this.currentProductModalStep = event.currentTarget.dataset.step;
+        const targetStep = event.currentTarget.dataset.step;
+        if ((targetStep === 'image' || targetStep === 'pricing') && !this.isBasicInfoValid) {
+            this.validateBasicInfoStepFields();
+            return;
+        }
+        this.currentProductModalStep = targetStep;
     }
 
     handleNextProductModalStep() {
         if (this.currentProductModalStep === 'basic') {
+            if (!this.validateBasicInfoStepFields()) {
+                return;
+            }
             this.currentProductModalStep = 'image';
         } else if (this.currentProductModalStep === 'image') {
             this.currentProductModalStep = 'pricing';
@@ -624,6 +901,7 @@ export default class ProductConfigureCmp extends LightningElement {
                 name: priceBook.Name,
                 currencyCode: priceBook.QuoteForce__Currency__c || '',
                 isActive: priceBook.QuoteForce__Is_Active__c,
+                isDefault: priceBook.QuoteForce__Is_Default__c,
                 searchText: `${priceBook.Name || ''} ${priceBook.QuoteForce__Currency__c || ''}`.toLowerCase()
             }));
             this.refreshPricingRowOptions();
@@ -640,15 +918,17 @@ export default class ProductConfigureCmp extends LightningElement {
 
         try {
             const result = await getPriceBookEntriesByPriceBook({ priceBookId });
-            this.bundleEntryOptions = (result || []).map((entry) => ({
-                label: entry.QuoteForce__Product__r?.QuoteForce__Product_Code__c
-                    ? `${entry.QuoteForce__Product__r.Name} (${entry.QuoteForce__Product__r.QuoteForce__Product_Code__c})`
-                    : (entry.QuoteForce__Product__r?.Name || entry.Name),
-                value: entry.Id,
-                productId: entry.QuoteForce__Product__c,
-                unitPrice: entry.QuoteForce__Unit_Price__c || 0,
-                searchText: `${entry.QuoteForce__Product__r?.Name || ''} ${entry.QuoteForce__Product__r?.QuoteForce__Product_Code__c || ''} ${entry.Name || ''}`.toLowerCase()
-            }));
+            this.bundleEntryOptions = (result || [])
+                .filter((entry) => entry.QuoteForce__Product__r?.QuoteForce__Active__c === true)
+                .map((entry) => ({
+                    label: entry.QuoteForce__Product__r?.QuoteForce__Product_Code__c
+                        ? `${entry.QuoteForce__Product__r.Name} (${entry.QuoteForce__Product__r.QuoteForce__Product_Code__c})`
+                        : (entry.QuoteForce__Product__r?.Name || entry.Name),
+                    value: entry.Id,
+                    productId: entry.QuoteForce__Product__c,
+                    unitPrice: entry.QuoteForce__Unit_Price__c || 0,
+                    searchText: `${entry.QuoteForce__Product__r?.Name || ''} ${entry.QuoteForce__Product__r?.QuoteForce__Product_Code__c || ''} ${entry.Name || ''}`.toLowerCase()
+                }));
             this.refreshBundleItemOptions();
         } catch (error) {
             this.bundleEntryOptions = [];
@@ -831,9 +1111,10 @@ export default class ProductConfigureCmp extends LightningElement {
                 updatedRow.priceBookSearchTerm = '';
                 updatedRow.isPriceBookDropdownOpen = false;
                 if (value === NEW_PRICEBOOK_OPTION) {
-                    updatedRow.priceBookId = '';
-                    updatedRow.isNewPriceBook = true;
-                    updatedRow.currency = updatedRow.draftPriceBook.currencyCode || this.selectedCurrency;
+                    this.activePricingRowId = rowId;
+                    this.newPriceBookForm = { ...EMPTY_NEW_PRICEBOOK_FORM };
+                    this.isNewPriceBookPopupOpen = true;
+                    return this.buildPricingRowWithOptions(row); // row unchanged
                 } else {
                     const selectedOption = this.priceBookOptions.find((option) => option.value === value);
                     updatedRow.priceBookId = value;
@@ -850,6 +1131,93 @@ export default class ProductConfigureCmp extends LightningElement {
 
             return this.buildPricingRowWithOptions(updatedRow);
         });
+    }
+
+    closeNewPriceBookPopup() {
+        this.isNewPriceBookPopupOpen = false;
+        this.newPriceBookForm = { ...EMPTY_NEW_PRICEBOOK_FORM };
+        this.activePricingRowId = null;
+    }
+
+    handleNewPriceBookFormChange(event) {
+        const fieldName = event.target.dataset.field;
+        const value = event.target.type === 'checkbox'
+            ? event.target.checked
+            : (event.detail?.value ?? event.target.value);
+
+        this.newPriceBookForm = {
+            ...this.newPriceBookForm,
+            [fieldName]: value
+        };
+    }
+
+    async saveNewPriceBookPopup() {
+        const trimmedName = this.newPriceBookForm.Name?.trim();
+
+        if (!trimmedName) {
+            this.showToast('Error', 'Price Book name is required.', 'error');
+            return;
+        }
+
+        const nameAlreadyExists = (this.priceBookOptions || []).some(
+            (option) => option.name?.toLowerCase() === trimmedName.toLowerCase()
+        );
+        if (nameAlreadyExists) {
+            this.showToast('Error', 'A PriceBook with this name already exists.', 'error');
+            return;
+        }
+
+        const lowerName = trimmedName.toLowerCase();
+        const matchedCurrency = this.currencyOptions
+            .map((option) => option.value)
+            .find((code) => lowerName.includes(code.toLowerCase()));
+
+        if (matchedCurrency) {
+            this.showToast('Error', `PriceBook name cannot contain the currency code "${matchedCurrency}".`, 'error');
+            return;
+        }
+
+        this.loaded = true;
+        try {
+            const result = await upsertPriceBook({
+                priceBookRecord: {
+                    Id: null,
+                    Name: trimmedName,
+                    QuoteForce__Currency__c: this.newPriceBookForm.QuoteForce__Currency__c || null,
+                    QuoteForce__Description__c: this.newPriceBookForm.QuoteForce__Description__c,
+                    QuoteForce__Is_Active__c: this.newPriceBookForm.QuoteForce__Is_Active__c,
+                    QuoteForce__Is_Default__c: this.newPriceBookForm.QuoteForce__Is_Default__c
+                }
+            });
+
+            const newId = result?.Id || result;
+            const newCurrency = this.newPriceBookForm.QuoteForce__Currency__c;
+
+            await this.loadPriceBookOptions();
+
+            if (this.activePricingRowId) {
+                this.pricingRows = this.pricingRows.map((row) => {
+                    if (row.id !== this.activePricingRowId) {
+                        return row;
+                    }
+                    return this.buildPricingRowWithOptions({
+                        ...row,
+                        priceBookSelection: newId,
+                        priceBookId: newId,
+                        isNewPriceBook: false,
+                        currency: newCurrency
+                    });
+                });
+            }
+
+            this.showToast('Success', 'Price Book created successfully.', 'success');
+            this.closeNewPriceBookPopup();
+
+        } catch (error) {
+            this.showToast('Error', this.normalizeError(error), 'error');
+        } finally {
+            this.loaded = false;
+        }
     }
 
     handleDraftPriceBookChange(event) {
@@ -1066,12 +1434,17 @@ async updateDefaultPrice(event) {
         this.productDelete = (label == 'Delete') ? true : false;
         this.productClear = (label == 'Clear') ? true : false;
 
-        const childCheck = await hasChildRecords({ parentId: this.productActionId });
+        if (this.productDelete) {
+            const childCheck = await hasChildRecords({ parentId: this.productActionId });
 
-        if (childCheck.hasChild) {
-            this.blockedByPriceBook = childCheck.hasPriceBookEntries;
-            this.blockedByBundle = childCheck.hasBundleLineItems;
-            this.isShowModalNotDelete = true;
+            if (childCheck.hasBundleLineItems) {
+                this.blockedByBundle = true;
+                this.isShowModalNotDelete = true;
+                return;
+            }
+
+            this.hasPriceBookEntriesWarning = childCheck.hasPriceBookEntries;
+            this.isShowModal = true;
         } else {
             this.isShowModal = true;
         }
@@ -1079,11 +1452,11 @@ async updateDefaultPrice(event) {
 
     hideModalBox() {
         this.isShowModal = false;
+        this.hasPriceBookEntriesWarning = false;
     }
 
     hidNotDeleteModalBox() {
         this.isShowModalNotDelete = false;
-        this.blockedByPriceBook = false;
         this.blockedByBundle = false;
     }
 
@@ -1197,36 +1570,44 @@ async updateDefaultPrice(event) {
             this.showToast('Error', 'Please select a Pricebook', 'error');
             return;
         }
-    
+
         if (!this.bundleNameValue || !this.bundleNameValue.trim()) {
             this.showToast('Error', 'Please enter product bundle name', 'error');
             return;
         }
-    
+
+        const normalizedBundleName = this.bundleNameValue.trim().toLowerCase();
+        const isBundleNameDuplicate = (this.productBundleRecords || []).some(
+            (bundle) => (bundle.name || '').trim().toLowerCase() === normalizedBundleName
+        );
+        if (isBundleNameDuplicate) {
+            this.showToast('Error', 'A Product Bundle with this name already exists.', 'error');
+            return;
+        }
+
         const validItems = this.productItemListInsert.filter(
             (item) => item.priceBookEntryId && item.productId
         );
-    
+
         if (validItems.length === 0) {
-        
             this.showToast('Error', 'Please add at least one Price Book Entry.', 'error');
             return;
         }
-    
+
         const selectedPriceBook = this.bundlePriceBookOptions.find(
             (option) => option.value === this.bundlePriceBookId
         );
-    
+
         const productObj = {
             'Name': this.bundleNameValue,
             'QuoteForce__Description__c': this.bundleDescriptionValue,
             'QuoteForce__Currency__c': selectedPriceBook?.currencyCode || null,
             'QuoteForce__Price_Book__c': this.bundlePriceBookId
         };
-    
+
         try {
             const bundleResult = await insertProductBundle({ prod_Bundle_Obj: productObj });
-    
+
             const lineItems = validItems.map(element => ({
                 'QuoteForce__Product_Bundle__c': bundleResult.Id,
                 'QuoteForce__Quantity__c': element.Quantity,
@@ -1234,9 +1615,8 @@ async updateDefaultPrice(event) {
                 'QuoteForce__Price_Book_Entry__c': element.priceBookEntryId,
                 'QuoteForce__Price__c': element.Price
             }));
-    
+
             await insertProductLineItm({ prod_itm_Lst: lineItems });
-    
 
             this.productItems = [];
             this.resetBundleInsertRows();
@@ -1247,7 +1627,7 @@ async updateDefaultPrice(event) {
             this.closeAllDropdowns();
             this.showToast('Success', 'Product bundle created successfully!', 'success');
             this.getProductRecordBundle(this.searchValBundle);
-    
+
         } catch (error) {
             this.showToast('Error', error.body ? error.body.message : '', 'error');
         }
@@ -1487,7 +1867,7 @@ async updateDefaultPrice(event) {
         }));
     }
 
-    openBundleEntryDropdown(event) {
+    async openBundleEntryDropdown(event) {
         event.stopPropagation();
         if (this.isBundleEntryPickerDisabled) {
             return;
@@ -1506,6 +1886,13 @@ async updateDefaultPrice(event) {
             ...row,
             isPriceBookDropdownOpen: false
         }));
+
+        // Refresh entries so newly-active/inactive products reflect immediately
+        try {
+            await this.loadBundleEntryOptions(this.bundlePriceBookId);
+        } catch (error) {
+            this.showToast('Error', this.normalizeError(error), 'error');
+        }
 
         const updateRows = (rows, ln) => rows.map((row, index) => this.buildBundleRowWithOptions({
             ...row,
@@ -2152,6 +2539,7 @@ handleChangeProductLineItem(event) {
 
     handleCurrencyFilter(event) {
         this.currencyFilter = event.detail.value;
+        this.currentPage = 1;
         this.getProductRecord(this.searchVal);
     }
 

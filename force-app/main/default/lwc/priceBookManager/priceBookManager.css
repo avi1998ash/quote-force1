@@ -4,7 +4,7 @@
     padding: 1rem 0;
     min-height: 320px;
 }
-
+ 
 .section-header {
     display: flex;
     justify-content: space-between;
@@ -26,6 +26,7 @@
     gap: 12px;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     flex: 1;
+    align-items: end; 
 }
 
 .search-input {
@@ -111,11 +112,18 @@
     color: #334155;
 }
 
-.card-actions,
+.card-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
 .modal-footer {
     display: flex;
     gap: 0.75rem;
     flex-wrap: wrap;
+    /* Added margin to create spacing between body checkbox and footer buttons */
+    margin-top: 1.25rem; 
 }
 
 .table-shell {
@@ -126,11 +134,12 @@
 
 .entry-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .entry-table th {
-    background: #003366;
+    background: #12233F;
     color: #fff;
     text-align: left;
     padding: 0.8rem;
@@ -168,7 +177,7 @@
 }
 
 .action-button {
-    background: #003366;
+    background: #12233F;
     color: #fff;
 }
 
@@ -214,7 +223,7 @@
 
 .modal-title {
     margin: 0;
-     font-size: 1.25rem;
+    font-size: 1.25rem;
     font-weight: 600;
     display: flex;
     justify-content: space-between;
@@ -237,6 +246,7 @@
     color: #334155;
     margin-bottom: 1rem;
 }
+
 .empty-message-box{
     display: flex;
     align-items: center;
@@ -257,6 +267,7 @@
     width: 100%;
     margin: 20px 0;
 }
+
 .modal-close {
     background-color: #ffffff;
     padding: 4px;
@@ -277,4 +288,682 @@
 .modal-close:active {
     transform: translateY(1px) scale(0.95);
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
+}
+
+.custom-combobox {
+    position: relative;
+}
+
+.custom-combobox__label {
+    display: inline-block;
+    margin-bottom: 0.25rem;
+    font-size: 0.75rem;
+    color: #3e3e3c;
+}
+
+.custom-combobox__control {
+    position: relative;
+}
+
+.custom-combobox__control--open .custom-combobox__trigger {
+    border-color: #334155;
+    box-shadow: 0 0 0 1px #334155;
+}
+
+.custom-combobox__control--disabled .custom-combobox__trigger {
+    background: #f3f3f3;
+    color: #8c8c8c;
+    cursor: not-allowed;
+}
+
+.custom-combobox__trigger {
+    width: 100%;
+    min-height: 2rem;
+    border: 1px solid #e3dfdb;
+    border-radius: 0.5rem;
+    background: #fff;
+    padding: 0.5rem 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.custom-combobox__trigger-text {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.custom-combobox__dropdown {
+    position: absolute;
+    top: calc(100% + 0.3rem);
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    background: #fff;
+    border: 1px solid #d8dde6;
+    border-radius: 1rem;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+}
+
+.custom-combobox__search {
+    padding: 0.75rem 0.75rem 0.5rem;
+    border-bottom: 1px solid #eef1f6;
+}
+
+.custom-combobox__options {
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 0.35rem;
+}
+
+.custom-combobox__option {
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    color: #181818;
+}
+
+.custom-combobox__option:hover {
+    background: #f3f8ff;
+}
+
+.custom-combobox__empty {
+    padding: 0.8rem 0.75rem;
+    color: #6b7785;
+    font-size: 0.9rem;
+}
+
+.custom-combobox--compact .custom-combobox__label {
+    display: none;
+}
+
+.custom-combobox__show-more {
+    border-top: 1px solid #eef1f6;
+    font-weight: 600;
+    color: #334155;
+}
+
+.dropdown-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+}
+
+.custom-combobox--product,
+.custom-combobox--pricebook {
+    position: relative;
+    z-index: 50;
+}
+
+/* Limit dropdown options height inside modals to prevent overflowing the screen on smaller resolutions */
+.modal .custom-combobox__options {
+    max-height: 150px;
+}
+
+/* =====================================================================
+   ================  UI REDESIGN LAYER  ==================================
+   Everything below is additive/override only. No selector above was
+   removed, and no functional class/attribute was renamed. All handlers,
+   IDs, and data bindings referenced by the JS are untouched — only visual
+   properties changed, plus one purely decorative element (.card-icon)
+   added in the HTML, which carries no data and isn't read by any JS.
+   ===================================================================== */
+
+:host {
+    --qf-navy: #12233F;
+    --qf-border: #e3e8ef;
+    --qf-bg: #f4f7fb;
+    --qf-text-muted: #5c6b7a;
+    --qf-radius-pill: 999px;
+    --qf-shadow-card: 0 2px 10px rgba(13, 43, 85, 0.06);
+    --qf-shadow-card-hover: 0 14px 28px rgba(13, 43, 85, 0.12);
+}
+
+.manager-shell {
+    background: transparent;
+    padding: 0;
+}
+
+/* ---------- Section header / filters ---------- */
+.section-header {
+    background: #ffffff;
+    border: 1px solid var(--qf-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: var(--qf-shadow-card);
+    margin-bottom: 1.25rem;
+    align-items: flex-end;
+}
+
+.filter-row,
+.filter-grid {
+    gap: 1rem;
+}
+
+.search-input {
+    min-width: 260px;
+}
+
+.search-input,
+lightning-combobox,
+lightning-input {
+    --slds-c-input-radius-border: 10px;
+    --slds-c-input-color-border: var(--qf-border);
+    --slds-c-input-shadow-focus: 0 0 0 3px rgba(0, 51, 102, 0.12);
+    --slds-c-input-color-border-focus: var(--qf-navy);
+}
+
+.action-button {
+    background: var(--qf-navy);
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 0.7rem 2.4rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    box-shadow: none;
+    height: 44px;
+}
+.action-button:hover {
+    background: #002347;
+}
+.action-button-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    /* background: rgba(255, 255, 255, 0.18); */
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.secondary-button {
+    background: #ffffff;
+    color: #1f2937;
+    border: 1px solid var(--qf-border);
+    border-radius: 10px;
+    padding: 0.7rem 1.2rem;
+    font-weight: 600;
+}
+.secondary-button:hover {
+    background: #f4f7fb;
+}
+
+.danger-button {
+    background: #eb1f1f;
+    color: #ffffff;
+    border-radius: var(--qf-radius-pill);
+    padding: 0.55rem 1.1rem;
+    font-weight: 700;
+}
+.danger-button:hover {
+    background: #c8171a;
+}
+
+/* ---------- Info banner (replaces the plain text line) ---------- */
+.empty-message-wrap {
+    margin: 0 0 1.25rem;
+}
+.info-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: #eef3fb;
+    border: 1px solid #d7e3f4;
+    border-radius: 12px;
+    padding: 0.9rem 1.1rem;
+    color: #24344a;
+    font-size: 0.88rem;
+}
+.info-banner-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    color: var(--qf-navy);
+}
+
+/* ---------- Price book cards ---------- */
+.cards-container {
+    gap: 1.1rem;
+}
+
+.price-card {
+    border: 1px solid var(--qf-border);
+    border-radius: 16px;
+    box-shadow: var(--qf-shadow-card);
+    padding: 1.25rem;
+    transition: box-shadow 0.2s ease;
+}
+.price-card:hover {
+    box-shadow: var(--qf-shadow-card-hover);
+}
+
+.card-header {
+    align-items: flex-start;
+    margin-bottom: 1.1rem;
+}
+.card-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+.card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #dbe9fd;
+    color: var(--qf-navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+/* Icon variety via pure CSS position-cycling — no data field, no JS change.
+   Purely decorative; the same 8-symbol sequence just repeats every 8 cards. */
+.price-card:nth-of-type(8n+1) .card-icon::before { content: "\1F4B0"; }
+.price-card:nth-of-type(8n+2) .card-icon::before { content: "\1F69A"; }
+.price-card:nth-of-type(8n+3) .card-icon::before { content: "\1F3E0"; }
+.price-card:nth-of-type(8n+4) .card-icon::before { content: "\1F3E2"; }
+.price-card:nth-of-type(8n+5) .card-icon::before { content: "\1F310"; }
+.price-card:nth-of-type(8n+6) .card-icon::before { content: "\1F6D2"; }
+.price-card:nth-of-type(8n+7) .card-icon::before { content: "\1F3F7"; }
+.price-card:nth-of-type(8n+8) .card-icon::before { content: "\2705"; }
+.card-icon::before {
+    font-style: normal;
+}
+
+.card-title {
+    font-size: 1.05rem;
+    color: #14202b;
+}
+.card-subtitle {
+    font-size: 0.82rem;
+    color: var(--qf-text-muted);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.status-badge {
+    background: #d9f2e3 !important;
+    color: #16794a !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    font-size: 0.68rem !important;
+    letter-spacing: 0.04em !important;
+    padding: 0.3rem 0.75rem !important;
+}
+
+/* ---------- Minimal footer: icon-only Delete + text-link Edit,
+   matching the reference's compact bottom row (Delete stays present
+   and fully functional — same handler/data-id — just restyled). ---------- */
+.card-actions {
+    border-top: 1px solid var(--qf-border);
+    padding-top: 0.9rem;
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+.danger-button--icon{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#fff5f5;
+    border:1px solid #f5c2c7;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+}
+
+.danger-button--icon:hover{
+    background:#ffe5e5;
+}
+
+.danger-button--icon lightning-icon{
+    --slds-c-icon-color-foreground-default:#d92d20;
+}
+.danger-button-icon::before {
+    content: "\1F5D1";
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.secondary-button--link {
+    background: transparent;
+    color: var(--qf-navy);
+    border: none;
+    padding: 0.3rem 0.2rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.secondary-button--link:hover {
+    text-decoration: underline;
+}
+.edit-icon::before {
+    content: "\270E";
+    font-size: 0.85rem;
+}
+
+/* ---------- Entries table ---------- */
+.table-shell {
+    border: 1px solid var(--qf-border);
+    border-radius: 14px;
+    box-shadow: var(--qf-shadow-card);
+}
+.entry-table th {
+    background: var(--qf-navy);
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+.entry-table th:first-child {
+    border-top-left-radius: 14px;
+}
+.entry-table th:last-child {
+    border-top-right-radius: 14px;
+}
+.entry-table td {
+    font-size: 0.9rem;
+    color: #24344a;
+}
+.entry-table tbody tr:hover {
+    background: #f8fbff;
+}
+
+/* Bold navy Product-name cell, matching the reference table */
+.entry-table__product-cell {
+    font-weight: 700;
+    color: var(--qf-navy);
+}
+
+/* Active column: YES/NO pill (span wraps the existing entry.activeLabel
+   text — the text itself, "Yes"/"No", is unchanged; only visually
+   presented as a pill now via the new entry.activeBadgeClass field). */
+.active-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 46px;
+    padding: 0.25rem 0.7rem;
+    border-radius: var(--qf-radius-pill);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+.active-pill--yes {
+    background: #d9f2e3;
+    color: #16794a;
+}
+.active-pill--no {
+    background: #eef1f6;
+    color: #5c6b7a;
+}
+
+.small-button {
+    border-radius: var(--qf-radius-pill);
+}
+
+.empty-state {
+    border: 1.5px dashed #c7d1dc;
+    border-radius: 14px;
+    background: #f8fbff;
+    color: var(--qf-text-muted);
+}
+
+/* ---------- Entries pagination (only rendered once there are more
+   than entryPageSize=20 rows — see showEntryPagination in the JS) ---------- */
+.entry-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.1rem;
+    padding: 0 0.25rem;
+}
+.entry-pagination-summary {
+    font-size: 0.85rem;
+    color: var(--qf-text-muted);
+}
+.entry-pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+.entry-page-nav,
+.entry-page-btn {
+    border: 1px solid var(--qf-border);
+    background: #ffffff;
+    color: #2c3948;
+    border-radius: 8px;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 0.7rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+.entry-page-nav {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+.entry-page-nav:hover,
+.entry-page-btn:hover {
+    background: #f4f7fb;
+}
+.entry-page-btn--active {
+    background: var(--qf-navy);
+    border-color: var(--qf-navy);
+    color: #ffffff;
+}
+.entry-page-nav:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+.entry-page-nav:disabled:hover {
+    background: #ffffff;
+}
+
+/* ---------- Modals ---------- */
+.modal {
+    border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(13, 43, 85, 0.18), 0 4px 12px rgba(13, 43, 85, 0.08);
+    padding: 1.75rem;
+}
+.modal-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #10233d;
+}
+.modal-close {
+    background: #ffffff;
+    border: 1px solid var(--qf-border);
+    box-shadow: none;
+}
+.modal-close:hover {
+    background: #f4f7fb;
+    transform: none;
+    box-shadow: none;
+}
+.modal-body {
+    gap: 1.1rem;
+}
+.modal-footer .action-button,
+.modal-footer .secondary-button {
+    min-width: 110px;
+}
+/* ===============================
+   Price Book Entry Action Buttons
+================================== */
+
+.pbe-action-buttons{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.pbe-edit-btn,
+.pbe-delete-btn{
+    width:40px;
+    height:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fff;
+    border:1px solid #E5E7EB;
+    border-radius:10px;
+    cursor:pointer;
+    transition:all .25s ease;
+    box-shadow:0 2px 8px rgba(15,35,95,.08);
+}
+
+/* Edit Button */
+
+.pbe-edit-btn{
+    border:1px solid #D6E4F5;
+}
+
+.pbe-edit-btn:hover{
+   background:#F4F8FD;
+    border-color:#003366;
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(0,51,102,.15);
+}
+
+.pbe-edit-icon{
+     --slds-c-icon-color-foreground-default:#003366;
+}
+
+/* Delete Button */
+
+.pbe-delete-btn{
+    border:1px solid #F8CACA;
+}
+
+.pbe-delete-btn:hover{
+     background:#FFF5F5;
+    border-color:#C62828;
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(198,40,40,.18);
+}
+
+.pbe-delete-icon{
+    --slds-c-icon-color-foreground-default:#C62828;
+}
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+    .section-header {
+        padding: 1.1rem;
+    }
+    .cards-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .section-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-row,
+    .filter-grid {
+        flex-direction: column;
+        display: flex;
+    }
+    .search-input {
+        min-width: 0;
+        width: 100%;
+    }
+    .button-row {
+        flex-direction: column;
+    }
+    .button-row .action-button,
+    .button-row .secondary-button {
+        width: 100%;
+        justify-content: center;
+    }
+    .cards-container {
+        grid-template-columns: 1fr;
+    }
+    .card-actions {
+        flex-direction: column;
+    }
+    .modal {
+        width: calc(100% - 1.5rem);
+        padding: 1.25rem;
+    }
+    .table-shell {
+        border-radius: 12px;
+    }
+    .entry-pagination {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+    .entry-pagination-controls {
+        justify-content: center;
+    }
+}
+
+/* ============================================================
+   AUTO-GENERATE SR. NO USING CSS COUNTERS
+   ============================================================ */
+
+/* Reset counter at the start of each tbody */
+.entry-table tbody {
+    counter-reset: sr-number 0;
+}
+
+/* Increment counter for each row */
+.entry-table tbody tr {
+    counter-increment: sr-number 1;
+}
+
+/* Display the counter in the first cell */
+.entry-table tbody tr td:first-child {
+    text-align: center;
+    width: 60px;
+    font-weight: 600;
+    color: #6b7785;
+}
+
+/* Use ::before to show the counter */
+.entry-table tbody tr td:first-child::before {
+    content: counter(sr-number);
+}
+
+/* Hide any existing text content in the first cell */
+.entry-table tbody tr td:first-child * {
+    display: none;
+}
+
+/* Or if you want to keep the cell completely empty and use ::before */
+.entry-table tbody tr td:first-child {
+    font-size: 0; /* Hide the text */
+}
+
+.entry-table tbody tr td:first-child::before {
+    font-size: 0.9rem; /* Restore font size for the counter */
 }

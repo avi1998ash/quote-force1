@@ -142,7 +142,7 @@ public with sharing class ProductConfigureController {
                 QuoteForce__Price_Book_Entry__r.QuoteForce__Product__r.QuoteForce__Product_Code__c
                 FROM QuoteForce__Product_Line_Items__c
                 Where QuoteForce__Product_Bundle__c = :Id WITH USER_MODE
-                ORDER BY CreatedDate ASC
+                ORDER BY CreatedDate ASC, Id ASC
             ];
             return prod_itm_Lst;
         } catch (Exception e) {
@@ -275,12 +275,21 @@ public with sharing class ProductConfigureController {
     @AuraEnabled
     public static string deleteProduct(String Id) {
         try {
-            Integer priceBookEntryCount = [
-                SELECT COUNT() FROM QuoteForce__Price_Book_Entry__c 
+            Integer bundleLineItemCount = [
+                SELECT COUNT() FROM QuoteForce__Product_Line_Items__c 
                 WHERE QuoteForce__Product__c = :Id WITH USER_MODE
             ];
-            if (priceBookEntryCount > 0) {
-                throw new AuraHandledException('This product is linked to one or more Price Books. Please remove those Price Book Entries first.');
+            if (bundleLineItemCount > 0) {
+                throw new AuraHandledException('This product is used in a Product Bundle. Please remove it from the bundle first.');
+            }
+
+            // Price Book Entries no longer block — cascade delete them, then the product.
+            List<QuoteForce__Price_Book_Entry__c> entriesToDelete = [
+                SELECT Id FROM QuoteForce__Price_Book_Entry__c 
+                WHERE QuoteForce__Product__c = :Id WITH USER_MODE
+            ];
+            if (!entriesToDelete.isEmpty()) {
+                delete as user entriesToDelete;
             }
 
             delete as user [Select Id From QuoteForce__Product__c WHERE Id =: Id WITH USER_MODE];
@@ -942,11 +951,11 @@ public with sharing class ProductConfigureController {
         try {
             String searchTerm = '%' + String.escapeSingleQuotes(String.isBlank(searchKey) ? '' : searchKey.trim()) + '%';
             
-            String query =
-                'SELECT Id, Name, QuoteForce__Price_Book__c, QuoteForce__Price_Book__r.Name, QuoteForce__Product__c, QuoteForce__Product__r.Name, QuoteForce__Product__r.QuoteForce__Product_Code__c, ' +
-                'QuoteForce__Product_Code__c, QuoteForce__Currency__c, QuoteForce__Unit_Price__c, QuoteForce__Is_Active__c, CreatedDate ' +
-                'FROM QuoteForce__Price_Book_Entry__c WHERE Id != null';
-            
+           String query =
+                        'SELECT Id, Name, QuoteForce__Price_Book__c, QuoteForce__Price_Book__r.Name, QuoteForce__Product__c, QuoteForce__Product__r.Name, QuoteForce__Product__r.QuoteForce__Product_Code__c, QuoteForce__Product__r.QuoteForce__Active__c, ' +
+                        'QuoteForce__Product_Code__c, QuoteForce__Currency__c, QuoteForce__Unit_Price__c, QuoteForce__Is_Active__c, CreatedDate ' +
+                        'FROM QuoteForce__Price_Book_Entry__c WHERE Id != null ';
+                                
             if (String.isNotBlank(searchKey)) {
                 query += ' AND (QuoteForce__Product__r.Name LIKE :searchTerm OR QuoteForce__Product_Code__c LIKE :searchTerm OR QuoteForce__Price_Book__r.Name LIKE :searchTerm)';
             }
@@ -977,7 +986,7 @@ public with sharing class ProductConfigureController {
     
     @AuraEnabled
     public static List<QuoteForce__Price_Book_Entry__c> getPriceBookEntriesByPriceBook(Id priceBookId) {
-        return listPriceBookEntries(null, priceBookId, null, null, false);
+        return listPriceBookEntries(null, priceBookId, null, null, true);
     }
     
    @AuraEnabled
@@ -1062,13 +1071,28 @@ public with sharing class ProductConfigureController {
             if (entryId == null) {
                 throw new AuraHandledException('Price Book Entry Id is required.');
             }
-            
-            delete as user [
-                SELECT Id
+
+            QuoteForce__Price_Book_Entry__c entryToDelete = [
+                SELECT Id, QuoteForce__Product__c, QuoteForce__Currency__c
                 FROM QuoteForce__Price_Book_Entry__c
                 WHERE Id = :entryId WITH USER_MODE
                 LIMIT 1
             ];
+
+            // Count how many OTHER entries this product still has
+            Integer remainingEntryCount = [
+                SELECT COUNT() FROM QuoteForce__Price_Book_Entry__c
+                WHERE QuoteForce__Product__c = :entryToDelete.QuoteForce__Product__c
+                AND Id != :entryId WITH USER_MODE
+            ];
+
+            if (remainingEntryCount == 0) {
+                throw new AuraHandledException(
+                    'This is the only Price Book Entry for this product. Every product must have at least one Price Book Entry — delete the product instead if you no longer need it, or add another entry before removing this one.'
+                );
+            }
+
+            delete as user entryToDelete;
             
             return true;
         } catch (AuraHandledException e) {
@@ -1077,7 +1101,7 @@ public with sharing class ProductConfigureController {
             throw new AuraHandledException(e.getMessage());
         }
     }
-    
+        
     @AuraEnabled(cacheable=false)
     public static Integer clonePriceBookEntries(Id sourcePriceBookId, Id targetPriceBookId, Boolean overwriteExisting) {
         try {
@@ -1383,5 +1407,15 @@ public with sharing class ProductConfigureController {
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
+    }
+    @AuraEnabled
+    public static Boolean isPriceBookEntryUsedInBundle(Id priceBookEntryId) {
+        Integer count = [
+            SELECT COUNT()
+            FROM QuoteForce__Product_Line_Items__c
+            WHERE QuoteForce__Price_Book_Entry__c = :priceBookEntryId
+            WITH USER_MODE
+        ];
+        return count > 0;
     }
 }
