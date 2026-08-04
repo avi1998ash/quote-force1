@@ -1,3 +1,5 @@
+/* ========== COMPLETE CSS WITH UPDATED DELETE BUTTON ========== */
+
 .section-container {
     margin-bottom: 20px;
     border: 1px solid #d9d9d9;
@@ -12,7 +14,7 @@
     padding: 8px;
     background: #e6e6e6;
     border-radius: 5px;
-}
+} 
 
 .action-button {
     margin-left: 10px;
@@ -37,8 +39,6 @@
     border-radius: 5px;
     background: #f4f4f4;
 }
-
-
 
 .item-row {
     display: flex;
@@ -98,22 +98,78 @@
     transform-style: preserve-3d;
 }
 
+/* ========== UPDATED DELETE SECTION BUTTON - PILL STYLE ========== */
+/* This replaces the old .del-section style */
+
 .del-section {
-    background: #eb1f1f;
-    display: flex;
+    background: transparent;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
-    padding: 0.5rem 0.7rem;
-    border: none;
-    margin-top: 7.5%;
-    float: right;
-    border-radius: 22px;
+    gap: 0.4rem;
+    color: #6b7785;
+    padding: 0.35rem 1rem 0.35rem 0.6rem;
+    border: 1.5px solid #d9d9d9;
+    border-radius: 50px;
     cursor: pointer;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    transform-style: preserve-3d;
+    transition: all 0.2s ease;
+    font-size: 0.82rem;
+    font-weight: 500;
+    background: #ffffff;
+    box-shadow: none;
+    margin-top: 0 !important;
+    float: none !important;
+    flex-shrink: 0;
+    font-family: inherit;
+    line-height: 1.5;
 }
+
+/* Icon inside delete button */
+.del-section lightning-icon {
+    --slds-c-icon-color-foreground-default: #6b7785;
+    --slds-c-icon-size: 1rem;
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+}
+
+/* Button text */
+.del-section .delete-btn-text {
+    color: #6b7785;
+    font-weight: 500;
+    transition: color 0.25s ease;
+    letter-spacing: 0.02em;
+}
+
+/* Hover state */
+.del-section:hover {
+    background: #fee2e2;
+    border-color: #ef4444;
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.18);
+}
+
+.del-section:hover lightning-icon {
+    --slds-c-icon-color-foreground-default: #ef4444;
+    transform: rotate(-6deg) scale(1.05);
+}
+
+.del-section:hover .delete-btn-text {
+    color: #ef4444;
+}
+
+/* Active state */
+.del-section:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.15);
+}
+
+/* Focus state for accessibility */
+.del-section:focus-visible {
+    outline: 2px solid #003366;
+    outline-offset: 2px;
+}
+
+/* ========== END UPDATED DELETE SECTION BUTTON ========== */
 
 .section-total {
     text-align: right;
@@ -198,51 +254,107 @@ lightning-combobox {
 
 .custom-combobox__dropdown {
     position: absolute;
-    top: calc(100% + 0.3rem);
+    top: calc(100% + 0.4rem);
     left: 0;
     width: max(100%, 18rem);
     max-width: min(28rem, calc(100vw - 2rem));
     z-index: 9000;
     background: #fff;
-    border: 1px solid #d8dde6;
-    border-radius: 1rem;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+    border: 1px solid #1b96ff;
+    border-radius: 1.25rem;
+    box-shadow: 0 12px 28px rgba(13, 43, 85, 0.18);
     overflow: hidden;
+    animation: comboboxDropdownIn 0.14s ease-out;
+    transform-origin: top center;
+}
+
+@keyframes comboboxDropdownIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .custom-combobox__search {
-    padding: 0.75rem 0.75rem 0.5rem;
+    padding: 0.65rem 0.65rem 0.6rem;
     border-bottom: 1px solid #eef1f6;
+    background: #fbfcfe;
+}
+
+.custom-combobox__search lightning-input {
+    --slds-c-input-radius-border: 0.75rem;
 }
 
 .custom-combobox__options {
-    max-height: 220px;
+    max-height: 214px;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 0.35rem;
+    padding: 0.35rem 0.25rem 0.35rem 0.35rem;
+    scrollbar-width: thin;
+    scrollbar-color: #c3cddb transparent;
 }
 
 .custom-combobox__option {
     display: block;
     box-sizing: border-box;
-    width: 100%;
+    width: calc(100% - 6px);
     border: none;
     background: transparent;
     text-align: left;
-    padding: 0.6rem 0.75rem;
-    border-radius: 0.75rem;
+    padding: 0.65rem 0.75rem;
+    margin-right: 6px;
+    border-radius: 0.7rem;
     cursor: pointer;
     color: #181818;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background 0.12s ease;
 }
 
-.custom-combobox__option:hover {
-    background: #f3f8ff;
+.custom-combobox__option:hover,
+.custom-combobox__option:focus-visible {
+    background: #eef5ff;
+    outline: none;
+}
+
+.custom-combobox__option:active {
+    background: #e2edfd;
+}
+
+.custom-combobox__option--selected {
+    background: #eaf2ff;
+    color: #0b5cd7;
+    font-weight: 600;
+}
+
+.custom-combobox__options::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-combobox__options::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-combobox__options::-webkit-scrollbar-thumb {
+    background: #c3cddb;
+    border-radius: 3px;
+}
+
+.custom-combobox__options::-webkit-scrollbar-thumb:hover {
+    background: #a7b4c6;
 }
 
 .custom-combobox__empty {
-    padding: 0.8rem 0.75rem;
+    padding: 1.1rem 0.75rem;
     color: #6b7785;
     font-size: 0.9rem;
+    text-align: center;
 }
 
 .modal-backdrop {
@@ -302,7 +414,6 @@ lightning-combobox {
     font-weight: bold;
 }
 
-
 lightning-input {
     --slds-c-input-radius-border: 3rem;
 }
@@ -314,6 +425,7 @@ lightning-input-rich-text {
 :host {
     --slds-c-textarea-radius-border: 3rem;
 }
+
 .drag-icon {
     cursor: pointer;
     margin-left: 10px;
@@ -322,6 +434,7 @@ lightning-input-rich-text {
 .btn-delete lightning-icon {
     --slds-c-icon-color-foreground-default: white;
 }
+
 .delete-icon-wrapper {
     width: 44px;
     height: 44px;
@@ -365,6 +478,7 @@ lightning-input-rich-text {
     padding: 0.6rem 1.8rem;
     cursor: pointer;
 }
+
 .image-delete-icon-wrap {
     display: flex;
     align-items: center;
@@ -379,6 +493,7 @@ lightning-input-rich-text {
 .image-delete-dustbin {
     --lwc-colorTextIconDefault: #fff;
 }
+
 .btn-cancel {
     background-color: #eb1f1f;
     color: white;
@@ -387,4 +502,298 @@ lightning-input-rich-text {
     border-radius: 2rem;
     cursor: pointer;
     font-size: 0.9rem;
+}
+
+/* =====================================================================
+   ================  UI REDESIGN LAYER (Quote Details / Image 2)  =======
+   Additive/override only. No original class removed or renamed.
+   Restyles: price book/bundle config card, per-section cards, item
+   table, add-item/section-total row, section notes. No fields, data
+   bindings, or handlers changed.
+   ===================================================================== */
+
+:host {
+    --qf-navy: #003366;
+    --qf-border: #e3e8ef;
+    --qf-bg: #f7f9fc;
+    --qf-text: #10233d;
+    --qf-text-muted: #5c6b7a;
+    --qf-shadow-card: 0 2px 10px rgba(13, 43, 85, 0.06);
+}
+
+/* ---------- Price Book / Bundle configuration card ---------- */
+.quote-config-card {
+    background: var(--qf-bg);
+    border: 1px solid var(--qf-border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.quote-config-card__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.quote-config-card__field {
+    min-width: 0;
+}
+
+.quote-config-card__label {
+    margin: 0 0 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--qf-text);
+}
+
+.quote-config-card .quote-pricebook-combobox {
+    width: 100%;
+}
+
+.quote-config-card__bundle {
+    width: 100%;
+}
+
+.quote-config-card__hint {
+    margin: 0.75rem 0 0;
+    font-size: 0.8rem;
+    color: var(--qf-text-muted);
+}
+
+/* ---------- Section card ---------- */
+.quote-section-card {
+    background: #ffffff;
+    border: 1px solid var(--qf-border);
+    border-left: 4px solid var(--qf-navy);
+    border-radius: 14px;
+    box-shadow: var(--qf-shadow-card);
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+}
+
+.quote-section-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--qf-border);
+    background: #fbfcfe;
+}
+
+.quote-section-card__title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.quote-section-card__icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: #eef3fb;
+    color: var(--qf-navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.quote-section-title-input {
+    flex: 1;
+    min-width: 0;
+    --slds-c-input-color-border: transparent;
+    --slds-c-input-shadow-focus: none;
+    --slds-c-input-radius-border: 8px;
+}
+
+.quote-section-title-input lightning-icon,
+.quote-section-title-input input {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--qf-text);
+}
+
+.quote-section-title-input:hover {
+    --slds-c-input-color-border: var(--qf-border);
+}
+
+/* Delete Section positioning inside header */
+.quote-section-card__delete {
+    margin-top: 0 !important;
+    float: none !important;
+    flex-shrink: 0;
+    gap: 0.4rem;
+}
+
+.quote-section-card__delete-icon {
+    --slds-c-icon-color-foreground-default: white;
+}
+
+.quote-section-card__body {
+    padding: 1.25rem;
+}
+
+/* ---------- Item table ---------- */
+.quote-items-table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.quote-items-table__th {
+    background: #f7f9fc !important;
+    color: var(--qf-text-muted) !important;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 0.75rem 0.6rem;
+    border-bottom: 1px solid var(--qf-border);
+    border-radius: 0 !important;
+}
+
+.quote-items-table__th--center {
+    text-align: center;
+}
+
+.quote-items-table__row {
+    transition: background 0.15s ease;
+}
+
+.quote-items-table__row:hover {
+    background: #fafbfd;
+}
+
+.quote-items-table__row td {
+    border-bottom: 1px solid var(--qf-border);
+    vertical-align: middle;
+}
+
+/* ---------- Add Item / Section Total row ---------- */
+.quote-section-card__footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.quote-add-item-btn {
+    flex-shrink: 0;
+}
+
+.quote-section-total {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+}
+
+.quote-section-total__label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--qf-text-muted);
+}
+
+.quote-section-total__value {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--qf-text);
+}
+
+/* ---------- Section notes ---------- */
+.quote-section-notes {
+    margin-top: 1.25rem;
+}
+
+.quote-section-notes lightning-textarea {
+    --slds-c-textarea-color-border: var(--qf-border);
+    --slds-c-textarea-radius-border: 12px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+    .quote-config-card__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quote-section-card__header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .quote-section-card__delete {
+        align-self: flex-end;
+    }
+}
+
+@media (max-width: 640px) {
+    .quote-section-card__footer-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.btn-delete-pill {
+    /* Reset layout */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 44px !important;
+    height: 44px !important;
+    background-color: #ffffff !important;
+    border: 2px solid #fca5a5 !important; /* Light red border */
+    border-radius: 12px !important;       /* Rounded square */
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+    
+    /* Shadow for depth */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08) !important;
+    
+    /* Transition for hover effects */
+    transition: all 0.2s ease-in-out !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+/* Hover State */
+.btn-delete-pill:hover {
+    background-color: #fef2f2 !important; /* Very light red background */
+    border-color: #ef4444 !important;     /* Darker red border */
+    box-shadow: 0 6px 12px rgba(239, 68, 68, 0.15) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Active/Click State */
+.btn-delete-pill:active {
+    transform: scale(0.95) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Focus State for Accessibility */
+.btn-delete-pill:focus-visible {
+    outline: 2px solid #003366 !important;
+    outline-offset: 2px !important;
+}
+
+/* ============================================================ */
+/*  ICON INSIDE THE BUTTON (Make it Red)                         */
+/* ============================================================ */
+
+.btn-delete-pill lightning-icon {
+    --slds-c-icon-color-foreground-default: #dc2626 !important; /* Solid red icon */
+    --slds-c-icon-size: 1.2rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }

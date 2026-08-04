@@ -76,6 +76,7 @@ export default class CustomQuoteEditCmp extends LightningElement {
     currentPage = 1;
     recordTypeId;
     allStateValues;
+    @track isTemplateLocked = false;  
 
     statusOptions = [
         { label: 'Draft',         value: 'Draft' },
@@ -197,6 +198,44 @@ export default class CustomQuoteEditCmp extends LightningElement {
                 });
         }
     }
+
+    get quoteAddressStepClass() { return 'qf-progress-item-active'; }
+get productSelectionStepClass() { return 'qf-progress-item'; }
+get termsStepClass() { return 'qf-progress-item'; }
+get previewStepClass() { return 'qf-progress-item'; }
+
+// Header
+get userInitials() { return 'JD'; } // replace with real user initials
+get currentYear() { return new Date().getFullYear(); }
+get quoteStatusBadgeLabel() { return this.status ? this.status.toUpperCase() + ' MODE' : 'DRAFT MODE'; }
+// Quote Information fields
+@track quoteName = '';
+@track relatedOpportunityName = '';
+@track expirationDate = '';
+
+handleQuoteInfoChange(event) {
+    const field = event.target.dataset.field;
+    this[field] = event.detail ? event.detail.value : event.target.value;
+}
+
+handleAddressChange(event) {
+    const field = event.target.dataset.field;   // street, city, province, postalCode, country
+    const type  = event.target.dataset.type;    // billing or shipping
+    const value = event.detail ? event.detail.value : event.target.value;
+
+    if (type === 'billing') {
+        this.billingAddress = { ...this.billingAddress, [field]: value };
+        log('handleAddressChange — billingAddress updated:', { ...this.billingAddress });
+    } else if (type === 'shipping') {
+        this.shippingAddress = { ...this.shippingAddress, [field]: value };
+        log('handleAddressChange — shippingAddress updated:', { ...this.shippingAddress });
+    }
+}
+
+handleCopyBillingToShipping() {
+    this.shippingAddress = { ...this.billingAddress };
+    log('handleCopyBillingToShipping — shippingAddress copied from billingAddress:', { ...this.shippingAddress });
+}
 
     // =================================================================
     // APEX CALLS
@@ -338,6 +377,10 @@ export default class CustomQuoteEditCmp extends LightningElement {
             });
     }
 
+        get isTemplateDisabled() {
+        return this.layoutAvailabel || this.isTemplateLocked;
+    }
+
     // =================================================================
     // ADDRESS HANDLERS
     // =================================================================
@@ -456,6 +499,52 @@ export default class CustomQuoteEditCmp extends LightningElement {
             });
     }
 
+    handleSaveAsDraft() {
+        log('handleSaveAsDraft — START. Saving quote with status Draft.');
+
+        if (!this.quoteName) {
+            warn('handleSaveAsDraft — validation FAILED: quoteName missing');
+            this.showToast('Error', 'Quote Name is required field.', 'error');
+            return;
+        }
+
+        const quoteObj = {
+            'Name':                                this.quoteName,
+            'QuoteForce__Expiration_Date__c':      this.expirationDate,
+            'QuoteForce__Status__c':               'Draft',
+            'QuoteForce__Tax__c':                  this.tax,
+            'QuoteForce__Bill_To__Street__s':      this.billingAddress.street,
+            'QuoteForce__Bill_To__City__s':        this.billingAddress.city,
+            'QuoteForce__Bill_To__StateCode__s':   this.billingAddress.province,
+            'QuoteForce__Bill_To__PostalCode__s':  this.billingAddress.postalCode,
+            'QuoteForce__Bill_To__CountryCode__s': this.billingAddress.country,
+            'QuoteForce__Ship_To__Street__s':      this.shippingAddress.street,
+            'QuoteForce__Ship_To__City__s':        this.shippingAddress.city,
+            'QuoteForce__Ship_To__StateCode__s':   this.shippingAddress.province,
+            'QuoteForce__Ship_To__PostalCode__s':  this.shippingAddress.postalCode,
+            'QuoteForce__Ship_To__CountryCode__s': this.shippingAddress.country,
+            'Id':                                  this.recordId
+        };
+
+        log('handleSaveAsDraft — calling updateQuotesRecord with payload:', quoteObj);
+
+        this.loaded = true;
+        updateQuotesRecord({ quoteWrapMap: quoteObj })
+            .then(result => {
+                log('handleSaveAsDraft — updateQuotesRecord SUCCESS — returned Id:', result);
+                this.status = 'Draft';
+                this.showToast('Success', 'Quote saved as draft successfully!', 'success');
+            })
+            .catch(error => {
+                const msg = extractErrorMessage(error);
+                err('handleSaveAsDraft — updateQuotesRecord FAILED:', msg, error);
+                this.showToast('Error', 'Failed to save draft: ' + msg, 'error');
+            })
+            .finally(() => {
+                this.loaded = false;
+            });
+    }
+
     handleSave() {
         log('handleSave — delegating to quoteForm.updateQuote()');
         try {
@@ -479,11 +568,22 @@ export default class CustomQuoteEditCmp extends LightningElement {
         saveAsNewVersion({ currentQuoteId: targetId })
             .then(newId => {
                 log('saveAsNewVersion SUCCESS — newId:', newId);
+
+                this.recordId       = newId;
+                this.createdQuoteId = newId;
+
+                this.getQuoteDetailsFromApex();
+
+                
+                this.isTemplateLocked = true;
+
                 if (this.refs.quoteForm) {
                     this.refs.quoteForm.updateQuote(newId);
                 } else {
                     warn('saveAsNewVersion — quoteForm ref not found');
                 }
+
+                this.showToast('Success', 'New version created successfully!', 'success');
             })
             .catch(error => {
                 const msg = extractErrorMessage(error);
@@ -494,10 +594,6 @@ export default class CustomQuoteEditCmp extends LightningElement {
                 this.loaded = false;
             });
     }
-
-    // =================================================================
-    // UI HELPERS
-    // =================================================================
 
     showToast(title, message, variant) {
         log('showToast —', variant, '|', title, '|', message);

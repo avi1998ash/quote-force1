@@ -65,38 +65,77 @@ Header
 .slds-modal__header {
 flex-shrink: 0;
 
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 1rem;
+
+padding: 0.85rem 1.5rem !important;
+min-height: auto !important;
+
+border-bottom: 1px solid var(--qf-border);
+background: #ffffff;
+
+}
+
+.modal-header-left {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+min-width: 0;
+}
+
+.modal-header-icon {
+width: 36px;
+height: 36px;
+flex-shrink: 0;
 
 display: flex;
 align-items: center;
 justify-content: center;
 
-position: relative;
+border-radius: 10px;
+background: #eef3fb;
+color: var(--qf-primary);
+font-size: 1.1rem;
+}
 
-padding-top: 0 !important;
-padding-bottom: 0 !important;
-padding-left: 1.5rem !important;
-padding-right: 1.5rem !important;
-min-height: 48px !important;
+/* REDESIGN LAYER: header icon now holds a real lightning-icon instead
+   of an emoji character — matches the icon system used in the page
+   builder (utility:file for the Title page, same shape/weight here). */
+.modal-header-icon lightning-icon {
+--slds-c-icon-color-foreground-default: var(--qf-primary);
+}
 
-border-bottom: 1px solid var(--qf-border);
-background: #ffffff;
-
-
+.modal-header-text {
+display: flex;
+flex-direction: column;
+min-width: 0;
 }
 
 .slds-modal__header h2 {
 margin: 0;
-font-size: 1.5rem;
-font-weight: 600;
+font-size: 1.05rem;
+font-weight: 700;
 color: var(--qf-text);
-line-height: 1.2;
+line-height: 1.3;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+.modal-header-subtitle {
+margin: 0.15rem 0 0;
+font-size: 0.8rem;
+color: var(--qf-muted);
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
 }
 
 .slds-modal__close {
-position: absolute !important;
-top: 0.9rem;
-right: 1rem;
-
+position: static !important;
+flex-shrink: 0;
 
 background: #ffffff;
 border: 1px solid var(--qf-border);
@@ -150,16 +189,12 @@ Footer
 .slds-modal__footer {
 flex-shrink: 0;
 
-
 display: flex;
-justify-content: center;
+justify-content: space-between;
 align-items: center;
 gap: 1rem;
 
-padding-top: 0 !important;
-padding-bottom: 0 !important;
-padding-left: 1.5rem !important;
-padding-right: 1.5rem !important;
+padding: 0.9rem 1.5rem !important;
 
 border-top: 1px solid var(--qf-border);
 background: #ffffff;
@@ -167,16 +202,61 @@ background: #ffffff;
 
 }
 
+.modal-footer-note {
+margin: 0;
+display: flex;
+align-items: center;
+gap: 0.4rem;
+
+font-size: 0.8rem;
+color: var(--qf-muted);
+white-space: nowrap;
+}
+
+.modal-footer-note-icon {
+width: 16px;
+height: 16px;
+flex-shrink: 0;
+
+display: inline-flex;
+align-items: center;
+justify-content: center;
+
+border-radius: 50%;
+background: #eef3fb;
+color: var(--qf-primary);
+font-size: 0.7rem;
+}
+
+/* REDESIGN LAYER: footer note icon now holds a real lightning-icon
+   (utility:info) instead of the ℹ emoji character. */
+.modal-footer-note-icon lightning-icon {
+--slds-c-icon-color-foreground-default: var(--qf-primary);
+}
+
+.modal-footer-actions {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+flex-shrink: 0;
+}
+
 /* ===========================
 Buttons
 =========================== */
 
+/* REDESIGN LAYER: this button just closes the modal (onclick={closeModal}),
+   nothing is deleted — the footer note next to it even says changes are
+   autosaved. Red/danger styling was implying a destructive action that
+   doesn't happen, which can make people second-guess closing. Restyled
+   as a neutral outline so red stays reserved for genuinely destructive
+   actions elsewhere (e.g. delete-image, delete-page). Class name and
+   onclick binding are unchanged. */
 .clear-btn {
-background: var(--qf-danger);
-color: #ffffff;
+background: #ffffff;
+color: var(--qf-primary);
 
-
-border: none;
+border: 1.5px solid var(--qf-border);
 border-radius: 999px;
 
 padding: 0.75rem 1.5rem;
@@ -192,7 +272,8 @@ transition: all 0.2s ease;
 }
 
 .clear-btn:hover {
-background: #d81919;
+background: #f8fafc;
+border-color: var(--qf-primary);
 transform: translateY(-1px);
 }
 
@@ -211,9 +292,19 @@ height: 44px;
 font-weight: 600;
 cursor: pointer;
 
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 0.4rem;
+
 transition: all 0.2s ease;
 
 
+}
+
+.save-btn-arrow {
+font-size: 0.95rem;
+line-height: 1;
 }
 
 .save-btn:hover {
@@ -268,14 +359,15 @@ padding: 0;
 }
 
 .slds-modal__header {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
+    padding: 0.75rem 1rem !important;
 }
 
 .slds-modal__header h2 {
-    font-size: 1.2rem;
+    font-size: 1rem;
+}
+
+.modal-header-subtitle {
+    display: none;
 }
 
 .slds-modal__content {
@@ -287,16 +379,23 @@ padding: 0;
 
 .slds-modal__footer {
     flex-direction: column;
+    align-items: stretch;
     gap: 0.75rem;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
+    padding: 0.9rem 1rem !important;
+}
+
+.modal-footer-note {
+    justify-content: center;
+}
+
+.modal-footer-actions {
+    width: 100%;
 }
 
 .clear-btn,
 .save-btn {
-    width: 100%;
+    flex: 1;
+    width: auto;
     min-width: auto;
 }
 

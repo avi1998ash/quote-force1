@@ -96,6 +96,9 @@ export default class CustomQuoteCreateCmp extends LightningElement {
         return Math.ceil(this.options.length / this.pageSize);
     }
 
+    get userInitials() { return 'JD'; }
+    get currentYear() { return new Date().getFullYear(); }
+
     get paginatedOptions() {
         const start = (this.currentPage - 1) * this.pageSize;
         return this.options.slice(start, start + this.pageSize);

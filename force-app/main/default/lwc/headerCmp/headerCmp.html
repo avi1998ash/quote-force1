@@ -1,17 +1,17 @@
-<template>
-  <div class="header">
+<!-- <template>
+  <div class="header"> -->
 
     <!--Content before waves-->
-    <div class="inner-header flex">
+    <!-- <div class="inner-header flex"> -->
       <!--Just the logo.. Don't mind this-->
 
-      <h1>{title}</h1>
-
-    </div>
+      <!-- <h1>{title}</h1>
     <div class="sectitle slds-text-body_regular">{titleSec}</div>
 
+    </div> -->
+
     <!--Waves Container-->
-    <div>
+    <!-- <div>
       <svg class="waves" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
         <defs>
           <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
@@ -23,10 +23,24 @@
           <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff"></use>
         </g>
       </svg>
-    </div>
+    </div> -->
     <!--Waves end-->
 
-  </div>
+  <!-- </div> -->
   <!--Header ends-->
 
+<!-- </template> -->
+ <template>
+    <div class="header">
+
+        <div class="inner-header">
+            <div class="header-content">
+                <h1>{title}</h1>
+                <div class="sectitle">
+                    {titleSec}
+                </div>
+            </div>
+        </div>
+
+    </div>
 </template>

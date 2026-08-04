@@ -741,6 +741,33 @@ updateQuoteAndWait(newQuoteId) {
             });
     }
 
+    // Card-click handler for the "Custom Page Configuration" cards.
+    // Mirrors handleRadioChange above exactly (same fields, same Apex
+    // call) — only the source of the value differs (dataset vs event.detail).
+    handleCustomPageTypeCardClick(event) {
+        var Value = event.currentTarget.dataset.value;
+        this.ctmPgType = Value;
+        if (Value === 'Upload File') {
+            this.customPageUploadFile = true;
+            this.customPageTextPage = false;
+        } else if (Value === 'Text Page') {
+            this.customPageUploadFile = false;
+            this.customPageTextPage = true;
+        }
+
+        var customObj = {
+            'Id': this.currentCustomPageRecordId,
+            'QuoteForce__Type__c': Value
+        };
+
+        updateCustomPage({ customObj: customObj })
+            .then(result => {
+            })
+            .catch(error => {
+                this.showToast('Error', 'Error Creating Record: ' + error.body.message, 'error');
+            });
+    }
+
     handleInputChange(event) {
         this.recordName = event.target.value;
     }

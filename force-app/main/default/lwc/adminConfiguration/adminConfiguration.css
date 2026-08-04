@@ -1,243 +1,359 @@
-/* Main Wrapper */
-/* Main Wrapper as Center Box */
+:host {
+    --qf-navy: #12233F;
+    --qf-blue: #2E6FD9;
+    --qf-border: #EDEFF3;
+    --qf-input-border: #D7DCE6;
+    --qf-bg: #F4F5F7;
+    --qf-text-muted: #5A6478;
+    --qf-text-dark: #1A2B45;
+}
+
+/* -------------------------------------------------- */
+/* Legacy hero header: kept mounted (functionality preserved), visually collapsed */
+/* If full removal is preferred instead of hiding, remove this block and the wrapping div in HTML */
+/* -------------------------------------------------- */
+.legacy-hero {
+    display: none;
+}
+.delete-btn {
+    --slds-c-button-destructive-color-background: #C62828;
+    --slds-c-button-destructive-color-border: #C62828;
+    --slds-c-button-destructive-color-background-hover: #B71C1C;
+    --slds-c-button-destructive-color-border-hover: #B71C1C;
+    --slds-c-button-radius-border: 8px;
+}
+/* -------------------------------------------------- */
+/* Page header: breadcrumb + title + editing badge   */
+/* -------------------------------------------------- */
 .admin-wrapper {
-	max-width: 900px;
-	/* control width */
-	margin: 2rem auto;
-	/* center horizontally */
-	background: #fff;
-	border-radius: 16px;
-	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-	padding: 2rem;
+    max-width: 1100px;
+    margin: 1.5rem auto;
+    background: var(--qf-bg);
+    border-radius: 16px;
+    padding: 1.5rem;
 }
 
-/* Section Cards inside Box */
-.admin-card {
-	background: #fff;
-	border-radius: 14px;
-	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
-	margin-bottom: 1.5rem;
-	overflow: visible;
-	transition: transform 0.3s ease, box-shadow 0.3s ease;
+.page-header {
+    margin-bottom: 1.25rem;
 }
 
-/* .admin-card:hover {
-	transform: translateY(-3px);
-	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-} */
-
-/* Header */
-.admin-card-header {
-	background: linear-gradient(135deg, #0f395f, #145080);
-	color: #fff;
-	font-weight: 600;
-	padding: 0.8rem 1.2rem;
-	font-size: 1rem;
-	letter-spacing: 0.5px;
-	border-top-left-radius: 14px;
-    border-top-right-radius: 14px;
+.breadcrumb {
+    font-size: 0.75rem;
+    color: #8A93A3;
+    margin-bottom: 0.6rem;
 }
 
-/* Body */
-.admin-card-body {
-	padding: 1.2rem;
-	font-size: 0.95rem;
-	color: #333;
+.breadcrumb span {
+    color: var(--qf-text-muted);
 }
 
-/* header Buttons (inside box bottom) */
+.page-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--qf-navy);
+    margin: 0;
+}
+
+.page-subtitle {
+    font-size: 0.85rem;
+    color: var(--qf-text-muted);
+    margin: 0.25rem 0 0;
+}
+
+.editing-badge {
+    display: inline-flex;
+    align-items: center;
+    background: #FFF3DE;
+    color: #9A5B10;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.35rem 0.85rem;
+    border-radius: 20px;
+}
+
 .header-btns {
-	text-align: right;
-	margin-bottom: 1.5rem;
-	border-bottom: 1px solid #eee;
-	padding-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .header-btns lightning-button {
-	margin-left: 0.6rem;
-	border-radius: 25px;
-	font-weight: 600;
+    border-radius: 8px;
+    font-weight: 600;
 }
 
-/* Footer Buttons (inside box bottom) */
+/* -------------------------------------------------- */
+/* Grid layout: two-column pairs, responsive          */
+/* -------------------------------------------------- */
+.admin-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.grid-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.1rem;
+    align-items: stretch;
+}
+
+.grid-row-single {
+    grid-template-columns: 1fr;
+}
+
+@media (max-width: 900px) {
+    .grid-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* -------------------------------------------------- */
+/* Section cards                                      */
+/* -------------------------------------------------- */
+.admin-card {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid var(--qf-border);
+    box-shadow: 0 1px 3px rgba(18, 35, 63, 0.07);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-card-header {
+    background: var(--qf-navy);
+    color: #fff;
+    font-weight: 600;
+    padding: 0.75rem 1.1rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.2px;
+}
+
+.admin-card-body {
+    padding: 1.1rem;
+    font-size: 0.9rem;
+    color: #333;
+    flex: 1;
+}
+
+.section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #8A93A3;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin: 0 0 0.5rem;
+}
+
+/* Read-only field rows */
+.field-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    margin-bottom: 0.85rem;
+}
+
+.field-row:last-child {
+    margin-bottom: 0;
+}
+
+.field-label {
+    font-size: 0.7rem;
+    color: var(--qf-text-muted);
+    font-weight: 500;
+}
+
+.field-value {
+    font-size: 0.85rem;
+    color: var(--qf-text-dark);
+    font-weight: 500;
+    word-break: break-word;
+}
+
+.doc-block {
+    margin-bottom: 1rem;
+}
+
+.doc-block:last-child {
+    margin-bottom: 0;
+}
+
+.doc-block > .field-label {
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+/* Invoice details internal split */
+.invoice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+@media (max-width: 700px) {
+    .invoice-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.text-block {
+    font-size: 0.85rem;
+    color: var(--qf-text-dark);
+    line-height: 1.55;
+    background: #FAFBFC;
+    border: 1px solid var(--qf-border);
+    border-radius: 7px;
+    padding: 0.65rem 0.85rem;
+    margin-bottom: 1rem;
+}
+
+/* -------------------------------------------------- */
+/* Footer buttons                                     */
+/* -------------------------------------------------- */
 .footer-btns {
-	text-align: right;
-	margin-top: 1.5rem;
-	border-top: 1px solid #eee;
-	padding-top: 1rem;
+    text-align: right;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--qf-border);
 }
 
 .footer-btns lightning-button {
-	margin-left: 0.6rem;
-	border-radius: 25px;
-	font-weight: 600;
+    margin-left: 0.6rem;
+    border-radius: 8px;
+    font-weight: 600;
 }
-
 
 .save {
-	background-color: #003366;
-	color: white;
-	border-radius: 1.5rem;
-	height: 34px;
-	width: 61px;
-	margin-left: 6px;
+    background-color: var(--qf-blue);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    height: 34px;
+    padding: 0 1.1rem;
+    margin-left: 0.6rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
 }
 
-
-.admin-card-body b {
-	color: #0f395f;
+.save:hover {
+    background-color: #245bb5;
 }
 
-/* File Upload */
+/* -------------------------------------------------- */
+/* File upload dropzone                               */
+/* -------------------------------------------------- */
 lightning-file-upload {
-	display: block;
-	margin: 1rem 0;
-	border: 2px dashed #0f395f;
-	border-radius: 12px;
-	padding: 0.8rem;
-	background: #f7fbff;
-	transition: background 0.3s ease;
+    display: block;
+    margin: 0.4rem 0;
+    border: 1px dashed #C7D2E3;
+    border-radius: 8px;
+    padding: 0.7rem;
+    background: #FAFBFC;
+    transition: background 0.2s ease;
 }
 
 lightning-file-upload:hover {
-	background: #eaf2f9;
+    background: #EEF3FA;
 }
 
-/* Company Logo & Docs */
-.company-logo {
-	max-height: 60px;
-	margin-bottom: 0.6rem;
-}
-
-.doc-icon {
-	max-height: 40px;
-	margin-left: 8px;
-}
-
-/* Footer Buttons */
-/* .footer-btns {
-	text-align: right;
-	margin-top: 1rem;
-}
-
-.footer-btns lightning-button {
-	margin-left: 0.6rem;
-	border-radius: 25px;
-	font-weight: 600;
-	transition: all 0.3s ease;
-}
-
-Neutral Button .footer-btns lightning-button[variant="neutral"] {
-	--slds-c-button-neutral-color-border: #dcdcdc;
-	--slds-c-button-neutral-color-background: #ffffff;
-	--slds-c-button-neutral-color-text: #0f395f;
-}
-
-.footer-btns lightning-button[variant="neutral"]:hover {
-	--slds-c-button-neutral-color-background: #f5f5f5;
-	transform: translateY(-2px);
-	box-shadow: 0 3px 8px rgba(15, 57, 95, 0.2);
-}
-
-.footer-btns lightning-button[variant="brand"] {
-	--slds-c-button-brand-color-background: linear-gradient(135deg, #0f395f, #145080);
-	--slds-c-button-brand-color-border: transparent;
-	--slds-c-button-brand-color-text: #fff;
-}
-
-.footer-btns lightning-button[variant="brand"]:hover {
-	--slds-c-button-brand-color-background: linear-gradient(135deg, #09314f, #124770);
-	transform: translateY(-2px);
-	box-shadow: 0 4px 12px rgba(15, 57, 95, 0.3);
-}
-
-.footer-btns lightning-button[variant="destructive"] {
-	--slds-c-button-destructive-color-background: #e63946;
-}
-
-.footer-btns lightning-button[variant="destructive"]:hover {
-	--slds-c-button-destructive-color-background: #c62828;
-	transform: translateY(-2px);
-	box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
-} */
-
-.custom-container {
-	color: black;
-}
-
-lightning-button {
-	--slds-c-button-radius-border: 1.5rem;
-}
-
-lightning-input {
-	--slds-c-input-radius-border: 1.5rem;
-}
-
-lightning-textarea {
-	--slds-c-textarea-radius-border: 1.5rem;
-}
-
-lightning-input-address {
-	--slds-c-input-radius-border: 1.5rem;
-	--slds-c-textarea-radius-border: 1.5rem;
-}
-
-lightning-combobox {
-	--slds-c-input-radius-border: 1.5rem;
-}
-
+/* -------------------------------------------------- */
+/* Preview / document cards                           */
+/* -------------------------------------------------- */
 .preview-card {
-	border: 1px solid #ddd;
-	border-radius: 12px;
-	padding: 12px;
-	margin: 8px 0;
-	background: #f9f9f9;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--qf-border);
+    border-radius: 8px;
+    padding: 0.6rem 0.85rem;
+    margin: 0.3rem 0;
+    background: #FAFBFC;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
 }
 
 .preview-image {
-	max-width: 150px;
-	max-height: 80px;
-	object-fit: contain;
-	border-radius: 8px;
-	border: 1px solid #ccc;
-	background: white;
-	padding: 4px;
+    max-width: 120px;
+    max-height: 56px;
+    object-fit: contain;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #fff;
+    padding: 3px;
 }
 
 .preview-doc {
-	max-width: 60px;
-	max-height: 60px;
-	object-fit: contain;
-	border-radius: 6px;
-	border: 1px solid #ccc;
-	background: white;
-	padding: 3px;
+    max-width: 44px;
+    max-height: 44px;
+    object-fit: contain;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: #fff;
+    padding: 2px;
 }
 
-.delete-btn {
-	margin-left: 16px;
+.signature-card {
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1rem;
+}
+
+.button-group {
+    display: flex;
+    gap: 0.5rem;
 }
 
 .view-btn {
-	margin-left: 16px;
-
+    margin-left: 0.5rem;
 }
 
-.slds-modal__container {
+/* -------------------------------------------------- */
+/* Existing SLDS custom property overrides preserved  */
+/* -------------------------------------------------- */
+lightning-button {
+    --slds-c-button-radius-border: 8px;
+}
 
-	overflow: hidden;
+lightning-input {
+    --slds-c-input-radius-border: 8px;
+}
+
+lightning-textarea {
+    --slds-c-textarea-radius-border: 8px;
+}
+
+lightning-input-address {
+    --slds-c-input-radius-border: 8px;
+    --slds-c-textarea-radius-border: 8px;
+}
+
+lightning-combobox {
+    --slds-c-input-radius-border: 8px;
+}
+
+/* -------------------------------------------------- */
+/* Modal (unchanged behavior, tightened visuals only) */
+/* -------------------------------------------------- */
+.slds-modal__container {
+    overflow: hidden;
 }
 
 .slds-modal__content {
-	 overflow-y: auto;      /* scroll add */
-    max-height: 70vh;      /* height limit */
-    padding: 1rem
+    overflow-y: auto;
+    max-height: 70vh;
+    padding: 1rem;
 }
-.button-group {
-    display: flex;
-    gap: 10px;
+
+.custom-container {
+    color: black;
 }

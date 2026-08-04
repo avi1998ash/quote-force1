@@ -808,6 +808,6 @@ lightning-combobox {
 /* Responsive */
 @media (max-width: 640px) {
     .custom-page-type-grid {
-      grid-template-columns: 1fr;
+        grid-template-columns: 1fr;
     }
 }
