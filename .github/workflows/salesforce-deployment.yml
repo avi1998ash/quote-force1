@@ -1,21 +1,17 @@
-name: Salesforce PR Validation Pipeline
+name: Salesforce Deployment Pipeline
 on:
-  pull_request:
+  push:
     branches:
       - main
-    types:
-      - opened
-      - synchronize
-      - reopened
 
 jobs:
-  salesforce-validation:
+  salesforce-deployment:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # need full history to diff against base branch
+          fetch-depth: 0   # full history so we can diff the merge commit
 
       - name: Install Salesforce CLI
         run: npm install -g @salesforce/cli
@@ -23,21 +19,20 @@ jobs:
       - name: Verify Salesforce CLI
         run: sf --version
 
-      - name: Get Changed Files in force-app
+      - name: Get Changed Files from Merge
         id: changed-files
         run: |
-          git fetch origin ${{ github.event.pull_request.base.ref }}
+          # Compare this commit against its parent to get only what the PR merge introduced.
           CHANGED=$(git diff --name-only --diff-filter=ACMR \
-            origin/${{ github.event.pull_request.base.ref }}...HEAD -- force-app)
+            ${{ github.event.before }} ${{ github.sha }} -- force-app)
 
           if [ -z "$CHANGED" ]; then
-            echo "No changed files under force-app. Skipping validation."
+            echo "No changed files under force-app. Skipping deployment."
             echo "has_changes=false" >> $GITHUB_OUTPUT
             exit 0
           fi
 
           echo "has_changes=true" >> $GITHUB_OUTPUT
-          # sf accepts --source-dir multiple times or comma-separated
           echo "$CHANGED" | paste -sd "," - > changed_files.txt
           echo "files=$(cat changed_files.txt)" >> $GITHUB_OUTPUT
 
@@ -63,12 +58,20 @@ jobs:
         if: steps.changed-files.outputs.has_changes == 'true'
         run: sf org display
 
-      - name: Validate Deployment (Changed Files Only)
+      - name: Deploy to Org (Changed Files Only)
         if: steps.changed-files.outputs.has_changes == 'true'
         run: |
           sf project deploy start \
-            --dry-run \
             --source-dir ${{ steps.changed-files.outputs.files }} \
-            --test-level NoTestRun \
+            --test-level RunLocalTests \
             --ignore-conflicts \
             --json
+
+      - name: Deployment Summary
+        if: always()
+        run: |
+          if [ "${{ steps.changed-files.outputs.has_changes }}" == "true" ]; then
+            echo "Deployment step completed — check logs above for status."
+          else
+            echo "No Salesforce metadata changes detected in this push."
+          fi

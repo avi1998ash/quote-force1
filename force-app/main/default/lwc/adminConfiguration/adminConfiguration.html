@@ -37,33 +37,36 @@
                 </div>
             </div>
 
-            <div class="admin-grid">
+            <!-- Contact Information -->
+            <div class="admin-card">
+                <div class="admin-card-header">Contact Information 1</div>
+                <div class="admin-card-body">
+                    <!-- READ ONLY -->
+                    <template if:false={isEditMode}>
+                        <!-- <p><b>Name:</b> {configRecord.QuoteForce__Name}</p> -->
+                        <p><b>Name:</b> {displayName}</p>
+                        <p><b>Phone:</b> {configRecord.QuoteForce__Phone__c}</p>
+                        <p><b>Email:</b> {configRecord.QuoteForce__Email__c}</p>
+                        <p><b>Address:</b> {formattedAddress}</p>
 
-                <!-- Row 1: Contact Information + Company Details -->
-                <div class="grid-row">
-                    <!-- Contact Information -->
-                    <div class="admin-card">
-                        <div class="admin-card-header">Contact Information</div>
-                        <div class="admin-card-body">
-                            <!-- READ ONLY -->
-                            <template if:false={isEditMode}>
-                                <div class="field-row"><span class="field-label">Name</span><span class="field-value">{displayName}</span></div>
-                                <div class="field-row"><span class="field-label">Phone</span><span class="field-value">{configRecord.QuoteForce__Phone__c}</span></div>
-                                <div class="field-row"><span class="field-label">Email</span><span class="field-value">{configRecord.QuoteForce__Email__c}</span></div>
-                                <div class="field-row"><span class="field-label">Address</span><span class="field-value">{formattedAddress}</span></div>
-                            </template>
+                        <!-- <p><b>Address: </b>
+                            {configRecord.QuoteForce__Street__c}, {configRecord.QuoteForce__City__c}, {configRecord.QuoteForce__State_Province__c},
+                            {configRecord.QuoteForce__Postal_Code__c}, {configRecord.QuoteForce__Country__c}
+                        </p> -->
+                    </template>
 
-                            <!-- EDIT MODE -->
-                            <template if:true={isEditMode}>
-                                <lightning-input required label="Name" data-field="name" value={configRecord.Name} onchange={handleInputChange}></lightning-input>
-                                <lightning-input required type="phone" label="Phone" data-field="phone" value={configRecord.QuoteForce__Phone__c} onchange={handleInputChange}></lightning-input>
-                                <lightning-input required type="email" label="Email" data-field="email" value={configRecord.QuoteForce__Email__c} onchange={handleInputChange}></lightning-input>
+                    <!-- EDIT MODE -->
+                    <template if:true={isEditMode}>
+                    <lightning-input required label="Name" data-field="name" value={configRecord.Name} onchange={handleInputChange}></lightning-input>
+                    <lightning-input required type="phone" label="Phone" data-field="phone" value={configRecord.QuoteForce__Phone__c} onchange={handleInputChange}></lightning-input>
+                    <lightning-input required type="email" label="Email" data-field="email" value={configRecord.QuoteForce__Email__c} onchange={handleInputChange}></lightning-input>
 
-                                <lightning-textarea label="Street Address" value={configRecord.QuoteForce__Street__c} onchange={handleInputChange} data-field="street">
-                                </lightning-textarea>
+                        <!-- <lightning-input-address address-label="Address" street={address.street} city={address.city} province={address.province} postal-code={address.postalCode}
+                            country={address.country} country-options={countryOptions} province-options={stateOptions} onchange={handleAddressChange} show-address-lookup>
+                        </lightning-input-address> -->
 
-                                <lightning-input label="City" value={configRecord.QuoteForce__City__c} onchange={handleInputChange} data-field="city">
-                                </lightning-input>
+                        <lightning-textarea label="Street Address" value={configRecord.QuoteForce__Street__c} onchange={handleInputChange} data-field="street">
+                        </lightning-textarea>
 
                                 <div class="slds-grid slds-gutters">
                                     <div class="slds-col">
