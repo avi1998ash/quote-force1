@@ -63,8 +63,6 @@ public with sharing class AdminSettingController {
                 throw new AuraHandledException('Please enter a valid Email address');
             }
         }
-        
-        // Phone Validation (Only digits)
         if(!String.isBlank(config.QuoteForce__Phone__c)) {
             //   Pattern phonePattern = Pattern.compile('^[0-9]{20}$');
             Pattern phonePattern = Pattern.compile('^\\+?[0-9]{1,20}$');
@@ -75,7 +73,6 @@ public with sharing class AdminSettingController {
             }
         }
     }
-    
     
     @AuraEnabled
     public static QuoteForce__Admin_Configuration__c saveAdminConfig(QuoteForce__Admin_Configuration__c config) {
