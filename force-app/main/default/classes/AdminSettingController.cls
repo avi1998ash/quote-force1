@@ -1,7 +1,7 @@
 public with sharing class AdminSettingController {
     
     private static final List<String> ADMIN_CONFIG_FIELDS = new List<String>{
-        'Id',
+            'Id',
             'Name',
             'QuoteForce__Phone__c',
             'QuoteForce__Email__c',
